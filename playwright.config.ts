@@ -11,7 +11,7 @@ const config: PlaywrightTestConfig = {
 		url: url
 	},
 	testDir: 'tests',
-	testMatch: /(.+\.)?(test|spec)\.[jt]s/,
+	testMatch: /(.+\.)?(test|spec)\.[jt]s/
 };
 
 export default config;

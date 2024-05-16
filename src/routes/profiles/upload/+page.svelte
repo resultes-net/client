@@ -1,34 +1,53 @@
 <script lang="ts">
+	import * as res from 'ts-results';
+
+	import { goto } from '$app/navigation';
+
 	import { FileDropzone } from '@skeletonlabs/skeleton';
+
+	import { container, type ProfileSummary } from '../profile_summary';
 
 	let fileList: FileList;
 
 	async function onChangeHandler(event: Event): Promise<void> {
 		console.assert(fileList.length === 1);
 		const file = fileList[0];
-		await uploadFile(file);
+		const result = await uploadFileAndGetMonthlyData(file);
+
+		if (result.err) {
+			window.alert(result.val);
+			return;
+		}
+
+		container.profileSummary = res.Some(result.val);
+
+		goto('/profiles/plot-summary/');
 	}
 
-	async function uploadFile(file: File): Promise<void> {
+	async function uploadFileAndGetMonthlyData(
+		file: File
+	): Promise<res.Result<ProfileSummary, string>> {
 		const formData = new FormData();
 
 		formData.append('file', file);
 
 		try {
-			const response = await fetch('http://localhost:8000/profiles', {
+			const response = await fetch('/api/profiles/', {
 				method: 'POST',
 				body: formData
 			});
 
 			const result = await response.json();
 
-			if (response.ok) {
-				console.log('Result:', result);
-			} else {
+			if (!response.ok) {
 				console.error('Error:', result);
+				const errorMessage = result.message;
+				return new res.Err(`An error occured: ${errorMessage}`);
 			}
+
+			return new res.Ok(result);
 		} catch (error) {
-			console.error('Error:', error);
+			return new res.Err(`An error occured: ${error}`);
 		}
 	}
 </script>

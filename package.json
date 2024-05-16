@@ -47,6 +47,7 @@
 	"type": "module",
 	"dependencies": {
 		"@floating-ui/dom": "1.6.5",
-		"plotly.js-dist-min": "^2.32.0"
+		"plotly.js-dist-min": "^2.32.0",
+		"ts-results": "^3.3.0"
 	}
 }
