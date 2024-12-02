@@ -1,0 +1,10 @@
+{
+    "collector": "Solarkollektor",
+    "collectorArea": "Kollektorfläche",
+    "storage": "Wärmespeicher",
+    "storageVolume": "Speichervolumen",
+    "demand": "Wärmebedarf",
+    "demandProfile": "Bedarfsprofil",
+    "newSimulation": "Neue Simulation",
+    "savedSimulations": "Gespeicherte Simulationen"
+}

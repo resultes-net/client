@@ -1,0 +1,411 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/compute": {
+            "get": {
+                "summary": "Compute",
+                "operationId": "compute_compute_get",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ComputePayload"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/consumption_model__domestic__Outputs"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ComputePayload": {
+                "properties": {
+                    "hour_of_day": {
+                        "$ref": "#/components/schemas/HourOfDay"
+                    },
+                    "outside_temperature_degC": {
+                        "type": "number",
+                        "title": "Outside Temperature Degc"
+                    },
+                    "parameters": {
+                        "$ref": "#/components/schemas/consumption_model__domestic__Parameters"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "hour_of_day",
+                    "outside_temperature_degC",
+                    "parameters"
+                ],
+                "title": "ComputePayload"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "HeatPump": {
+                "properties": {
+                    "fraction_of_households_heated_by_heat_pump": {
+                        "type": "number",
+                        "title": "Fraction Of Households Heated By Heat Pump"
+                    },
+                    "fraction_of_heat_pumps_with_air_source": {
+                        "type": "number",
+                        "title": "Fraction Of Heat Pumps With Air Source"
+                    },
+                    "fraction_of_heat_pumps_with_ground_source": {
+                        "type": "number",
+                        "title": "Fraction Of Heat Pumps With Ground Source"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "fraction_of_households_heated_by_heat_pump",
+                    "fraction_of_heat_pumps_with_air_source",
+                    "fraction_of_heat_pumps_with_ground_source"
+                ],
+                "title": "HeatPump"
+            },
+            "HourOfDay": {
+                "properties": {
+                    "hour": {
+                        "type": "integer",
+                        "title": "Hour"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "hour"
+                ],
+                "title": "HourOfDay"
+            },
+            "HouseType": {
+                "properties": {
+                    "fraction_of_inhabitants": {
+                        "type": "number",
+                        "title": "Fraction Of Inhabitants"
+                    },
+                    "average_household_size": {
+                        "type": "number",
+                        "title": "Average Household Size"
+                    },
+                    "heat_pump": {
+                        "$ref": "#/components/schemas/HeatPump"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "fraction_of_inhabitants",
+                    "average_household_size",
+                    "heat_pump"
+                ],
+                "title": "HouseType"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            },
+            "consumption_model__common__heat_pump__Parameters": {
+                "properties": {
+                    "isentropic_efficiency": {
+                        "type": "number",
+                        "title": "Isentropic Efficiency"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "isentropic_efficiency"
+                ],
+                "title": "Parameters"
+            },
+            "consumption_model__domestic__Outputs": {
+                "properties": {
+                    "ashp_per_capita": {
+                        "$ref": "#/components/schemas/consumption_model__domestic__per_capita__Outputs"
+                    },
+                    "gshp_per_capita": {
+                        "$ref": "#/components/schemas/consumption_model__domestic__per_capita__Outputs"
+                    },
+                    "no_hp_per_capita": {
+                        "$ref": "#/components/schemas/consumption_model__domestic__per_capita__Outputs"
+                    },
+                    "total_demand_electricity_kW": {
+                        "type": "number",
+                        "title": "Total Demand Electricity Kw"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "ashp_per_capita",
+                    "gshp_per_capita",
+                    "no_hp_per_capita",
+                    "total_demand_electricity_kW"
+                ],
+                "title": "Outputs"
+            },
+            "consumption_model__domestic__Parameters": {
+                "properties": {
+                    "population": {
+                        "$ref": "#/components/schemas/consumption_model__domestic__population__Parameters"
+                    },
+                    "per_capita": {
+                        "$ref": "#/components/schemas/consumption_model__domestic__per_capita__Parameters"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "population",
+                    "per_capita"
+                ],
+                "title": "Parameters"
+            },
+            "consumption_model__domestic__per_capita__Outputs": {
+                "properties": {
+                    "heat": {
+                        "$ref": "#/components/schemas/consumption_model__domestic__per_capita__electricity_for_heat__Outputs"
+                    },
+                    "general_demand_electricity_kW": {
+                        "type": "number",
+                        "title": "General Demand Electricity Kw"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "heat",
+                    "general_demand_electricity_kW"
+                ],
+                "title": "Outputs"
+            },
+            "consumption_model__domestic__per_capita__Parameters": {
+                "properties": {
+                    "heat": {
+                        "$ref": "#/components/schemas/consumption_model__domestic__per_capita__electricity_for_heat__Parameters"
+                    },
+                    "general": {
+                        "$ref": "#/components/schemas/consumption_model__domestic__per_capita__general_electricity__Parameters"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "heat",
+                    "general"
+                ],
+                "title": "Parameters"
+            },
+            "consumption_model__domestic__per_capita__electricity_for_heat__Outputs": {
+                "properties": {
+                    "space_heat_carnot_efficiency": {
+                        "type": "number",
+                        "title": "Space Heat Carnot Efficiency"
+                    },
+                    "demand_space_heat_electricity_kW": {
+                        "type": "number",
+                        "title": "Demand Space Heat Electricity Kw"
+                    },
+                    "hot_water_carnot_efficiency": {
+                        "type": "number",
+                        "title": "Hot Water Carnot Efficiency"
+                    },
+                    "hot_water_electricity_kW": {
+                        "type": "number",
+                        "title": "Hot Water Electricity Kw"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "space_heat_carnot_efficiency",
+                    "demand_space_heat_electricity_kW",
+                    "hot_water_carnot_efficiency",
+                    "hot_water_electricity_kW"
+                ],
+                "title": "Outputs"
+            },
+            "consumption_model__domestic__per_capita__electricity_for_heat__Parameters": {
+                "properties": {
+                    "heat_pump": {
+                        "$ref": "#/components/schemas/consumption_model__common__heat_pump__Parameters"
+                    },
+                    "space_heating": {
+                        "$ref": "#/components/schemas/consumption_model__domestic__per_capita__heating__space_heating__Parameters"
+                    },
+                    "hot_water": {
+                        "$ref": "#/components/schemas/consumption_model__domestic__per_capita__heating__domestic_hot_water__Parameters"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "heat_pump",
+                    "space_heating",
+                    "hot_water"
+                ],
+                "title": "Parameters"
+            },
+            "consumption_model__domestic__per_capita__general_electricity__Parameters": {
+                "properties": {
+                    "morning_demand_electricity_kW": {
+                        "type": "number",
+                        "title": "Morning Demand Electricity Kw"
+                    },
+                    "noon_demand_electricity_kW": {
+                        "type": "number",
+                        "title": "Noon Demand Electricity Kw"
+                    },
+                    "evening_demand_electricity_kW": {
+                        "type": "number",
+                        "title": "Evening Demand Electricity Kw"
+                    },
+                    "base_demand_electricity_kW": {
+                        "type": "number",
+                        "title": "Base Demand Electricity Kw"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "morning_demand_electricity_kW",
+                    "noon_demand_electricity_kW",
+                    "evening_demand_electricity_kW",
+                    "base_demand_electricity_kW"
+                ],
+                "title": "Parameters"
+            },
+            "consumption_model__domestic__per_capita__heating__domestic_hot_water__Parameters": {
+                "properties": {
+                    "set_point_temperature_degC": {
+                        "type": "number",
+                        "title": "Set Point Temperature Degc"
+                    },
+                    "peak_demand_L_per_min": {
+                        "type": "number",
+                        "title": "Peak Demand L Per Min"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "set_point_temperature_degC",
+                    "peak_demand_L_per_min"
+                ],
+                "title": "Parameters"
+            },
+            "consumption_model__domestic__per_capita__heating__space_heating__Parameters": {
+                "properties": {
+                    "daytime_set_point_temperature_degC": {
+                        "type": "number",
+                        "title": "Daytime Set Point Temperature Degc"
+                    },
+                    "nighttime_set_point_temperature_degC": {
+                        "type": "number",
+                        "title": "Nighttime Set Point Temperature Degc"
+                    },
+                    "energy_reference_area_m2_per_capita": {
+                        "type": "number",
+                        "title": "Energy Reference Area M2 Per Capita"
+                    },
+                    "building_hull_number": {
+                        "type": "number",
+                        "title": "Building Hull Number"
+                    },
+                    "overall_U_value_kW_per_m2_K": {
+                        "type": "number",
+                        "title": "Overall U Value Kw Per M2 K"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "daytime_set_point_temperature_degC",
+                    "nighttime_set_point_temperature_degC",
+                    "energy_reference_area_m2_per_capita",
+                    "building_hull_number",
+                    "overall_U_value_kW_per_m2_K"
+                ],
+                "title": "Parameters"
+            },
+            "consumption_model__domestic__population__Parameters": {
+                "properties": {
+                    "number_of_inhabitants": {
+                        "type": "integer",
+                        "title": "Number Of Inhabitants"
+                    },
+                    "multi_family_house": {
+                        "$ref": "#/components/schemas/HouseType"
+                    },
+                    "single_family_house": {
+                        "$ref": "#/components/schemas/HouseType"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "number_of_inhabitants",
+                    "multi_family_house",
+                    "single_family_house"
+                ],
+                "title": "Parameters"
+            }
+        }
+    }
+}

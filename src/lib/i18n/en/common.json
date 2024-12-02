@@ -1,0 +1,10 @@
+{
+    "collector": "Solar collector",
+    "collectorArea": "Collector area",
+    "storage": "Heat storage",
+    "storageVolume": "Storage volume",
+    "demand": "Heat demand",
+    "demandProfile": "Demand profile",
+    "newSimulation": "New simulation",
+    "savedSimulations": "Saved simulations"
+}
