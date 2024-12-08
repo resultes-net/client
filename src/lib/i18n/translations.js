@@ -58,6 +58,20 @@ const config = ({
             loader: async () => (
                 await import('./de-CH/btes.json')
             ).default,
+        },
+        {
+            locale: 'en',
+            key: 'units',
+            loader: async () => (
+                await import('./en/units.json')
+            ).default,
+        },
+        {
+            locale: 'de-CH',
+            key: 'units',
+            loader: async () => (
+                await import('./de-CH/units.json')
+            ).default,
         }
     ]
 });

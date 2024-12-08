@@ -1,3 +1,4 @@
 {
-    "createSimulation": "Create simulation with tank thermal energy storage"
+    "createSimulation": "Create simulation with tank thermal energy storage",
+    "diagram": "The diagram for the TTES system"
 }

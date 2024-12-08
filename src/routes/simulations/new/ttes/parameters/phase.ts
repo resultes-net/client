@@ -1,0 +1,1 @@
+export type Phase = 'pre-design' | 'design';
