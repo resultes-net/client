@@ -7,7 +7,10 @@
 
 	import { type Demand } from '$lib/openapi/generated/model/demand';
 
+    import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
+
 	export let parameters: Demand;
+    export let onAreParametersValidChanged: OnAreParametersValidChanged;
 
 	const profileInfoHoverPopupSettings: PopupSettings = {
 		event: 'hover',

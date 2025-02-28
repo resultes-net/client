@@ -4,13 +4,14 @@
 	import Size from './size.svelte';
 	import Ports from './ports.svelte';
 	import type { Phase } from '../phase';
-
-	export let parameters: TtesStorage;
+	import type { OnAreParametersValidChanged } from '../onAreParametersValidChanged';
 
 	export let projectPhase: Phase;
+	export let parameters: TtesStorage;
+	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 </script>
 
-<Size parameters={parameters.size} />
+<Size parameters={parameters.size} {onAreParametersValidChanged}/>
 {#if projectPhase == 'design'}
-	<Ports parameters={parameters.inlet_relative_heights_1} />
+	<Ports parameters={parameters.ports_relative_heights_1} {onAreParametersValidChanged}/>
 {/if}

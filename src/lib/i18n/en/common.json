@@ -27,5 +27,7 @@
     "runSimulation": "Run",
     "height": "Height",
     "floorArea": "Floor area",
-    "volume": "Volume"
+    "volume": "Volume",
+    "correctErrorsInParameters": "Please correct the errors in your parameters."
+
 }

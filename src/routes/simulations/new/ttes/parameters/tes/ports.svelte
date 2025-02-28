@@ -7,7 +7,11 @@
 
 	import { type TtesPortRelativeHeights } from '$lib/openapi/generated/model/ttesPortRelativeHeights';
 
+	import type { OnAreParametersValidChanged } from '../onAreParametersValidChanged';
+	import { afterUpdate } from 'svelte';
+
 	export let parameters: TtesPortRelativeHeights;
+	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 
 	let errorMessage: string | null = null;
 
@@ -19,6 +23,7 @@
 
 	function validate(): void {
 		const isValid = parameters.top > parameters.middle && parameters.middle > parameters.bottom;
+		onAreParametersValidChanged(isValid);
 		errorMessage = isValid ? null : $t('ttes.portsMustBeInOrder');
 	}
 
@@ -48,15 +53,20 @@
 
 		validate();
 	}
+
+	afterUpdate(validate)
 </script>
 
 <div class="flex flex-col my-4">
 	<!-- Header -->
-	<div class="flex flex-row gap-1">
+	<div class="flex flex-row gap-x-1">
 		<h7 class="h7">{$t('ttes.portHeights')}</h7>
 		{#if errorMessage !== null}
-			<div class="text-warning-300-600-token [&>*]:pointer-events-none" use:popup={validationErrorMessagePopupSettings}>
-				<TriangleAlert/>
+			<div
+				class="text-warning-300-600-token [&>*]:pointer-events-none"
+				use:popup={validationErrorMessagePopupSettings}
+			>
+				<TriangleAlert />
 			</div>
 		{/if}
 	</div>
@@ -123,8 +133,8 @@
 </div>
 
 <div data-popup="validationeErrorMessagePopup">
-	<div class="card p-4 variant-filled-secondary z-50">
+	<div class="card p-4 variant-filled-warning z-50">
 		<p>{errorMessage}</p>
-		<div class="arrow variant-filled-secondary" />
+		<div class="arrow variant-filled-warning" />
 	</div>
 </div>

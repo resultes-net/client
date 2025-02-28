@@ -28,7 +28,7 @@ export function createDefaultParameters(): TtesParameters {
         },
         storage: {
             heat_conductance_kW_per_m2_per_K: 0.08e-3,
-            inlet_relative_heights_1: {
+            ports_relative_heights_1: {
                 top: 0.99,
                 middle: 0.50,
                 bottom: 0.01

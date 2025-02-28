@@ -27,5 +27,6 @@
     "runSimulation": "Simulieren",
     "height": "Höhe",
     "floorArea": "Grundfläche",
-    "volume": "Volumen"
+    "volume": "Volumen",
+    "correctErrorsInParameters": "Bitte korrigieren Sie die fehlerhaften Parameter."
 }

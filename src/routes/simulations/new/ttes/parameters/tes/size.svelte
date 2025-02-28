@@ -10,8 +10,10 @@
 	import { TtesSizeScaledFloorArea } from '$lib/openapi/generated/model/ttesSizeScaledFloorArea';
 
 	import { popupSizeApplyReferenceWidthIncludingBorder } from '../common';
+	import type { OnAreParametersValidChanged } from '../onAreParametersValidChanged';
 
 	export let parameters: Size;
+	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 
 	function throwUnknownSizeTypeError(size_type: string): never {
 		throw new Error(`Unknown size type: ${size_type}.`);

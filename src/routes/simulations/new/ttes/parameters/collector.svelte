@@ -9,10 +9,11 @@
 	import type { Phase } from './phase';
 	import { AreaScalingEnum, MassFlowScalingEnum } from './units';
 	import { popupSizeApplyReferenceWidthIncludingBorder } from './common'
+	import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
 
 	export let projectPhase: Phase;
-
 	export let parameters: CollectorField;
+	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 
 	const areaSizeScalingPopupSettings: PopupSettings = createPopupSettings(
 		'area-size-scaling-combobox'
@@ -76,7 +77,7 @@
 		<ListBoxItem
 			bind:group={parameters.nominal_massflow.scaling}
 			name="scaling"
-			value={MassFlowScalingEnum.RelativeToDemandKgPerHGwh}
+			value={MassFlowScalingEnum.RelativeToCollectorAreaKgPerHM2}
 		>
 			{$t('units.relativeToDemand')} [kg h<sup>-1</sup>GWh<sup>-1</sup>]
 		</ListBoxItem>
