@@ -63,7 +63,7 @@
 <div class="flex flex-col">
 	<!-- Header -->
 	<div class="flex flex-row w-full">
-		<h7 class="h7">{$t('common.storageVolume')}</h7>
+		<h7 class="h7 self-end">{$t('common.storageVolume')}</h7>
 		<button
 			class="btn border-[1px] bg-surface-200-700-token border-surface-400-500-token w-[35%] ml-auto"
 			use:popup={sizePopupSettings}
@@ -85,15 +85,15 @@
 
 	<!-- Form -->
 	<div
-		class="m-2 border rounded-lg dark:border-surface-600 light:boder-surface-300 p-2 grid grid-cols-[30%_70%] items-center gap-y-1"
+		class="m-2 border rounded-lg dark:border-surface-600 light:boder-surface-300 p-2 grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]"
 	>
 		{#if parameters.size_type == 'absolute'}
-			<label for="height">{$t('common.height')}</label>
-			<div class="input-group input-group-divider grid grid-cols-[82%_18%]">
+			<label for="volume">{$t('common.volume')}</label>
+			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 				<input
 					class="input"
-					id="height"
-					title={$t('common.height')}
+					id="volume"
+					title={$t('common.volume')}
 					type="number"
 					bind:value={parameters.volume_m3}
 				/>
@@ -101,7 +101,7 @@
 			</div>
 		{:else if parameters.size_type == 'scaled_height'}
 			<label for="height">{$t('common.height')}</label>
-			<div class="input-group input-group-divider grid grid-cols-[82%_18%]">
+			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 				<input
 					class="input"
 					id="height"
@@ -115,7 +115,7 @@
 			</div>
 
 			<label for="floor-area">{$t('common.floorArea')}</label>
-			<div class="input-group input-group-divider grid grid-cols-[82%_18%]">
+			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 				<input
 					class="input"
 					id="floor-area"
@@ -129,7 +129,7 @@
 			</div>
 		{:else if parameters.size_type == 'scaled-floor-area'}
 			<label for="height">{$t('common.height')}</label>
-			<div class="input-group input-group-divider grid grid-cols-[82%_18%]">
+			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 				<input
 					class="input"
 					id="height"
@@ -143,7 +143,7 @@
 			</div>
 
 			<label for="floor-area">{$t('common.floorArea')}</label>
-			<div class="input-group input-group-divider grid grid-cols-[82%_18%]">
+			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 				<input
 					class="input"
 					id="floor-area"

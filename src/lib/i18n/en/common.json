@@ -26,5 +26,6 @@
     "designPhase": "Design phase",
     "runSimulation": "Run",
     "height": "Height",
-    "floorArea": "Floor area"
+    "floorArea": "Floor area",
+    "volume": "Volume"
 }

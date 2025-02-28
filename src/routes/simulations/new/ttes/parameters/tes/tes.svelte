@@ -1,14 +1,16 @@
 <script lang="ts">
-    import { t } from '$lib/i18n/translations';
+	import { TtesStorage } from '$lib/openapi/generated/model/ttesStorage';
 
-    import { TtesStorage} from '$lib/openapi/generated/model/ttesStorage'
+	import Size from './size.svelte';
+	import Ports from './ports.svelte';
+	import type { Phase } from '../phase';
 
-    import Size from './size.svelte';
+	export let parameters: TtesStorage;
 
-    export let parameters: TtesStorage;
+	export let projectPhase: Phase;
 </script>
 
 <Size parameters={parameters.size} />
-
-<div class="grid grid-cols-[30%_70%] items-center">
-</div>
+{#if projectPhase == 'design'}
+	<Ports parameters={parameters.inlet_relative_heights_1} />
+{/if}

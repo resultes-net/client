@@ -1,4 +1,9 @@
 {
     "createSimulation": "Create simulation with tank thermal energy storage",
-    "diagram": "The diagram for the TTES system"
+    "diagram": "The diagram for the TTES system",
+    "top": "top",
+    "middle": "middle",
+    "bottom": "bottom",
+    "portHeights": "Port heights",
+    "portsMustBeInOrder": "The ports heights must be decreasing from top to bottom."
 }

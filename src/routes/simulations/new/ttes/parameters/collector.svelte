@@ -83,9 +83,9 @@
 	</ListBox>
 </div>
 
-<div class="grid grid-cols-[30%_70%] items-center gap-y-1 m-2 p-2">
+<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] m-2 p-2">
 	<label for="collector-area">{$t('common.collectorArea')}</label>
-	<div class="input-group input-group-divider grid grid-cols-[45%_55%]">
+	<div class="input-group input-group-divider grid grid-cols-[--input-button-grid-cols]">
 		<input
 			class="input"
 			id="collector-area"
@@ -109,7 +109,7 @@
 	</div>
 
 	<label for="collector-inclination">{$t('common.inclination')}</label>
-	<div class="input-group input-group-divider grid grid-cols-[85%_15%]">
+	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 		<input
 			class="input"
 			id="collector-inclination"
@@ -120,7 +120,7 @@
 	</div>
 
 	<label for="collector-orientation">{$t('common.orientation')}</label>
-	<div class="input-group input-group-divider grid grid-cols-[85%_15%]">
+	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 		<input
 			class="input"
 			id="collector-orientation"
@@ -142,16 +142,16 @@
 	
 	<h7 class="h7">{$t('common.collectorPerformanceCoefficients')}</h7>
 	<div
-		class="m-2 border rounded-lg dark:border-surface-600 light:boder-surface-300 p-2 grid grid-cols-[30%_70%] items-center gap-y-1"
+		class="m-2 border rounded-lg dark:border-surface-600 light:boder-surface-300 p-2 grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]"
 	>
 		<label for="perf-coeff-a0">{$t('common.perfCoeffA0')}</label>
-		<div class="input-group input-group-divider grid grid-cols-[85%_15%]">
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 			<input class="input" id="perf-coeff-a0" title={$t('common.perfCoeffA0')} type="number" />
 			<div><span class="flex flex-grow justify-center">-</span></div>
 		</div>
 
 		<label for="collector-orientation">{$t('common.perfCoeffA1')}</label>
-		<div class="input-group input-group-divider grid grid-cols-[85%_15%]">
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 			<input class="input" id="perf-coeff-a1" title={$t('common.perfCoeffA1')} type="number" />
 			<div class="!px-0">
 				<span class="flex flex-grow justify-center"
@@ -161,7 +161,7 @@
 		</div>
 
 		<label for="collector-orientation">{$t('common.perfCoeffA2')}</label>
-		<div class="input-group input-group-divider grid grid-cols-[85%_15%]">
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 			<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA2')} type="number" />
 			<div class="!px-0">
 				<span class="flex flex-grow justify-center"
@@ -171,9 +171,9 @@
 		</div>
 	</div>
 
-	<div class="grid grid-cols-[30%_70%] items-center gap-y-1 m-2 p-2">
+	<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] m-2 p-2">
 		<label for="nominal-mass-flow">{$t('common.nominalMassFlowRate')}</label>
-		<div class="input-group input-group-divider grid grid-cols-[45%_55%]">
+		<div class="input-group input-group-divider grid grid-cols-[--input-button-grid-cols]">
 			<input
 				class="input"
 				id="nominal-mass-flow"

@@ -72,7 +72,21 @@ const config = ({
             loader: async () => (
                 await import('./de-CH/units.json')
             ).default,
-        }
+        },
+        {
+            locale: 'en',
+            key: 'lang',
+            loader: async () => (
+                await import('./en/lang.json')
+            ).default,
+        },
+        {
+            locale: 'de-CH',
+            key: 'lang',
+            loader: async () => (
+                await import('./de-CH/lang.json')
+            ).default,
+        }        
     ]
 });
 
