@@ -3,8 +3,8 @@ FROM node:23.11-bookworm-slim AS npm-dependencies
 WORKDIR /app
 
 # Install Java for `openapischema-generator-cli`.
-RUN apt update
-RUN apt install -y openjdk-17-jre-headless
+RUN apt-get update
+RUN apt-get install -y openjdk-17-jre-headless
 
 COPY package.json package-lock.json ./
 
