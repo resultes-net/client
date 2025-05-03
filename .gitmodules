@@ -1,0 +1,3 @@
+[submodule "openapi-schema"]
+	path = openapi-schema
+	url = https://github.com/resultes-net/openapi-schema.git
