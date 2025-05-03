@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: true
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      resultes.net/component: client
+  template:
+    metadata:
+      labels:
+        resultes.net/component: client
+    spec:
+      containers:
+        - image: ghcr.io/resultes-net/client:latest
+          name: client
+          env:
+            - name: API_URI
+              value: https://dev.resultes.net/api
+
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+      imagePullSecrets:
+        - name: read-ghcr-io-auth-secret
+      restartPolicy: Always
