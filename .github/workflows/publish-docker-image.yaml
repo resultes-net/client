@@ -8,6 +8,9 @@ on:
 jobs:
   build-and-push-images:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/create-github-app-token@v1
         id: app-token
