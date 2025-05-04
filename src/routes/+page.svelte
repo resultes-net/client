@@ -1,9 +1,8 @@
 <script lang="ts">
+	
 	import { House, ChevronRight } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
-
-	let currentTile: 'newSimulation' | 'savedSSimulations' = 'newSimulation';
 </script>
 
 <div class="flex flex-row mt-[2%]">
