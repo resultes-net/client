@@ -3,6 +3,8 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 
+	import { t } from '$lib/i18n/translations';
+
 	const checked = $page.route.id === '/(auth)/register';
 
 	function onCheckedChanged(event: Event): void {
@@ -17,20 +19,18 @@
 	}
 </script>
 
-<div class="flex flex-col w-full h-full justify-center">
-	<div class="basis-[20%]" />
-	<div class="card p-4 flex flex-col flex-auto w-[30%] self-center">
-		<slot />
-		<div class="grid grid-cols-3 gap-x-2 mt-auto w-[70%] self-center items-center">
-			<span class="justify-self-end">Log in</span>
-			<SlideToggle
-				class="justify-self-center"
-				name="login-or-register"
-				{checked}
-				on:change={onCheckedChanged}
-			/>
-			<span class="justify-self-start">Register</span>
-		</div>
+<div class="h-[4rem]" />
+<div class="card p-4 flex flex-col h-[30rem] w-[20rem] self-center">
+	<slot />
+	<div class="flex-grow" />
+	<div class="grid grid-cols-3 gap-x-2 w-[70%] self-center items-center">
+		<span class="justify-self-end">{$t('auth.login')}</span>
+		<SlideToggle
+			class="justify-self-center"
+			name="login-or-register"
+			{checked}
+			on:change={onCheckedChanged}
+		/>
+		<span class="justify-self-start">{$t('auth.register')}</span>
 	</div>
-	<div class="basis-[30%]" />
 </div>

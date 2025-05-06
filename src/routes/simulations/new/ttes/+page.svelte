@@ -2,10 +2,11 @@
 	import { TabGroup, Tab } from '@skeletonlabs/skeleton';
 	import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
 
-	import { TriangleAlert } from 'lucide-svelte';
-
 	import { t } from '$lib/i18n/translations';
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
+
+	import * as auth from 'src/auth';
+	import { post } from 'src/post';
 
 	import { createDefaultParameters } from './create';
 
@@ -46,6 +47,11 @@
 		target: 'submitButtonDisabledMessagePopup',
 		placement: 'top'
 	};
+
+	async function onSubmitButtonClicked(): Promise<void> {
+		const bearerToken = auth.getToken();
+		await post({ endPoint: '/simulations', body: JSON.stringify(parameters), bearerToken });
+	}
 </script>
 
 <div class="flex gap-[2%] ltr:mr-[2%] rtl:ml-[2%]">
@@ -125,8 +131,10 @@
 					type="button"
 					class="btn variant-filled-primary [&>*]:pointer-events-none"
 					use:popup={submitButtonDisabledMessagePopupSettings}
-					disabled={!areAllParametersValid}>{$t('common.runSimulation')}</button
-				>
+					disabled={!areAllParametersValid}
+					on:click={onSubmitButtonClicked}
+					>{$t('common.runSimulation')}
+				</button>
 			</div>
 		</div>
 	</div>

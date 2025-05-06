@@ -86,6 +86,20 @@ const config = ({
             loader: async () => (
                 await import('./de-CH/lang.json')
             ).default,
+        },
+        {
+            locale: 'en',
+            key: 'auth',
+            loader: async () => (
+                await import('./en/auth.json')
+            ).default,
+        },
+        {
+            locale: 'de-CH',
+            key: 'auth',
+            loader: async () => (
+                await import('./de-CH/auth.json')
+            ).default,
         }        
     ]
 });

@@ -14,7 +14,7 @@
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow, size });
 </script>
 
-<div class="flex flex-col h-screen">
+<div class="flex flex-col">
 	<header>
 		<AppBar slotTrail="justify-self-end">
 			<span class="text-2xl">ResulTES</span>
