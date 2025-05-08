@@ -1,21 +1,27 @@
-var _token: string | null = null;
+const _KEY = 'token';
 
 export function isAuthenticated(): boolean {
-    return _token !== null; 
+    return _getTokenOrNull() !== null;
+}
+
+function _getTokenOrNull() {
+    return localStorage.getItem(_KEY);
 }
 
 export function setToken(token: string): void {
-    _token = token;
+    localStorage.setItem(_KEY, token);
 }
 
 export function getToken(): string {
-    if (!isAuthenticated()) {
+    const tokenOrNull = _getTokenOrNull();
+
+    if (tokenOrNull === null) {
         throw new Error("Not authenticated.")
     }
 
-    return _token as string;
+    return tokenOrNull;
 }
 
 export function unsetToken(): void {
-    _token = null;
+    localStorage.removeItem(_KEY);
 }

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { t } from '$lib/i18n/translations';
+	import { assert } from '$lib/utils'
 
     import * as auth from 'src/auth';
 
@@ -13,7 +14,13 @@
 
 	async function onClick(): Promise<void> {
         const contentType = 'application/x-www-form-urlencoded';
-        const body = new URLSearchParams( { 'grant_type': 'password', ...formData });
+
+		assert(formData.password && formData.username);
+
+		const username = formData.username;
+		const password = formData.password;
+
+        const body = new URLSearchParams( { 'grant_type': 'password', username, password });
         
         const tokenResponse = await post<TokenResponse>({endPoint: '/token', body, contentType });
         const token = tokenResponse.access_token;

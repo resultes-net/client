@@ -1,11 +1,13 @@
+
+
 import type { LayoutLoad } from './$types';
+
+import { browser } from '$app/environment';
+import { goto } from '$app/navigation';
 
 import { loadTranslations } from '$lib/i18n/translations';
 
-    
-import { redirect } from '@sveltejs/kit';
-
-import * as auth from '../auth'
+import * as auth from '../auth';
 
 
 export const load: LayoutLoad = async ({ url }) => {
@@ -15,24 +17,22 @@ export const load: LayoutLoad = async ({ url }) => {
 
     await loadTranslations(initLocale, pathname); // keep this just before the `return`
 
-    const isTryingToLogIn = pathname === '/login' || pathname === '/register';
-    const isLoggedIn = auth.isAuthenticated();
-
-    if (isLoggedIn && !isTryingToLogIn) {
-        return;
-    }
-
-    if (isLoggedIn && isTryingToLogIn) {
-        redirect(302, "/");
-    }
-
-    if (!isLoggedIn && !isTryingToLogIn) {
-        redirect(302, "/login");
-    }
-
-    if (!isLoggedIn && isTryingToLogIn) {
-        return;
+    if (browser) {
+        checkLoggedInAndGotoIfneeded(pathname);
     }
 
     return {};
 };
+
+function checkLoggedInAndGotoIfneeded(pathname: string) {
+    const isTryingToLogIn = pathname === '/login' || pathname === '/register';
+    const isLoggedIn = auth.isAuthenticated();
+
+    if (isLoggedIn && isTryingToLogIn) {
+        goto("/");
+    }
+
+    if (!isLoggedIn && !isTryingToLogIn) {
+        goto("/login");
+    }
+}

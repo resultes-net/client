@@ -50,6 +50,7 @@
 
 	async function onSubmitButtonClicked(): Promise<void> {
 		const bearerToken = auth.getToken();
+		
 		await post({ endPoint: '/simulations', body: JSON.stringify(parameters), bearerToken });
 	}
 </script>
