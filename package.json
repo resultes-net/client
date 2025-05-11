@@ -13,7 +13,7 @@
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"api:gen-model": "openapi-generator-cli generate -i openapi-schema/openapi.json -o src/lib/openapi/generated -g typescript-angular --global-property models --skip-validate-spec"
+		"api:gen-model": "openapi-generator-cli generate -i openapi-schema/external-server-openapi.json -o src/lib/openapi/generated -g typescript-angular --global-property models --skip-validate-spec"
 	},
 	"devDependencies": {
 		"@openapitools/openapi-generator-cli": "^2.15.3",

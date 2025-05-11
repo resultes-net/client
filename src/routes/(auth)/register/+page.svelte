@@ -1,23 +1,54 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+
 	import { t } from '$lib/i18n/translations';
+	import { assert } from '$lib/utils';
+
+	import type { UserCreate } from '$lib/openapi/generated/model/userCreate';
+
+	import { post } from 'src/post';
+
+	var user_create: UserCreate = {
+		full_name: '',
+		email: '',
+		user_name: '',
+		plain_password: '',
+		registration_key: '',
+	};
+
+	async function onClick(): Promise<void> {
+		// assert(user_create.full_name && ...);
+
+		const body = JSON.stringify(user_create);
+
+		const tokenResponse = await post({ endPoint: '/user', body });
+
+		goto('/login');
+	}
 </script>
 
-<div class="flex flex-col w-[80%] self-center gap-y-4">
+<form class="flex flex-col w-[80%] self-center gap-y-4">
 	<label class="label">
 		<span>{$t('auth.fullname')}</span>
-		<input class="input" type="text" />
+		<input class="input" type="text" autocomplete="name" bind:value={user_create.full_name}/>
 	</label>
 	<label class="label">
 		<span>{$t('auth.email')}</span>
-		<input class="input" type="email" />
+		<input class="input invalid:input-error" type="email" autocomplete="email" bind:value={user_create.email} />
 	</label>
-    <label class="label">
+	<label class="label">
 		<span>{$t('auth.username')}</span>
-		<input class="input" type="text" />
+		<input class="input" type="text" autocomplete="username" bind:value={user_create.user_name} />
 	</label>
 	<label class="label">
 		<span>{$t('auth.password')}</span>
-		<input class="input" type="password" />
+		<input class="input" type="password" autocomplete="new-password" bind:value={user_create.plain_password} />
 	</label>
-    <button type="button" class="btn variant-filled-primary self-center mt-2">{$t('auth.register')}</button>
-</div>
+	<label class="label">
+		<span>{$t('auth.registrationCode')}</span>
+		<input class="input" type="text" bind:value={user_create.registration_key} />
+	</label>
+	<button type="button" class="btn variant-filled-primary self-center mt-2" on:click={onClick}
+		>{$t('auth.register')}</button
+	>
+</form>

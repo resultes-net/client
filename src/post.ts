@@ -1,16 +1,18 @@
+import { PUBLIC_API_BASE_URI } from '$env/static/public'
+
 export async function post<O>(
     {
         endPoint,
         body,
         bearerToken = null,
         contentType = 'application/Json',
-        host = '/api'
+        baseUri = PUBLIC_API_BASE_URI,
     }: {
         endPoint: string,
         body: BodyInit | null | undefined,
         bearerToken?: string | null,
         contentType?: string,
-        host?: string
+        baseUri?: string
     }
 ): Promise<O> {
     var headers: Record<string, string> = {
@@ -30,7 +32,7 @@ export async function post<O>(
 
     console.debug(`About to post ${requestInit.body}`);
 
-    const uri = `${host}${endPoint}`
+    const uri = `${baseUri}${endPoint}`
 
     const request = new Request(uri, requestInit);
 

@@ -18,13 +18,13 @@ export const load: LayoutLoad = async ({ url }) => {
     await loadTranslations(initLocale, pathname); // keep this just before the `return`
 
     if (browser) {
-        checkLoggedInAndGotoIfneeded(pathname);
+        checkLoggedInAndGotoIfNeeded(pathname);
     }
 
     return {};
 };
 
-function checkLoggedInAndGotoIfneeded(pathname: string) {
+function checkLoggedInAndGotoIfNeeded(pathname: string) {
     const isTryingToLogIn = pathname === '/login' || pathname === '/register';
     const isLoggedIn = auth.isAuthenticated();
 
