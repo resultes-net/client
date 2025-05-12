@@ -6,7 +6,7 @@
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
 
 	import * as auth from 'src/auth';
-	import { post } from 'src/post';
+	import { ajax } from 'src/ajax';
 
 	import { createDefaultParameters } from './create';
 
@@ -51,7 +51,7 @@
 	async function onSubmitButtonClicked(): Promise<void> {
 		const bearerToken = auth.getToken();
 		
-		await post({ endPoint: '/simulations', body: JSON.stringify(parameters), bearerToken });
+		await ajax({ endPoint: '/simulations', body: JSON.stringify(parameters), bearerToken });
 	}
 </script>
 

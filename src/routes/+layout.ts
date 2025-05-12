@@ -26,7 +26,7 @@ export const load: LayoutLoad = async ({ url }) => {
 
 function checkLoggedInAndGotoIfNeeded(pathname: string) {
     const isTryingToLogIn = pathname === '/login' || pathname === '/register';
-    const isLoggedIn = auth.isAuthenticated();
+    const isLoggedIn = auth.getIsAuthenticated();
 
     if (isLoggedIn && isTryingToLogIn) {
         goto("/");

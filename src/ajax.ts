@@ -1,15 +1,17 @@
 import { PUBLIC_API_BASE_URI } from '$env/static/public'
 
-export async function post<O>(
+export async function ajax<O>(
     {
         endPoint,
         body,
+        httpVerb = 'POST',
         bearerToken = null,
         contentType = 'application/Json',
         baseUri = PUBLIC_API_BASE_URI,
     }: {
         endPoint: string,
         body: BodyInit | null | undefined,
+        httpVerb?: string,
         bearerToken?: string | null,
         contentType?: string,
         baseUri?: string
@@ -25,12 +27,12 @@ export async function post<O>(
     }
 
     const requestInit: RequestInit = {
-        method: 'POST',
+        method: httpVerb,
         headers,
         body
     };
 
-    console.debug(`About to post ${requestInit.body}`);
+    console.debug(`About to ${httpVerb} ${requestInit.body}`);
 
     const uri = `${baseUri}${endPoint}`
 

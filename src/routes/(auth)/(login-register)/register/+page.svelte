@@ -6,7 +6,7 @@
 
 	import type { UserCreate } from '$lib/openapi/generated/model/userCreate';
 
-	import { post } from 'src/post';
+	import { ajax } from 'src/ajax';
 
 	var user_create: UserCreate = {
 		full_name: '',
@@ -21,7 +21,7 @@
 
 		const body = JSON.stringify(user_create);
 
-		const tokenResponse = await post({ endPoint: '/user', body });
+		const tokenResponse = await ajax({ endPoint: '/user', body });
 
 		goto('/login');
 	}

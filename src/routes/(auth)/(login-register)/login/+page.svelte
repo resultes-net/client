@@ -5,7 +5,7 @@
 
 	import * as auth from 'src/auth';
 
-	import { post } from 'src/post';
+	import { ajax } from 'src/ajax';
 
 	interface TokenResponse {
 		access_token: string;
@@ -22,7 +22,7 @@
 
 		const body = new URLSearchParams({ grant_type: 'password', username, password });
 
-		const tokenResponse = await post<TokenResponse>({ endPoint: '/token', body, contentType });
+		const tokenResponse = await ajax<TokenResponse>({ endPoint: '/token', body, contentType });
 		const token = tokenResponse.access_token;
 
 		auth.setToken(token);
@@ -49,21 +49,24 @@
 	$: disabled = isNullOrEmpty(formData.username) || isNullOrEmpty(formData.password);
 </script>
 
-<div class="flex flex-col w-[80%] self-center gap-y-4">
-	<form>
-		<label class="label">
-			<span>{$t('auth.username')}</span>
-			<input class="input" type="text" autocomplete="username" bind:value={formData.username} />
-		</label>
-		<label class="label">
-			<span>{$t('auth.password')}</span>
-			<input class="input" type="password" autocomplete="current-password" bind:value={formData.password} />
-		</label>
-		<button
-			type="button"
-			class="btn variant-filled-primary self-center mt-2"
-			{disabled}
-			on:click={onClick}>{$t('auth.login')}</button
-		>
-	</form>
-</div>
+<form class="flex flex-col w-[80%] self-center gap-y-4">
+	<label class="label">
+		<span>{$t('auth.username')}</span>
+		<input class="input" type="text" autocomplete="username" bind:value={formData.username} />
+	</label>
+	<label class="label">
+		<span>{$t('auth.password')}</span>
+		<input
+			class="input"
+			type="password"
+			autocomplete="current-password"
+			bind:value={formData.password}
+		/>
+	</label>
+	<button
+		type="button"
+		class="btn variant-filled-primary self-center mt-2"
+		{disabled}
+		on:click={onClick}>{$t('auth.login')}</button
+	>
+</form>

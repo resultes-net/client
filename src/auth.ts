@@ -1,6 +1,17 @@
+import { browser } from "$app/environment";
+import { readonly, writable } from "svelte/store";
+
 const _KEY = 'token';
 
-export function isAuthenticated(): boolean {
+const _writable = writable(getIsAuthenticated());
+
+export const isAuthenticated = readonly(_writable);
+
+export function getIsAuthenticated(): boolean {
+    if (!browser) {
+        return false;
+    }
+
     return _getTokenOrNull() !== null;
 }
 
@@ -10,6 +21,7 @@ function _getTokenOrNull() {
 
 export function setToken(token: string): void {
     localStorage.setItem(_KEY, token);
+    _writable.set(true);
 }
 
 export function getToken(): string {
@@ -24,4 +36,5 @@ export function getToken(): string {
 
 export function unsetToken(): void {
     localStorage.removeItem(_KEY);
+    _writable.set(false)
 }
