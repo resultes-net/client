@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { SlideToggle } from '@skeletonlabs/skeleton';
-	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
-	import { t } from '$lib/i18n/translations';
-
+	
 	const checked = $page.route.id === '/(auth)/register';
 
 	function onCheckedChanged(event: Event): void {

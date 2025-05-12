@@ -16,6 +16,7 @@
 	import * as auth from 'src/auth';
 
 	import '../app.postcss';
+	import { goto } from '$app/navigation';
 	
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow, size });
 
@@ -32,6 +33,7 @@
 
 	function onLogout(): void {
 		auth.unsetToken();
+		goto('/');
 	}
 </script>
 
@@ -45,9 +47,9 @@
 				</a>
 			</li>
 			<li>
-				<a href="/logout" on:click={onLogout}>
-					<span class="flex-auto">{$t('auth.logout')}</span>
-				</a>
+				<button class="btn w-full" on:click={onLogout}>
+					<span class="flex-auto text-start">{$t('auth.logout')}</span>
+				</button>
 			</li>
 		</ul>
 	</nav>
