@@ -23,7 +23,7 @@ FROM openapi-schema AS npm-build
 COPY .svelte-kit .svelte-kit
 COPY src src
 
-COPY postcss.config.cjs svelte.config.js tailwind.config.ts tsconfig.json vite.config.ts .env ./
+COPY postcss.config.cjs svelte.config.js tailwind.config.ts tsconfig.json vite.config.ts .env.production ./
 
 RUN npm run build
 
