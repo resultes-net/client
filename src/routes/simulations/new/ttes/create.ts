@@ -2,6 +2,7 @@ import { type TtesParameters } from "$lib/openapi/generated/model/ttesParameters
 
 export function createDefaultParameters(): TtesParameters {
     const defaultParameters: TtesParameters = {
+        type: "ttes",
         demand: {
             profile: {
                 profile_type: "predefined",
