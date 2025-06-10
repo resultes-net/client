@@ -3,14 +3,11 @@
 	import { t } from '$lib/i18n/translations';
 	import { assert } from '$lib/utils';
 
+	import { type Token } from 'src/lib/openapi/generated/model/token';
+
 	import * as auth from 'src/auth';
 
 	import { ajax } from 'src/ajax';
-
-	interface TokenResponse {
-		access_token: string;
-		token_type: string;
-	}
 
 	async function onClick(): Promise<void> {
 		const contentType = 'application/x-www-form-urlencoded';
@@ -22,8 +19,9 @@
 
 		const body = new URLSearchParams({ grant_type: 'password', username, password });
 
-		const tokenResponse = await ajax<TokenResponse>({ endPoint: '/token', body, contentType });
-		const token = tokenResponse.access_token;
+		const token = await ajax<Token>({ endPoint: '/token', body, contentType });
+		
+		assert(token.token_type === "bearer");
 
 		auth.setToken(token);
 

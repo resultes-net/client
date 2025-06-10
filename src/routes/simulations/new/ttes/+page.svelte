@@ -1,20 +1,21 @@
 <script lang="ts">
-	import { TabGroup, Tab } from '@skeletonlabs/skeleton';
-	import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
+	import { type PopupSettings, Tab, TabGroup, popup } from '@skeletonlabs/skeleton';
 
-	import { t } from '$lib/i18n/translations';
+	import { goto } from '$app/navigation';
+
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
+	import { t } from '$lib/i18n/translations';
 
-	import * as auth from 'src/auth';
 	import { ajax } from 'src/ajax';
+	import * as auth from 'src/auth';
 
 	import { createDefaultParameters } from './create';
 
 	import { type Phase } from './parameters/phase';
 
 	import Collector from './parameters/collector.svelte';
-	import Tes from './parameters/tes/tes.svelte';
 	import Demand from './parameters/demand.svelte';
+	import Tes from './parameters/tes/tes.svelte';
 	import SystemDescription from './systemDescription.svelte';
 
 	let parameters = createDefaultParameters();
@@ -49,8 +50,12 @@
 	};
 
 	async function onSubmitButtonClicked(): Promise<void> {
-		const bearerToken = auth.getToken();
-		
+		if (!auth.getIsAuthenticated()) {
+			goto('/login');
+		}
+
+		const bearerToken = auth.getAccessToken();
+
 		await ajax({ endPoint: '/simulations', body: JSON.stringify(parameters), bearerToken });
 	}
 </script>

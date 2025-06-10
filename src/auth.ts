@@ -1,6 +1,8 @@
 import { browser } from "$app/environment";
 import { readonly, writable } from "svelte/store";
 
+import type { Token } from "./lib/openapi/generated/model/token";
+
 const _KEY = 'token';
 
 const _writable = writable(getIsAuthenticated());
@@ -12,26 +14,56 @@ export function getIsAuthenticated(): boolean {
         return false;
     }
 
-    return _getTokenOrNull() !== null;
+    const tokenOrNull = getTokenOrNull();
+
+    if (tokenOrNull === null) {
+        return false;
+    }
+
+    return getIsTokenValid();
 }
 
-function _getTokenOrNull() {
-    return localStorage.getItem(_KEY);
+export function getIsTokenValid(): boolean {
+    const token = getToken();
+
+    const valid_until = new Date(token.valid_until);
+
+    const now = new Date();
+
+    const isValid = valid_until > now;
+
+    return isValid;
 }
 
-export function setToken(token: string): void {
-    localStorage.setItem(_KEY, token);
-    _writable.set(true);
+function getTokenOrNull(): Token | null {
+    const jsonOrNull = localStorage.getItem(_KEY);
+    if (jsonOrNull === null) {
+        return null;
+    }
+
+    const token: Token = JSON.parse(jsonOrNull)
+    return token
 }
 
-export function getToken(): string {
-    const tokenOrNull = _getTokenOrNull();
+function getToken(): Token {
+    const tokenOrNull = getTokenOrNull();
 
     if (tokenOrNull === null) {
         throw new Error("Not authenticated.")
     }
 
     return tokenOrNull;
+}
+
+export function setToken(token: Token): void {
+    const json = JSON.stringify(token);
+    localStorage.setItem(_KEY, json);
+    _writable.set(true);
+}
+
+export function getAccessToken(): string {
+    const token = getToken()
+    return token.access_token;
 }
 
 export function unsetToken(): void {

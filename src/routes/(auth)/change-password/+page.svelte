@@ -19,7 +19,7 @@
 
 		const body = JSON.stringify(user_create);
 
-		const bearerToken = auth.getToken();
+		const bearerToken = auth.getAccessToken();
 
 		await ajax({ endPoint: '/user', httpVerb:'PUT', body, bearerToken });
 
