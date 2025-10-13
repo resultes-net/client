@@ -1,14 +1,10 @@
 <script lang="ts">
-	import { AppRail, AppRailAnchor, AppRailTile } from '@skeletonlabs/skeleton';
-
 	import { ArrowBigLeft, ChevronRight } from 'lucide-svelte';
 
 	import { page } from '$app/stores';
 
-	import { t } from '$lib/i18n/translations';
-
-	function computeLastPart(): string {
-		const parts = $page.url.pathname.split('/');
+	function computeLastPart(pathname: string): string {
+		const parts = pathname.split('/');
 
 		if (parts.length === 0) {
 			return '';
@@ -19,7 +15,7 @@
 		return lastPart;
 	}
 
-	$: lastPart = computeLastPart();
+	$: lastPart = computeLastPart($page.url.pathname);
 
 	$: classesActive = (href: string) => (href == lastPart ? '!variant-filled-primary' : '');
 </script>

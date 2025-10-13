@@ -1,0 +1,1 @@
+export type OnAreParametersValidChanged = (areValid: boolean) => void;
