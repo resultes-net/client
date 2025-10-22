@@ -2,18 +2,17 @@
 	import { goto } from '$app/navigation';
 
 	import { t } from '$lib/i18n/translations';
-	import { assert } from '$lib/utils';
 
 	import type { UserCreate } from '$lib/openapi/generated/model/userCreate';
 
-	import { ajax } from 'src/ajax';
+	import { getJson } from 'src/ajax';
 
 	var user_create: UserCreate = {
 		full_name: '',
 		email: '',
 		user_name: '',
 		plain_password: '',
-		registration_key: '',
+		registration_key: ''
 	};
 
 	async function onClick(): Promise<void> {
@@ -21,7 +20,7 @@
 
 		const body = JSON.stringify(user_create);
 
-		const tokenResponse = await ajax({ endPoint: '/user', body });
+		const tokenResponse = await getJson({ endPoint: '/user', body });
 
 		goto('/login');
 	}
@@ -30,11 +29,16 @@
 <form class="flex flex-col w-[80%] self-center gap-y-4">
 	<label class="label">
 		<span>{$t('auth.fullname')}</span>
-		<input class="input" type="text" autocomplete="name" bind:value={user_create.full_name}/>
+		<input class="input" type="text" autocomplete="name" bind:value={user_create.full_name} />
 	</label>
 	<label class="label">
 		<span>{$t('auth.email')}</span>
-		<input class="input invalid:input-error" type="email" autocomplete="email" bind:value={user_create.email} />
+		<input
+			class="input invalid:input-error"
+			type="email"
+			autocomplete="email"
+			bind:value={user_create.email}
+		/>
 	</label>
 	<label class="label">
 		<span>{$t('auth.username')}</span>
@@ -42,7 +46,12 @@
 	</label>
 	<label class="label">
 		<span>{$t('auth.password')}</span>
-		<input class="input" type="password" autocomplete="new-password" bind:value={user_create.plain_password} />
+		<input
+			class="input"
+			type="password"
+			autocomplete="new-password"
+			bind:value={user_create.plain_password}
+		/>
 	</label>
 	<label class="label">
 		<span>{$t('auth.registrationCode')}</span>

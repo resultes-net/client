@@ -58,7 +58,7 @@
 <div class="flex flex-col">
 	<header>
 		<AppBar gap="" slotTrail="justify-self-end">
-			<span class="text-2xl">ResulTES</span>
+			<a href="/" class="text-2xl">ResulTES</a>
 			<svelte:fragment slot="trail">
 				<div class="flex flex-row gap-x-2 items-center">
 					<select class="select w-auto" bind:value={$locale}>

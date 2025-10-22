@@ -1,44 +1,27 @@
-import { PUBLIC_API_BASE_URI } from '$env/static/public'
+import { PUBLIC_API_BASE_URI } from '$env/static/public';
 
-export async function ajax<O>(
+export async function getJson<O>(
     {
         endPoint,
-        body,
+        body = null,
         httpVerb = 'POST',
         bearerToken = null,
-        contentType = 'application/Json',
+        contentType = 'application/json',
         baseUri = PUBLIC_API_BASE_URI,
+        fetchFunction = fetch
     }: {
         endPoint: string,
-        body: BodyInit | null | undefined,
-        httpVerb?: string,
+        body?: BodyInit | null,
+        httpVerb?: 'GET' | 'POST' | 'PUT',
         bearerToken?: string | null,
         contentType?: string,
-        baseUri?: string
+        baseUri?: string,
+        fetchFunction?: (...args: any[]) => Promise<Response>
     }
 ): Promise<O> {
-    var headers: Record<string, string> = {
-        Accept: 'application/json',
-        'Content-Type': contentType
-    }
+    const accept = "application/json"
 
-    if (bearerToken) {
-        headers['Authorization'] = `Bearer ${bearerToken}`
-    }
-
-    const requestInit: RequestInit = {
-        method: httpVerb,
-        headers,
-        body
-    };
-
-    console.debug(`About to ${httpVerb} ${requestInit.body}`);
-
-    const uri = `${baseUri}${endPoint}`
-
-    const request = new Request(uri, requestInit);
-
-    const response = await fetch(request);
+    const response = await getResponse({ endPoint, body, httpVerb, bearerToken, contentType, accept, baseUri, fetchFunction });
 
     const json = await response.json();
 
@@ -49,4 +32,84 @@ export async function ajax<O>(
     }
 
     return json as O;
+}
+
+export async function getBlob(
+    {
+        endPoint,
+        body = null,
+        httpVerb = 'POST',
+        bearerToken = null,
+        contentType = null,
+        accept,
+        baseUri = PUBLIC_API_BASE_URI,
+        fetchFunction = fetch
+    }: {
+        endPoint: string,
+        body?: BodyInit | null,
+        httpVerb?: 'GET' | 'POST' | 'PUT',
+        bearerToken?: string | null,
+        contentType?: string | null,
+        accept: string,
+        baseUri?: string,
+        fetchFunction?: (...args: any[]) => Promise<Response>
+    }
+): Promise<Blob> {
+    const response = await getResponse({ endPoint, body, httpVerb, bearerToken, contentType, accept, baseUri, fetchFunction });
+
+    if (response.status !== 200) {
+        const errorMessage = `Error calling API endpoint ${endPoint}`
+        console.error(errorMessage);
+        throw new Error(errorMessage);
+    }
+
+    const blob = await response.blob();
+
+    return blob;
+}
+
+async function getResponse({
+    endPoint,
+    body,
+    httpVerb,
+    bearerToken,
+    contentType,
+    accept,
+    baseUri,
+    fetchFunction
+}: {
+    endPoint: string,
+    body: BodyInit | null,
+    httpVerb: 'GET' | 'POST' | 'PUT',
+    bearerToken: string | null,
+    contentType: string | null,
+    accept: string,
+    baseUri: string,
+    fetchFunction: (...args: any[]) => Promise<Response>
+}): Promise<Response> {
+    var headers: Record<string, string> = {
+        Accept: accept,
+    };
+
+    if (contentType) {
+        headers['Content-Type'] = contentType;
+    }
+
+    if (bearerToken) {
+        headers['Authorization'] = `Bearer ${bearerToken}`;
+    }
+
+    const requestInit: RequestInit = {
+        method: httpVerb,
+        headers,
+        body
+    };
+
+    console.debug(`About to ${httpVerb} ${requestInit.body}`);
+
+    const uri = `${baseUri}${endPoint}`;
+
+    const request = new Request(uri, requestInit);
+
+    return fetchFunction(request);
 }

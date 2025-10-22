@@ -6,7 +6,7 @@
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
 	import { t } from '$lib/i18n/translations';
 
-	import { ajax } from 'src/ajax';
+	import { getJson } from 'src/ajax';
 	import * as auth from 'src/auth';
 
 	import { createDefaultParameters } from './create';
@@ -54,7 +54,7 @@
 
 		const bearerToken = auth.getAccessToken();
 
-		await ajax({ endPoint: '/simulations', body: JSON.stringify(parameters), bearerToken });
+		await getJson({ endPoint: '/simulations', body: JSON.stringify(parameters), bearerToken });
 	}
 </script>
 

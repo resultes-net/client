@@ -7,7 +7,7 @@
 
 	import * as auth from 'src/auth';
 
-	import { ajax } from 'src/ajax';
+	import { getJson } from 'src/ajax';
 
 	async function onClick(): Promise<void> {
 		const contentType = 'application/x-www-form-urlencoded';
@@ -19,7 +19,7 @@
 
 		const body = new URLSearchParams({ grant_type: 'password', username, password });
 
-		const token = await ajax<Token>({ endPoint: '/token', body, contentType });
+		const token = await getJson<Token>({ endPoint: '/token', body, contentType });
 		
 		assert(token.token_type === "bearer");
 
