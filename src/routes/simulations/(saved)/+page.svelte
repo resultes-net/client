@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { type PageData } from './$types';
-
 	import { getBreadCrumbsStore } from './breadCrumbs';
 
-	export let data: PageData;
+	export let data;
 
 	const breadCrumbs = getBreadCrumbsStore();
 
