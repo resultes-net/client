@@ -105,11 +105,11 @@ async function getResponse({
         body
     };
 
-    console.debug(`About to ${httpVerb} ${requestInit.body}`);
-
     const uri = `${baseUri}${endPoint}`;
 
     const request = new Request(uri, requestInit);
+
+    console.debug('About to send request %O.', request)
 
     return fetchFunction(request);
 }
