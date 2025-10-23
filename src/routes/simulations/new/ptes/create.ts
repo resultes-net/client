@@ -1,7 +1,7 @@
-import { type PtesParameters } from "$lib/openapi/generated/model/ptesParameters";
+import { PtesParametersInput } from "src/lib/openapi/generated/model/ptesParametersInput";
 
-export function createDefaultParameters(): PtesParameters {
-    const defaultParameters: PtesParameters = {
+export function createDefaultParameters(): PtesParametersInput {
+    const defaultParameters: PtesParametersInput = {
         type: "ptes",
         demand: {
             profile: {

@@ -13,6 +13,7 @@
 
 	import { type Phase } from './parameters/phase';
 
+	import type { ParametersInput } from 'src/lib/openapi/generated/model/parametersInput';
 	import Collector from './parameters/collector.svelte';
 	import Demand from './parameters/demand.svelte';
 	import Tes from './parameters/tes/tes.svelte';
@@ -56,7 +57,13 @@
 
 		const bearerToken = auth.getAccessToken();
 
-		await getJson({ endPoint: '/simulations', body: JSON.stringify(parameters), bearerToken });
+		const parametersWrapper: ParametersInput = { values: parameters };
+
+		await getJson({
+			endPoint: '/simulations',
+			body: JSON.stringify(parametersWrapper),
+			bearerToken
+		});
 	}
 </script>
 

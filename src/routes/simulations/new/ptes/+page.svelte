@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { type PopupSettings, Tab, TabGroup, popup } from '@skeletonlabs/skeleton';
 
+	import { type ParametersInput } from 'src/lib/openapi/generated/model/parametersInput';
+
 	import { goto } from '$app/navigation';
 
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
@@ -54,7 +56,13 @@
 
 		const bearerToken = auth.getAccessToken();
 
-		await getJson({ endPoint: '/simulations', body: JSON.stringify(parameters), bearerToken });
+		const parametersWrapper: ParametersInput = { values: parameters };
+
+		await getJson({
+			endPoint: '/simulations',
+			body: JSON.stringify(parametersWrapper),
+			bearerToken
+		});
 	}
 </script>
 

@@ -1,7 +1,7 @@
-import { type TtesParameters } from "$lib/openapi/generated/model/ttesParameters";
+import { type TtesParametersInput } from "$lib/openapi/generated/model/ttesParametersInput";
 
-export function createDefaultParameters(): TtesParameters {
-    const defaultParameters: TtesParameters = {
+export function createDefaultParameters(): TtesParametersInput {
+    const defaultParameters: TtesParametersInput = {
         type: "ttes",
         demand: {
             profile: {
