@@ -31,7 +31,7 @@
 				<tr>
 					<td><a class="anchor" href="/simulations/{simulation.id}">{simulation.id}</a></td>
 					<td>{simulation.created_on}</td>
-					<td>{simulation.parameters.type}</td>
+					<td>{simulation.parameters.values.type}</td>
 					<td>{simulation.state}</td>
 					<td>{simulation.variations.length}</td>
 				</tr>
