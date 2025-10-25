@@ -4,7 +4,7 @@
 		LightSwitch,
 		popup,
 		type PopupSettings,
-		storePopup,
+		storePopup
 	} from '@skeletonlabs/skeleton';
 
 	import { arrow, autoUpdate, computePosition, flip, offset, shift, size } from '@floating-ui/dom';
@@ -15,9 +15,9 @@
 
 	import * as auth from 'src/auth';
 
-	import '../app.postcss';
 	import { goto } from '$app/navigation';
-	
+	import '../app.postcss';
+
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow, size });
 
 	const userButtonPopupSettings: PopupSettings = {
@@ -29,11 +29,16 @@
 	var loggedIn = false;
 	auth.isAuthenticated.subscribe((value) => {
 		loggedIn = value;
-	})
+	});
 
 	function onLogout(): void {
 		auth.unsetToken();
 		goto('/');
+	}
+
+	function onLocaleChanged(event: Event): void {
+		const newLocale = (event.currentTarget! as HTMLSelectElement).value;
+		document.cookie = `lang=${newLocale}`;
 	}
 </script>
 
@@ -61,9 +66,9 @@
 			<a href="/" class="text-2xl">ResulTES</a>
 			<svelte:fragment slot="trail">
 				<div class="flex flex-row gap-x-2 items-center">
-					<select class="select w-auto" bind:value={$locale}>
+					<select class="select w-auto" bind:value={$locale} on:change={onLocaleChanged}>
 						{#each $locales as value}
-							<option {value}>{$t(`lang.${value}`)}</option>
+							<option {value} selected={$locale === value}>{$t(`lang.${value}`)}</option>
 						{/each}
 					</select>
 					<LightSwitch />

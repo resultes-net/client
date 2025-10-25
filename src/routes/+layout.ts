@@ -2,20 +2,23 @@
 
 import type { LayoutLoad } from './$types';
 
+import { addTranslations, setLocale, setRoute } from '$lib/i18n/translations.js';
+
+
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 
-import { loadTranslations } from '$lib/i18n/translations';
 
 import * as auth from '../auth';
 
 
-export const load: LayoutLoad = async ({ url }) => {
-    const { pathname } = url;
+export const load: LayoutLoad = async ({ data }) => {
+    const { i18n: { locale, route: pathname }, translations } = data;
 
-    const initLocale = 'de-CH'; // get from cookie, user session, ...
+    addTranslations(translations);
 
-    await loadTranslations(initLocale, pathname); // keep this just before the `return`
+    await setRoute(pathname);
+    await setLocale(locale);
 
     if (browser) {
         checkLoggedInAndGotoIfNeeded(pathname);

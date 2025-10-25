@@ -1,5 +1,7 @@
 import i18n from 'sveltekit-i18n';
 
+export const defaultLocale = 'de-CH';
+
 /** @type {import('sveltekit-i18n').Config} */
 const config = ({
     loaders: [
@@ -100,8 +102,8 @@ const config = ({
             loader: async () => (
                 await import('./de-CH/auth.json')
             ).default,
-        }        
+        }
     ]
 });
 
-export const { t, locale, locales, loading, loadTranslations } = new i18n(config);
+export const { t, locale, locales, translations, loadTranslations, setLocale, setRoute, addTranslations } = new i18n(config);
