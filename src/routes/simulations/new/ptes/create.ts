@@ -11,8 +11,8 @@ export function createDefaultParameters(): PtesParametersInput {
         },
         collector_field: {
             area: {
-                scaling: "relative_to_demand_m2_per_GWh",
-                value: 4.0
+                scaling: "relative_to_demand_m2_per_MWh",
+                value: 2.0
             },
             inclination_deg: 45.0,
             nominal_massflow: {
@@ -27,7 +27,12 @@ export function createDefaultParameters(): PtesParametersInput {
             },
             type: "flat-plate"
         },
-        storage: {}
+        storage: {
+            volume: {
+                scaling: "relative_to_demand_m3_per_MWh",
+                value: 2.0
+            }
+        }
     };
 
     return defaultParameters;

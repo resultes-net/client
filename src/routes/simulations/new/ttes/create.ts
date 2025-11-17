@@ -11,8 +11,8 @@ export function createDefaultParameters(): TtesParametersInput {
         },
         collector_field: {
             area: {
-                scaling: "relative_to_demand_m2_per_GWh",
-                value: 4.0
+                scaling: "relative_to_demand_m2_per_MWh",
+                value: 0.004
             },
             inclination_deg: 45.0,
             nominal_massflow: {
