@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { LoaderCircle } from 'lucide-svelte';
+
 	import type { PageData } from './$types';
 
 	import { getBreadCrumbsStore } from '../breadCrumbs';
@@ -21,7 +23,15 @@
 </script>
 
 <div class="w-4/5 mt-6 table-container self-center">
-	<h3 class="h3">Variations</h3>
+	<div class="flex flex-row">
+		<h3 class="h3">
+			Simulation {simulation.id}
+		</h3>
+		{#if simulation.state !== 'done'}
+			<LoaderCircle class="animate-spin ml-2" />
+		{/if}
+	</div>
+	<h3 class="h3 mt-4">Variations</h3>
 	<table class="mt-4 table table-hover">
 		<thead>
 			<tr>
@@ -33,13 +43,23 @@
 		<tbody>
 			{#each sortedVariations as variation}
 				<tr>
-					<td
-						><a class="anchor" href="/simulations/{simulation.id}/variations/{variation.id}"
-							>{variation.id}</a
-						></td
-					>
+					<td>
+						{#if variation.state !== 'done'}
+							{variation.id}
+						{:else}
+							<a class="anchor" href="/simulations/{simulation.id}/variations/{variation.id}">
+								{variation.id}
+							</a>
+						{/if}
+					</td>
 					<td>{variation.created_on}</td>
-					<td>{variation.state}</td>
+					<td class="flex flex-row">
+						{#if variation.state !== 'done'}
+							<LoaderCircle class="animate-spin mr-2" /> {variation.state}
+						{:else}
+							{variation.state}
+						{/if}
+					</td>
 				</tr>
 			{/each}
 		</tbody>

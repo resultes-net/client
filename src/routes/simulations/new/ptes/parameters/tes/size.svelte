@@ -4,19 +4,18 @@
 
 	import { t } from '$lib/i18n/translations';
 
-	import { type Size } from '$lib/openapi/generated/model/size';
-	import { TtesSizeAbsolute } from '$lib/openapi/generated/model/ttesSizeAbsolute';
-	import { TtesSizeScaledHeight } from '$lib/openapi/generated/model/ttesSizeScaledHeight';
-	import { TtesSizeScaledFloorArea } from '$lib/openapi/generated/model/ttesSizeScaledFloorArea';
+	import { ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWh } from '$lib/openapi/generated/model/scaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWh';
 
 	import { popupSizeApplyReferenceWidthIncludingBorder } from '../common';
 	import type { OnAreParametersValidChanged } from '../onAreParametersValidChanged';
 
-	export let parameters: Size;
+	export let parameters: ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWh;
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 
-	function throwUnknownSizeTypeError(size_type: string): never {
-		throw new Error(`Unknown size type: ${size_type}.`);
+	function throwUnknownSizeTypeError(
+		scaling: ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWh.ScalingEnum
+	): never {
+		throw new Error(`Unknown scaling: ${scaling}.`);
 	}
 
 	const sizePopupSettings: PopupSettings = {
@@ -41,124 +40,45 @@
 		hover="hover:variant-soft-primary pr-[44px]"
 	>
 		<ListBoxItem
-			bind:group={parameters.size_type}
+			bind:group={parameters.scaling}
 			name="absolute"
-			value={TtesSizeAbsolute.SizeTypeEnum.Absolute}
+			value={ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWh.ScalingEnum.AbsoluteM3}
 		>
-			{$t('units.absolute')}
+			{$t('units.absolute')} [m<sup>3</sup>]
 		</ListBoxItem>
 		<ListBoxItem
-			bind:group={parameters.size_type}
-			name="relative-height"
-			value={TtesSizeScaledHeight.SizeTypeEnum.ScaledHeight}
-			>{$t('units.heightRelativeToDemand')}
-		</ListBoxItem>
-		<ListBoxItem
-			bind:group={parameters.size_type}
-			name="relative-floor-area"
-			value={TtesSizeScaledFloorArea.SizeTypeEnum.ScaledFloorArea}
-			>{$t('units.floorAreaRelativeToDemand')}
+			bind:group={parameters.scaling}
+			name="relative"
+			value={ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWh.ScalingEnum
+				.RelativeToDemandM3PerMwh}
+		>
+			{$t('units.relativeToDemand')} [m<sup>3</sup>MWh<sup>-1</sup>]
 		</ListBoxItem>
 	</ListBox>
 </div>
 
-<div class="flex flex-col">
-	<!-- Header -->
-	<div class="flex flex-row w-full">
-		<h7 class="h7 self-end">{$t('common.storageVolume')}</h7>
+<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] m-2 p-2">
+	<label for="collector-area">{$t('common.collectorArea')}</label>
+	<div class="input-group input-group-divider grid grid-cols-[--input-button-grid-cols]">
+		<input
+			class="input"
+			id="volume"
+			title={$t('common.volume')}
+			type="number"
+			bind:value={parameters.value}
+		/>
 		<button
-			class="btn border-[1px] bg-surface-200-700-token border-surface-400-500-token w-[35%] ml-auto"
+			class="btn justify-between self-end rounded-l-none border-l-[1px] border-surface-400-500-token"
 			use:popup={sizePopupSettings}
 		>
-			<span class="mr-auto">
-				{#if parameters.size_type == 'absolute'}
-					{$t('units.absolute')}
-				{:else if parameters.size_type == 'scaled_height'}
-					{$t('units.heightRelativeToDemand')}
-				{:else if parameters.size_type == 'scaled-floor-area'}
-					{$t('units.floorAreaRelativeToDemand')}
+			<span>
+				{#if parameters.scaling === 'absolute_m3'}
+					{$t('units.absolute')} [m<sup>3</sup>]
 				{:else}
-					{throwUnknownSizeTypeError(parameters.size_type)}
+					{$t('units.relativeToDemand')} [m<sup>3</sup>MWh<sup>-1</sup>]
 				{/if}
 			</span>
 			<ChevronDown class="text-surface-400-500-token" size="20" />
 		</button>
-	</div>
-
-	<!-- Form -->
-	<div
-		class="m-2 border rounded-lg dark:border-surface-600 light:boder-surface-300 p-2 grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]"
-	>
-		{#if parameters.size_type == 'absolute'}
-			<label for="volume">{$t('common.volume')}</label>
-			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-				<input
-					class="input"
-					id="volume"
-					title={$t('common.volume')}
-					type="number"
-					bind:value={parameters.volume_m3}
-				/>
-				<div><span class="flex flex-grow justify-center">m<sup class="top-1">3</sup></span></div>
-			</div>
-		{:else if parameters.size_type == 'scaled_height'}
-			<label for="height">{$t('common.height')}</label>
-			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-				<input
-					class="input"
-					id="height"
-					title={$t('common.height')}
-					type="number"
-					bind:value={parameters.height_relative_to_demand_m_per_GWh}
-				/>
-				<div>
-					<span class="flex flex-grow justify-center">m GWh<sup class="top-1">-1</sup></span>
-				</div>
-			</div>
-
-			<label for="floor-area">{$t('common.floorArea')}</label>
-			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-				<input
-					class="input"
-					id="floor-area"
-					title={$t('common.floorArea')}
-					type="number"
-					bind:value={parameters.floor_area_m2}
-				/>
-				<div class="!px-0">
-					<span class="flex flex-grow justify-center">m<sup class="top-1">2</sup></span>
-				</div>
-			</div>
-		{:else if parameters.size_type == 'scaled-floor-area'}
-			<label for="height">{$t('common.height')}</label>
-			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-				<input
-					class="input"
-					id="height"
-					title={$t('common.height')}
-					type="number"
-					bind:value={parameters.height_m}
-				/>
-				<div>
-					<span class="flex flex-grow justify-center">m</span>
-				</div>
-			</div>
-
-			<label for="floor-area">{$t('common.floorArea')}</label>
-			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-				<input
-					class="input"
-					id="floor-area"
-					title={$t('common.floorArea')}
-					type="number"
-					bind:value={parameters.floor_area_relative_to_demand_m2_per_GWh}
-				/>
-				<div class="!px-0">
-					<span class="flex flex-grow justify-center">m<sup class="top-1">2</sup> GWh<sup class="top-1">-1</sup></span>
-				</div>
-			</div>
-		{:else}
-			{throwUnknownSizeTypeError(parameters.size_type)}
-		{/if}
 	</div>
 </div>

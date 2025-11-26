@@ -15,22 +15,25 @@
 
 	import { type Phase } from './parameters/phase';
 
+	import { type SimulationBase } from 'src/lib/openapi/generated/model/simulationBase';
 	import Collector from './parameters/collector.svelte';
 	import Demand from './parameters/demand.svelte';
+	import Tes from './parameters/tes/tes.svelte';
 	import SystemDescription from './systemDescription.svelte';
 
 	let parameters = createDefaultParameters();
 
-	type ActiveParamtersTab = 'collector' | 'demand';
+	type ActiveParamtersTab = 'collector' | 'storage' | 'demand';
 	let activeParametersTab: ActiveParamtersTab = 'collector';
 	let projectPhase: Phase = 'pre-design';
 
 	let areParametersValid = {
 		collector: true,
 		demand: true,
+		storage: true,
 
 		all(): boolean {
-			return this.collector && this.demand;
+			return this.collector && this.demand && this.demand;
 		}
 	};
 	let areAllParametersValid;
@@ -58,11 +61,13 @@
 
 		const parametersWrapper: ParametersInput = { values: parameters };
 
-		await getJson({
+		const simulation = await getJson<SimulationBase>({
 			endPoint: '/simulations',
 			body: JSON.stringify(parametersWrapper),
 			bearerToken
 		});
+
+		goto(`/simulations/${simulation.id}`);
 	}
 </script>
 
@@ -98,6 +103,12 @@
 							config={{ shallWarn: !areParametersValid.collector, errorMessage: null }}
 						/>
 					</Tab>
+					<Tab bind:group={activeParametersTab} name="storage" value="storage">
+						<TextWithWarning
+							text={$t('common.storage')}
+							config={{ shallWarn: !areParametersValid.demand, errorMessage: null }}
+						/>
+					</Tab>
 					<Tab bind:group={activeParametersTab} name="demand" value="demand">
 						<TextWithWarning
 							text={$t('common.demand')}
@@ -112,6 +123,12 @@
 									{projectPhase}
 									parameters={parameters.collector_field}
 									onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'collector')}
+								/>
+							{:else if activeParametersTab === 'storage'}
+								<Tes
+									parameters={parameters.storage}
+									{projectPhase}
+									onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'storage')}
 								/>
 							{:else if activeParametersTab === 'demand'}
 								<Demand
