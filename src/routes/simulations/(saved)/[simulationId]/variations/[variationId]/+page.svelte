@@ -1,14 +1,35 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-
+	import { TableOfContents, tocCrawler } from '@skeletonlabs/skeleton';
 	import { onDestroy } from 'svelte';
+
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
+
+	import type { Results } from './results';
+
+	import type { PageData } from './$types';
 
 	export let data: PageData;
 
-	const variation = data.variation;
+	const { variation, objectUrls } = data;
 
 	const breadCrumbs = getBreadCrumbsStore();
+
+	const titles: { [K in Results]: string } = {
+		energyBalance: 'Monthly energy balance of the system',
+		boiler: 'Boiler power',
+		hpBalance: 'Heat pump energy balance',
+		hpQt: 'Heat pump Q vs. T plot',
+		hxEffectiveness: 'Heat exchanger effectiveness',
+		hxLmtd: 'Heat exchanger LMTD',
+		ptesBalance: 'PTES energy balance',
+		ptesSoc: 'PTES state of charge (SoC)',
+		ptesT: 'PTES temperatures',
+		sink: 'Demand power',
+		solarQt: 'Collector Q vs. T plot',
+		solarPHourly: 'Collector power hourly',
+		solarPMonthly: 'Collector power monthly',
+		source: 'Additional source power'
+	};
 
 	breadCrumbs.set([
 		{ href: '/', text: 'Home' },
@@ -21,64 +42,23 @@
 		}
 	]);
 
-	const objectUrls: string[] = [];
-
-	function createObjectUrl(blob: Blob): string {
-		const url = URL.createObjectURL(blob);
-		objectUrls.push(url);
-		return url;
-	}
-
 	onDestroy(() => {
-		for (const objectUrl in objectUrls) {
+		for (const objectUrl of Object.values(objectUrls)) {
 			URL.revokeObjectURL(objectUrl);
 		}
 	});
 </script>
 
-<div class="w-4/5 mt-6 self-center flex-col">
-	<h5 class="h5">Energy Balance</h5>
-	<img src={createObjectUrl(data.blobs.energyBalance)} alt="Monthly energy balance of the system" />
+<div class="flex flex-row mt-6">
+	<TableOfContents class="sticky top-10 h-screen ml-4" indentStyles={{ h5: 'ml-0' }} />
 
-	<h5 class="h5 mt-6">Boiler power</h5>
-	<img src={createObjectUrl(data.blobs.boiler)} alt="Boiler power" />
-
-	<h5 class="h5 mt-6">Heat pump energy balance</h5>
-	<img src={createObjectUrl(data.blobs.hpBalance)} alt="Heat pump energy balance" />
-
-	<h5 class="h5 mt-6">Heat pump Q vs. T plot</h5>
-	<img src={createObjectUrl(data.blobs.hpQt)} alt="Heat pump Q vs. T plot" />
-
-	<h5 class="h5 mt-6">Heat exchanger efficiency</h5>
-	<img src={createObjectUrl(data.blobs.hxEfficiency)} alt="Heat exchanger efficiency" />
-
-	<h5 class="h5 mt-6">Heat exchanger logarithmic mean temperature difference (LMTD)</h5>
-	<img
-		src={createObjectUrl(data.blobs.hxLmtd)}
-		alt="Heat exchanger logarithmic mean temperature difference (LMTD)"
-	/>
-
-	<h5 class="h5 mt-6">PTES energy balance</h5>
-	<img src={createObjectUrl(data.blobs.ptesBalance)} alt="PTES energy balance" />
-
-	<h5 class="h5 mt-6">PTES state of charge (SoC)</h5>
-	<img src={createObjectUrl(data.blobs.ptesSoc)} alt="PTES state of charge (SoC)" />
-
-	<h5 class="h5 mt-6">PTES temperatures</h5>
-	<img src={createObjectUrl(data.blobs.ptesT)} alt="PTES temperatures" />
-
-	<h5 class="h5 mt-6">Demand power</h5>
-	<img src={createObjectUrl(data.blobs.sink)} alt="Demand power" />
-
-	<h5 class="h5 mt-6">Collector Q vs. T plot</h5>
-	<img src={createObjectUrl(data.blobs.solarQt)} alt="Collector Q vs. T plot" />
-
-	<h5 class="h5 mt-6">Collector power hourly</h5>
-	<img src={createObjectUrl(data.blobs.solarPHourly)} alt="Collector power hourly" />
-
-	<h5 class="h5 mt-6">Collector power monthly</h5>
-	<img src={createObjectUrl(data.blobs.solarPMonthly)} alt="Collector power hourly" />
-
-	<h5 class="h5 mt-6">Additional source power</h5>
-	<img src={createObjectUrl(data.blobs.sink)} alt="Additional source power" />
+	<div class="w-4/5 ml-6 self-center flex-col" use:tocCrawler={{ mode: 'generate' }}>
+		{#each Object.entries(titles) as [result, title]}
+			{@const firstKey = Object.keys(objectUrls)[0]}
+			{@const margin = result === firstKey ? '' : 'mt-6'}
+			{@const url = objectUrls[result]}
+			<h5 class={`h5 ${margin}`} id={result}>{title}</h5>
+			<img src={url} alt={title} />
+		{/each}
+	</div>
 </div>
