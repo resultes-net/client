@@ -1,4 +1,3 @@
-import { Err } from "ts-results";
 import { downloadResultToObjectUrl } from "./downloadResult";
 
 export type DisplayResult = { id: string, title: string, path: string, url: string | null };
