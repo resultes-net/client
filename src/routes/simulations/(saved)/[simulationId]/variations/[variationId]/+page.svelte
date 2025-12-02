@@ -2,7 +2,7 @@
 	import { TableOfContents, tocCrawler } from '@skeletonlabs/skeleton';
 	import { onDestroy } from 'svelte';
 
-	import { page } from '$app/state';
+	import { page } from '$app/stores';
 
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
 
@@ -10,8 +10,8 @@
 
 	let { displayResults } = data;
 
-	const simulationId = page.params.simulationId as string;
-	const variationId = page.params.variationId as string;
+	const simulationId = $page.params as string;
+	const variationId = $page.params.variationId as string;
 
 	const breadCrumbs = getBreadCrumbsStore();
 
