@@ -38,7 +38,7 @@ export async function getBlob(
     {
         endPoint,
         body = null,
-        httpVerb = 'POST',
+        httpVerb = 'GET',
         bearerToken = null,
         contentType = null,
         accept,
@@ -68,24 +68,24 @@ export async function getBlob(
     return blob;
 }
 
-async function getResponse({
+export async function getResponse({
     endPoint,
-    body,
-    httpVerb,
-    bearerToken,
-    contentType,
+    body = null,
+    httpVerb = 'GET',
+    bearerToken = null,
+    contentType = null,
     accept,
-    baseUri,
-    fetchFunction
+    baseUri = PUBLIC_API_BASE_URI,
+    fetchFunction = fetch
 }: {
     endPoint: string,
-    body: BodyInit | null,
-    httpVerb: 'GET' | 'POST' | 'PUT',
-    bearerToken: string | null,
-    contentType: string | null,
+    body?: BodyInit | null,
+    httpVerb?: 'GET' | 'POST' | 'PUT',
+    bearerToken?: string | null,
+    contentType?: string | null,
     accept: string,
-    baseUri: string,
-    fetchFunction: (...args: any[]) => Promise<Response>
+    baseUri?: string,
+    fetchFunction?: (...args: any[]) => Promise<Response>
 }): Promise<Response> {
     var headers: Record<string, string> = {
         Accept: accept,

@@ -7,6 +7,8 @@
 		storePopup
 	} from '@skeletonlabs/skeleton';
 
+	import { initializeStores, Modal } from '@skeletonlabs/skeleton';
+
 	import { arrow, autoUpdate, computePosition, flip, offset, shift, size } from '@floating-ui/dom';
 
 	import { CircleUserRound } from 'lucide-svelte';
@@ -17,6 +19,8 @@
 
 	import { goto } from '$app/navigation';
 	import '../app.postcss';
+
+	initializeStores();
 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow, size });
 
@@ -41,6 +45,8 @@
 		document.cookie = `lang=${newLocale}`;
 	}
 </script>
+
+<Modal />
 
 <div data-popup="user-button-drop-down">
 	<nav class="list-nav bg-surface-50-900-token pt-2">
