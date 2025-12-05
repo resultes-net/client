@@ -45,7 +45,7 @@
 			throw new Error(`${endPoint} did not set Content-Length`);
 		}
 
-		sizeInMiB = Math.floor(Number.parseInt(contentLength) / 1024 / 1024);
+		sizeInMiB = Math.round(Number.parseInt(contentLength) / 1024 / 1024);
 
 		if (response.body === null) {
 			throw Error(`${endPoint} returned null body.`);
@@ -82,13 +82,11 @@
 </script>
 
 {#if sizeInMiB !== null}
+	{@const downloadedInMiB = Math.round(downloadedInBytes / 1024 / 1024)}
 	<div class="card p-4 w-80 flex flex-col">
-		<div><h6 class="h6">Downloading results...</h6></div>
-		<ProgressBar
-			class="mt-2 mb-2 w-4/5 self-center"
-			value={downloadedInBytes / 1024 / 1024}
-			max={sizeInMiB}
-		/>
+		<div>Downloading results...</div>
+		<ProgressBar class="mt-2 w-4/5 self-center" value={downloadedInMiB} max={sizeInMiB} />
+		<div class="text-xs mt-1 mb-2">{downloadedInMiB} of {sizeInMiB} MiB</div>
 		{#if objectUrl}
 			<a class="anchor" href={objectUrl} on:click={onClose} download={targetFileName}>Save</a>
 		{/if}

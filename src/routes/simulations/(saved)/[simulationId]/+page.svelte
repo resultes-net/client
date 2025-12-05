@@ -60,7 +60,7 @@
 							{variation.state}
 						{/if}
 					</td>
-				</tr>~
+				</tr>
 			{/each}
 		</tbody>
 	</table>
