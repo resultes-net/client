@@ -3,6 +3,7 @@ import { PtesParametersInput } from "src/lib/openapi/generated/model/ptesParamet
 export function createDefaultParameters(): PtesParametersInput {
     const defaultParameters: PtesParametersInput = {
         type: "ptes",
+        time: { start: 5760, stop: 17280, dt_sim: 0.5 },
         demand: {
             profile: {
                 profile_type: "predefined",
