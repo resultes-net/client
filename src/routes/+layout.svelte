@@ -30,7 +30,7 @@
 		placement: 'bottom'
 	};
 
-	var loggedIn = false;
+	let loggedIn = false;
 	auth.isAuthenticated.subscribe((value) => {
 		loggedIn = value;
 	});

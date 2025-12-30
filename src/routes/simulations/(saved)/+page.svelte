@@ -3,6 +3,8 @@
 
 	import { ProgressBar } from '@skeletonlabs/skeleton';
 
+	import { goto } from '$app/navigation';
+
 	import type { Simulation } from 'src/lib/openapi/generated/model/simulation';
 
 	import { getJson } from 'src/ajax';
@@ -39,7 +41,12 @@
 		}
 	});
 
-	async function pollSimulations() {
+	async function pollSimulations(): Promise<void> {
+		if (!auth.getIsAuthenticated()) {
+			goto('/login');
+			return;
+		}
+
 		const bearerToken = auth.getAccessToken();
 
 		simulations = await getJson({
@@ -52,6 +59,17 @@
 			pollingTimeoutId = window.setTimeout(pollSimulations, 5000);
 		}
 	}
+
+	function getMinutesElapsed(simulation: Simulation): number {
+		const start = new Date(simulation.created_on);
+		const end = simulation.state === 'done' ? new Date(simulation.state_changed_on) : new Date();
+
+		const millisecondsElapsed = end - start;
+
+		const minutesElapsed = Math.round(millisecondsElapsed / 1000.0 / 60.0);
+
+		return minutesElapsed;
+	}
 </script>
 
 <div class="w-4/5 mt-4 table-container self-center">
@@ -63,11 +81,13 @@
 				<th>System</th>
 				<th>State</th>
 				<th>Progress</th>
+				<th>Time elapsed</th>
 				<th>Number of variations</th>
 			</tr>
 		</thead>
 		<tbody>
 			{#each sortedSimulations as simulation}
+				{@const minutesElapsed = getMinutesElapsed(simulation)}
 				<tr>
 					<td><a class="anchor" href="/simulations/{simulation.id}">{simulation.id}</a></td>
 					<td>{simulation.created_on}</td>
@@ -79,6 +99,7 @@
 						</div>
 						<span class="w-14 text-end">{simulation.progress}/100</span>
 					</td>
+					<td>{minutesElapsed} min</td>
 					<td>{simulation.variations.length}</td>
 				</tr>
 			{/each}
