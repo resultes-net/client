@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import { getBreadCrumbsStore } from './breadCrumbs';
 
-	import { LoaderCircle } from 'lucide-svelte';
+	import { ProgressBar } from '@skeletonlabs/skeleton';
+
 	import type { Simulation } from 'src/lib/openapi/generated/model/simulation';
 
 	import { getJson } from 'src/ajax';
 	import * as auth from 'src/auth';
+
+	import { getBreadCrumbsStore } from './breadCrumbs';
 
 	export let data;
 
@@ -60,6 +62,7 @@
 				<th>Created on</th>
 				<th>System</th>
 				<th>State</th>
+				<th>Progress</th>
 				<th>Number of variations</th>
 			</tr>
 		</thead>
@@ -69,11 +72,12 @@
 					<td><a class="anchor" href="/simulations/{simulation.id}">{simulation.id}</a></td>
 					<td>{simulation.created_on}</td>
 					<td>{simulation.parameters.values.type}</td>
+					<td>{simulation.state}</td>
 					<td class="flex flex-row">
-						{#if simulation.state !== 'done'}
-							<LoaderCircle class="animate-spin mr-2" />
-						{/if}
-						{simulation.state}
+						<div class="flex flex-row w-24">
+							<ProgressBar class="self-center" value={simulation.progress} max={100} />
+						</div>
+						<span class="w-14 text-end">{simulation.progress}/100</span>
 					</td>
 					<td>{simulation.variations.length}</td>
 				</tr>
