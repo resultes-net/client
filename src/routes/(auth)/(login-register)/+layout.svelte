@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { SlideToggle } from '@skeletonlabs/skeleton';
-	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { SlideToggle } from '@skeletonlabs/skeleton';
 
 	import { t } from '$lib/i18n/translations';
 
 	const checked = $page.url.pathname === '/register';
 
-	function onCheckedChanged(event: Event): void {
+	async function onCheckedChanged(event: Event): Promise<void> {
 		const target = event.target as HTMLInputElement;
 		const checked = target.checked;
 
 		if (checked) {
-			goto('/register');
+			await goto('/register');
 		} else {
-			goto('/login');
+			await goto('/login');
 		}
 	}
 </script>

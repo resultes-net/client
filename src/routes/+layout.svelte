@@ -35,9 +35,9 @@
 		loggedIn = value;
 	});
 
-	function onLogout(): void {
+	async function onLogout(): Promise<void> {
 		auth.unsetToken();
-		goto('/');
+		await goto('/');
 	}
 
 	function onLocaleChanged(event: Event): void {

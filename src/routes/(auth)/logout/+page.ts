@@ -6,5 +6,5 @@ import { goto } from '$app/navigation';
 
 
 export const load: PageLoad = async () => {
-	goto('/login');
+	await goto('/login');
 };

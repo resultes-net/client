@@ -21,21 +21,21 @@ export const load: LayoutLoad = async ({ data }) => {
     await setLocale(locale);
 
     if (browser) {
-        checkLoggedInAndGotoIfNeeded(pathname);
+        await checkLoggedInAndGotoIfNeeded(pathname);
     }
 
     return {};
 };
 
-function checkLoggedInAndGotoIfNeeded(pathname: string) {
+async function checkLoggedInAndGotoIfNeeded(pathname: string): Promise<void> {
     const isTryingToLogIn = pathname === '/login' || pathname === '/register';
     const isLoggedIn = auth.getIsAuthenticated();
 
     if (isLoggedIn && isTryingToLogIn) {
-        goto("/");
+        await goto("/");
     }
 
     if (!isLoggedIn && !isTryingToLogIn) {
-        goto("/login");
+        await goto("/login");
     }
 }

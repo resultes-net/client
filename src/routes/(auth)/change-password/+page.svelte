@@ -22,7 +22,7 @@
 
 		await getJson({ endPoint: '/user', httpVerb: 'PUT', body, bearerToken });
 
-		goto('/');
+		await goto('/');
 	}
 </script>
 
