@@ -54,7 +54,7 @@
 
 	async function onSubmitButtonClicked(): Promise<void> {
 		if (!auth.getIsAuthenticated()) {
-			await goto('/login');
+			goto('/login');
 		}
 
 		const bearerToken = auth.getAccessToken();
@@ -67,7 +67,7 @@
 			bearerToken
 		});
 
-		await goto(`/simulations/${simulation.id}`);
+		goto(`/simulations/${simulation.id}`);
 	}
 </script>
 

@@ -20,12 +20,12 @@
 		const body = new URLSearchParams({ grant_type: 'password', username, password });
 
 		const token = await getJson<Token>({ endPoint: '/token', body, contentType });
-
-		assert(token.token_type === 'bearer');
+		
+		assert(token.token_type === "bearer");
 
 		auth.setToken(token);
 
-		await goto('/');
+		goto('/');
 	}
 
 	interface FormData {

@@ -43,7 +43,7 @@
 
 	async function pollSimulations(): Promise<void> {
 		if (!auth.getIsAuthenticated()) {
-			await goto('/login');
+			goto('/login');
 			return;
 		}
 

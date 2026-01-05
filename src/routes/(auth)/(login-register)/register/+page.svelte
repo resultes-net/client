@@ -20,9 +20,9 @@
 
 		const body = JSON.stringify(user_create);
 
-		await getJson({ endPoint: '/user', body });
+		const tokenResponse = await getJson({ endPoint: '/user', body });
 
-		await goto('/login');
+		goto('/login');
 	}
 </script>
 
