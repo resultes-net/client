@@ -12,12 +12,12 @@ import { goto } from '$app/navigation';
 import * as auth from '../auth';
 
 
-export const load: LayoutLoad = async ({ data }) => {
-    const { i18n: { locale, route: pathname }, translations } = data;
+export const load: LayoutLoad = async ({ data, url: { pathname} }) => {
+    const { i18n: { locale, route: localeRoute }, translations } = data;
 
     addTranslations(translations);
 
-    await setRoute(pathname);
+    await setRoute(localeRoute);
     await setLocale(locale);
 
     if (browser) {
