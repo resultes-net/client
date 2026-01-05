@@ -58,7 +58,7 @@
 </div>
 
 <div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] m-2 p-2">
-	<label for="collector-area">{$t('common.collectorArea')}</label>
+	<label for="storage-volume">{$t('common.storageVolume')}</label>
 	<div class="input-group input-group-divider grid grid-cols-[--input-button-grid-cols]">
 		<input
 			class="input"
