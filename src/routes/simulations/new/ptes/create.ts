@@ -32,6 +32,11 @@ export function createDefaultParameters(): PtesParametersInput {
             volume: {
                 scaling: "relative_to_demand_m3_per_MWh",
                 value: 2.0
+            },
+            ports_relative_heights_1: {
+                top: 0.95,
+                middle: 0.50,
+                bottom: 0.05,
             }
         }
     };

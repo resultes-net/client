@@ -1,16 +1,15 @@
 <script lang="ts">
-	import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
+	import { afterUpdate } from 'svelte';
 
+	import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
 	import { TriangleAlert } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
 
-	import { type TtesPortRelativeHeights } from '$lib/openapi/generated/model/ttesPortRelativeHeights';
-
+	import type { PtesPortRelativeHeights } from '$lib/openapi/generated/model/ptesPortRelativeHeights';
 	import type { OnAreParametersValidChanged } from '../onAreParametersValidChanged';
-	import { afterUpdate } from 'svelte';
 
-	export let parameters: TtesPortRelativeHeights;
+	export let parameters: PtesPortRelativeHeights;
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 
 	let errorMessage: string | null = null;
@@ -27,7 +26,7 @@
 		errorMessage = isValid ? null : $t('ttes.portsMustBeInOrder');
 	}
 
-	function setRelativeHeight(event: Event, position: keyof TtesPortRelativeHeights): void {
+	function setRelativeHeight(event: Event, position: keyof PtesPortRelativeHeights): void {
 		const inputElement = event.target as HTMLInputElement;
 
 		const string = inputElement.value;
@@ -54,7 +53,7 @@
 		validate();
 	}
 
-	afterUpdate(validate)
+	afterUpdate(validate);
 </script>
 
 <div class="flex flex-col my-4">
