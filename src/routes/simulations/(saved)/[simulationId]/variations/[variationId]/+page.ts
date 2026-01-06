@@ -1,10 +1,31 @@
 
+import type { Simulation } from 'src/lib/openapi/generated/model/simulation';
+
+import * as auth from 'src/auth';
+
+import type { PageLoad } from './$types';
+
+import { getJson } from 'src/ajax';
+
 import { createDisplayResults, loadMoreResults } from './results';
 
-export const load = async ({ params }) => {
+export const load: PageLoad = async ({ params, fetch }) => {
+    const bearerToken = auth.getAccessToken();
+    
+    const simulation: Simulation = await getJson(
+        {
+            endPoint: `/simulations/${params.simulationId}`,
+            httpVerb: 'GET',
+            bearerToken: bearerToken,
+            fetchFunction: fetch
+        }
+    )
+
+    const parameters = simulation.parameters;
+
     const displayResults = createDisplayResults();
 
     await loadMoreResults({ displayResults, variationId: params.variationId, nResultsToLoad: null });
 
-    return { displayResults }
+    return { parameters, displayResults }
 }

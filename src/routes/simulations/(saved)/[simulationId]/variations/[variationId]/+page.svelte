@@ -15,13 +15,15 @@
 
 	import { page } from '$app/stores';
 
+	import { t } from '$lib/i18n/translations';
+
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
 
 	import DownladAllResults from './downladAllResults.svelte';
 
 	export let data;
 
-	let { displayResults } = data;
+	const { parameters, displayResults } = data;
 
 	const modalStore = getModalStore();
 
@@ -95,11 +97,68 @@
 			<div class="self-center" use:popup={variationMenuPopupSettings}><EllipsisVertical /></div>
 		</div>
 		<div class="mt-8" use:tocCrawler={{ mode: 'generate' }}>
+			<h5 class="h5">Parameters</h5>
+
+			<div class="table-container">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Description</th>
+							<th>Value</th>
+							<th>Unit</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>{$t('common.collectorArea')}</td>
+							<td>{parameters.values.collector_field.area.value}</td>
+							<td>
+								{#if parameters.values.collector_field.area.scaling == 'absolute_m2'}
+									m<sup>2</sup>
+								{:else if parameters.values.collector_field.area.scaling == 'relative_to_demand_m2_per_MWh'}
+									m<sup>2</sup>GWh<sup>-1</sup>
+								{/if}
+							</td>
+						</tr>
+						{#if parameters.values.type === 'ptes'}
+							<tr>
+								<td>{$t('common.storageVolume')}</td>
+								<td>{parameters.values.storage.volume.value}</td>
+								<td>
+									{#if parameters.values.storage.volume.scaling == 'absolute_m3'}
+										m<sup>3</sup>
+									{:else if parameters.values.storage.volume.scaling == 'relative_to_demand_m3_per_MWh'}
+										m<sup>3</sup>GWh<sup>-1</sup>
+									{/if}
+								</td>
+							</tr>
+							<tr>
+								<td>{$t('common.portHeightTop')}</td>
+								<td>{parameters.values.storage.ports_relative_heights_1.top}</td>
+								<td>&percnt;</td>
+							</tr>
+							<tr>
+								<td>{$t('common.portHeightMiddle')}</td>
+								<td>{parameters.values.storage.ports_relative_heights_1.middle}</td>
+								<td>&percnt;</td>
+							</tr>
+							<tr>
+								<td>{$t('common.portHeightBottom')}</td>
+								<td>{parameters.values.storage.ports_relative_heights_1.bottom}</td>
+								<td>&percnt;</td>
+							</tr>
+						{/if}
+					</tbody>
+				</table>
+			</div>
+
 			{#each displayResults as displayResult}
-				<h5 class="h5" id={displayResult.id}>{displayResult.title}</h5>
-				{#if displayResult.url}
-					<img src={displayResult.url} alt={displayResult.title} />
-				{/if}
+				<div class="mt-6">
+					<h5 class="h5" id={displayResult.id}>{displayResult.title}</h5>
+					{#if displayResult.url}
+						<img src={displayResult.url} alt={displayResult.title} />
+					{/if}
+				</div>
 			{/each}
 		</div>
 	</div>

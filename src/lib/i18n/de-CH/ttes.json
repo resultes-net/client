@@ -1,9 +1,4 @@
 {
     "createSimulation": "Simulation mit Tank-Wärmespeicher erstellen",
-    "diagram": "Das Diagram des TTES-Systems",
-    "top": "Oben",
-    "middle": "Mitte",
-    "bottom": "Unten",
-    "portHeights": "Anschlüsshöhen",
-    "portsMustBeInOrder": "Die Anschluss-Höhen müssen von oben nach unten abnehmen."
+    "diagram": "Das Diagram des TTES-Systems"
 }

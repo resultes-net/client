@@ -28,6 +28,13 @@
     "height": "Height",
     "floorArea": "Floor area",
     "volume": "Volume",
-    "correctErrorsInParameters": "Please correct the errors in your parameters."
-
+    "correctErrorsInParameters": "Please correct the errors in your parameters.",
+    "top": "top",
+    "middle": "middle",
+    "bottom": "bottom",
+    "portHeights": "Port heights",
+    "portsMustBeInOrder": "The ports heights must be decreasing from top to bottom.",
+    "portHeightTop": "Top port position",
+    "portHeightMiddle": "Middle port position",
+    "portHeightBottom": "Bottom port position"
 }

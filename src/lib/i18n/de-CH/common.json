@@ -28,5 +28,13 @@
     "height": "Höhe",
     "floorArea": "Grundfläche",
     "volume": "Volumen",
-    "correctErrorsInParameters": "Bitte korrigieren Sie die fehlerhaften Parameter."
+    "correctErrorsInParameters": "Bitte korrigieren Sie die fehlerhaften Parameter.",
+    "top": "Oben",
+    "middle": "Mitte",
+    "bottom": "Unten",
+    "portHeights": "Anschlüsshöhen",
+    "portsMustBeInOrder": "Die Anschluss-Höhen müssen von oben nach unten abnehmen.",
+    "portHeightTop": "Anschlusshöhe oben",
+    "portHeightMiddle": "Anschlusshöhe mittig",
+    "portHeightBottom": "Anschlusshöhe unten"
 }

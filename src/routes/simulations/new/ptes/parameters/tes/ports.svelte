@@ -23,7 +23,7 @@
 	function validate(): void {
 		const isValid = parameters.top > parameters.middle && parameters.middle > parameters.bottom;
 		onAreParametersValidChanged(isValid);
-		errorMessage = isValid ? null : $t('ttes.portsMustBeInOrder');
+		errorMessage = isValid ? null : $t('common.portsMustBeInOrder');
 	}
 
 	function setRelativeHeight(event: Event, position: keyof PtesPortRelativeHeights): void {
@@ -59,7 +59,7 @@
 <div class="flex flex-col my-4">
 	<!-- Header -->
 	<div class="flex flex-row gap-x-1">
-		<h7 class="h7">{$t('ttes.portHeights')}</h7>
+		<h7 class="h7">{$t('common.portHeights')}</h7>
 		{#if errorMessage !== null}
 			<div
 				class="text-warning-300-600-token [&>*]:pointer-events-none"
@@ -75,12 +75,12 @@
 			${errorMessage !== null ? 'border-warning-300-600-token' : 'border-surface-300-600-token'}
 			items-center gap-y-[--input-gap-y] m-2 p-2`}
 	>
-		<label for="height">{$t('ttes.top')}</label>
+		<label for="height">{$t('common.top')}</label>
 		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 			<input
 				class="input"
 				id="height"
-				title={$t('ttes.top')}
+				title={$t('common.top')}
 				type="number"
 				value={parameters.top * 100}
 				min="0"
@@ -93,12 +93,12 @@
 			</div>
 		</div>
 
-		<label for="floor-area">{$t('ttes.middle')}</label>
+		<label for="floor-area">{$t('common.middle')}</label>
 		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 			<input
 				class="input"
 				id="floor-area"
-				title={$t('ttes.middle')}
+				title={$t('common.middle')}
 				type="number"
 				value={parameters.middle * 100}
 				min="0"
@@ -111,12 +111,12 @@
 			</div>
 		</div>
 
-		<label for="floor-area">{$t('ttes.bottom')}</label>
+		<label for="floor-area">{$t('common.bottom')}</label>
 		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 			<input
 				class="input"
 				id="floor-area"
-				title={$t('ttes.bottom')}
+				title={$t('common.bottom')}
 				type="number"
 				value={parameters.bottom * 100}
 				min="0"
