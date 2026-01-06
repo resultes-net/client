@@ -76,9 +76,9 @@
 			return { minutes: 0, seconds: 0 };
 		}
 
-		// if (simulation.state !== 'running-variations') {
-		// 	throw new Error(`Invalid state: ${simulation.state}.`);
-		// }
+		if (simulation.state !== 'running-variations') {
+			throw new Error(`Invalid state: ${simulation.state}.`);
+		}
 
 		const start = new Date(simulation.state_changed_on);
 		const end = new Date();
