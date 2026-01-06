@@ -70,6 +70,34 @@
 
 		return minutesElapsed;
 	}
+
+	function getEstimatedTimeRemaining(simulation: Simulation): { minutes: number; seconds: number } {
+		if (simulation.state === 'done') {
+			return { minutes: 0, seconds: 0 };
+		}
+
+		// if (simulation.state !== 'running-variations') {
+		// 	throw new Error(`Invalid state: ${simulation.state}.`);
+		// }
+
+		const start = new Date(simulation.state_changed_on);
+		const end = new Date();
+
+		const millisecondsRunning = end - start;
+
+		const progressCompleted = simulation.progress!;
+		const progressRemaining = 100 - progressCompleted;
+
+		const millisecondsRemaining = (millisecondsRunning / progressCompleted) * progressRemaining;
+
+		const totalSecondsRemaining = Math.round(millisecondsRemaining / 1000);
+
+		const minutes = Math.floor(totalSecondsRemaining / 60);
+
+		const seconds = totalSecondsRemaining - minutes * 60;
+
+		return { minutes, seconds };
+	}
 </script>
 
 <div class="w-4/5 mt-4 table-container self-center">
@@ -82,6 +110,7 @@
 				<th>State</th>
 				<th>Progress</th>
 				<th>Time elapsed</th>
+				<th>Estimated time remaining</th>
 				<th>Number of variations</th>
 			</tr>
 		</thead>
@@ -100,6 +129,15 @@
 						<span class="w-14 text-end">{simulation.progress}/100</span>
 					</td>
 					<td>{minutesElapsed} min</td>
+					<td>
+						{#if simulation.progress > 2}
+							{@const timeRemaining = getEstimatedTimeRemaining(simulation)}
+							{@const secondsFormatted = timeRemaining.seconds.toString().padStart(2, '0')}
+							{timeRemaining.minutes}:{secondsFormatted} min
+						{:else}
+							TBD
+						{/if}
+					</td>
 					<td>{simulation.variations.length}</td>
 				</tr>
 			{/each}
