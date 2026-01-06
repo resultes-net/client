@@ -123,10 +123,17 @@
 					<td>{simulation.parameters.values.type}</td>
 					<td>{simulation.state}</td>
 					<td class="flex flex-row">
-						<div class="flex flex-row w-24">
-							<ProgressBar class="self-center" value={simulation.progress} max={100} />
-						</div>
-						<span class="w-14 text-end">{simulation.progress}/100</span>
+						{#if simulation.state !== 'running-variations' && simulation.state !== 'done'}
+							<div class="flex flex-row w-24">
+								<ProgressBar class="self-center" />
+							</div>
+							<span class="w-14 text-end"></span>
+						{:else}
+							<div class="flex flex-row w-24">
+								<ProgressBar class="self-center" value={simulation.progress} max={100} />
+							</div>
+							<span class="w-14 text-end">{simulation.progress}/100</span>
+						{/if}
 					</td>
 					<td>{minutesElapsed} min</td>
 					<td>
