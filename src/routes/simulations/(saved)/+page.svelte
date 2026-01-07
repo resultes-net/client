@@ -92,6 +92,11 @@
 
 		return millisecondsToTime(millisecondsElapsed);
 	}
+
+	function toMilliseconds(time: Time): number {
+		const seconds = 60 * time.minutes + time.seconds;
+		return seconds * 1000;
+	}
 </script>
 
 <div class="w-4/5 mt-4 table-container self-center">
@@ -105,6 +110,7 @@
 				<th>Progress</th>
 				<th>Time elapsed</th>
 				<th>Estimated time remaining</th>
+				<th>Estimated time done</th>
 				<th>Number of variations</th>
 			</tr>
 		</thead>
@@ -130,15 +136,21 @@
 						{/if}
 					</td>
 					<td>{formatTime(ellapsedTime)} min</td>
-					<td>
-						{#if simulation.id in timeRemainingEstimators && timeRemainingEstimators[simulation.id].hasEstimate()}
-							{@const estimatedTimeRemaining =
-								timeRemainingEstimators[simulation.id].getEstimatedTime()}
-							{formatTime(estimatedTimeRemaining)} min
-						{:else}
-							TBD
-						{/if}
-					</td>
+					{#if simulation.state === 'done'}
+						<td>00:00 min</td>
+						<td>&ndash;</td>
+					{:else if simulation.id in timeRemainingEstimators && timeRemainingEstimators[simulation.id].hasEstimate()}
+						{@const estimatedTimeRemaining =
+							timeRemainingEstimators[simulation.id].getEstimatedTime()}
+						{@const estimatedDoneDate = new Date(
+							Date.now() + toMilliseconds(estimatedTimeRemaining)
+						)}
+						<td>{formatTime(estimatedTimeRemaining)} min</td>
+						<td>{estimatedDoneDate.toLocaleTimeString()}</td>
+					{:else}
+						<td>TBD</td>
+						<td>TBD</td>
+					{/if}
 					<td>{simulation.variations.length}</td>
 				</tr>
 			{/each}
