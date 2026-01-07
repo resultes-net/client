@@ -33,13 +33,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image
+      - name: Build client-npm-build Docker image
         run: |
-          docker build -f docker/client/Dockerfile -t ghcr.io/resultes-net/client:latest .
+          docker build -f docker/client/npm-build.Dockerfile -t client-npm-build .
 
       - name: Run unit tests
         run: |
-          docker run --mount=type=bind,from=openapi-schema --pull=never ghcr.io/resultes-net/client:latest npx vitest --run
+          docker run --pull never client-npm-build npx vitest --run
+
+      - name: Build client Docker image
+        run: |
+          docker build -f docker/client/Dockerfile -t ghcr.io/resultes-net/client:latest .
 
       - name: Push Docker image
         id: push
