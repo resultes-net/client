@@ -5,3 +5,4 @@
 !/.svelte-kit/tsconfig.json
 /openapitools.json
 /**/*.swp
+/test-results/

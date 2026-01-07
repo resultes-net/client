@@ -30,7 +30,7 @@ RUN npm run build
 
 FROM node:23.11-bookworm-slim
 
-COPY --from=npm-dependencies /app/package.json /app/package-lock.json ./
+COPY package.json package-lock.json ./
 
 COPY --from=npm-build /app/build build
 

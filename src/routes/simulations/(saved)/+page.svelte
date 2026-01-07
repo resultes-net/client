@@ -12,6 +12,8 @@
 
 	import { getBreadCrumbsStore } from './breadCrumbs';
 
+	import { type Time, TimeRemainingEstimator, formatTime, millisecondsToTime } from './time';
+
 	export let data;
 
 	const breadCrumbs = getBreadCrumbsStore();
@@ -22,6 +24,26 @@
 	]);
 
 	let simulations = data.simulations;
+	let timeRemainingEstimators: { [index: string]: TimeRemainingEstimator } = {};
+	updateTimeRemainingEstimators(simulations);
+
+	function updateTimeRemainingEstimators(simulations: Simulation[]): void {
+		for (const simulation of simulations) {
+			if (simulation.state !== 'done' && simulation.state !== 'running-variations') {
+				continue;
+			}
+
+			if (!(simulation.id in timeRemainingEstimators)) {
+				timeRemainingEstimators[simulation.id] = new TimeRemainingEstimator();
+			}
+
+			const timeRemainingEstimator = timeRemainingEstimators[simulation.id];
+
+			timeRemainingEstimator.addProgress(simulation.progress!);
+		}
+
+		timeRemainingEstimators = timeRemainingEstimators;
+	}
 
 	let sortedSimulations: Simulation[];
 	$: sortedSimulations = simulations.toSorted((s1, s2) =>
@@ -55,48 +77,20 @@
 			bearerToken
 		});
 
+		updateTimeRemainingEstimators(simulations);
+
 		if (shallPoll) {
 			pollingTimeoutId = window.setTimeout(pollSimulations, 5000);
 		}
 	}
 
-	function getMinutesElapsed(simulation: Simulation): number {
+	function getEllapsedTime(simulation: Simulation): Time {
 		const start = new Date(simulation.created_on);
 		const end = simulation.state === 'done' ? new Date(simulation.state_changed_on) : new Date();
 
 		const millisecondsElapsed = end - start;
 
-		const minutesElapsed = Math.round(millisecondsElapsed / 1000.0 / 60.0);
-
-		return minutesElapsed;
-	}
-
-	function getEstimatedTimeRemaining(simulation: Simulation): { minutes: number; seconds: number } {
-		if (simulation.state === 'done') {
-			return { minutes: 0, seconds: 0 };
-		}
-
-		if (simulation.state !== 'running-variations') {
-			throw new Error(`Invalid state: ${simulation.state}.`);
-		}
-
-		const start = new Date(simulation.state_changed_on);
-		const end = new Date();
-
-		const millisecondsRunning = end - start;
-
-		const progressCompleted = simulation.progress!;
-		const progressRemaining = 100 - progressCompleted;
-
-		const millisecondsRemaining = (millisecondsRunning / progressCompleted) * progressRemaining;
-
-		const totalSecondsRemaining = Math.round(millisecondsRemaining / 1000);
-
-		const minutes = Math.floor(totalSecondsRemaining / 60);
-
-		const seconds = totalSecondsRemaining - minutes * 60;
-
-		return { minutes, seconds };
+		return millisecondsToTime(millisecondsElapsed);
 	}
 </script>
 
@@ -116,14 +110,14 @@
 		</thead>
 		<tbody>
 			{#each sortedSimulations as simulation}
-				{@const minutesElapsed = getMinutesElapsed(simulation)}
+				{@const ellapsedTime = getEllapsedTime(simulation)}
 				<tr>
 					<td><a class="anchor" href="/simulations/{simulation.id}">{simulation.id}</a></td>
 					<td>{simulation.created_on}</td>
 					<td>{simulation.parameters.values.type}</td>
 					<td>{simulation.state}</td>
 					<td class="flex flex-row">
-						{#if simulation.state !== 'running-variations' && simulation.state !== 'done'}
+						{#if !(simulation.state === 'running-variations' && simulation.progress < 100) && simulation.state !== 'done'}
 							<div class="flex flex-row w-24">
 								<ProgressBar class="self-center" />
 							</div>
@@ -135,12 +129,12 @@
 							<span class="w-14 text-end">{simulation.progress}/100</span>
 						{/if}
 					</td>
-					<td>{minutesElapsed} min</td>
+					<td>{formatTime(ellapsedTime)} min</td>
 					<td>
-						{#if simulation.progress > 2}
-							{@const timeRemaining = getEstimatedTimeRemaining(simulation)}
-							{@const secondsFormatted = timeRemaining.seconds.toString().padStart(2, '0')}
-							{timeRemaining.minutes}:{secondsFormatted} min
+						{#if simulation.id in timeRemainingEstimators && timeRemainingEstimators[simulation.id].hasEstimate()}
+							{@const estimatedTimeRemaining =
+								timeRemainingEstimators[simulation.id].getEstimatedTime()}
+							{formatTime(estimatedTimeRemaining)} min
 						{:else}
 							TBD
 						{/if}
