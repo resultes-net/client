@@ -38,7 +38,7 @@ jobs:
           docker build -f docker/client/Dockerfile -t ghcr.io/resultes-net/client:latest .
 
       - name: Run unit tests
-      - run: |
+        run: |
           docker run --mount=type=bind,from=openapi-schema --pull=never ghcr.io/resultes-net/client:latest npx vitest --run
 
       - name: Push Docker image
