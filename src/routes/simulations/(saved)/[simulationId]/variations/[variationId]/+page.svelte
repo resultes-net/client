@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	import {
 		type ModalComponent,
@@ -20,10 +20,12 @@
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
 
 	import DownladAllResults from './downladAllResults.svelte';
+	import { loadMoreResults } from './results';
 
 	export let data;
 
-	const { parameters, displayResults } = data;
+	const parameters = data.parameters;
+	let displayResults = data.displayResults;
 
 	const modalStore = getModalStore();
 
@@ -65,6 +67,11 @@
 
 		modalStore.trigger(modal);
 	}
+
+	onMount(async () => {
+		await loadMoreResults({ displayResults, variationId, nResultsToLoad: null });
+		displayResults = displayResults;
+	});
 
 	onDestroy(() => {
 		for (const displayResult of displayResults) {

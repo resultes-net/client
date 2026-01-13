@@ -25,7 +25,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 
     const displayResults = createDisplayResults();
 
-    await loadMoreResults({ displayResults, variationId: params.variationId, nResultsToLoad: null });
+    await loadMoreResults({ displayResults, variationId: params.variationId, nResultsToLoad: 3 });
 
     return { parameters, displayResults }
 }
