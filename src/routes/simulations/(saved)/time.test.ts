@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { TimeRemainingEstimator, millisecondsToTime } from "./time";
+import { TimeRemainingEstimator, millisecondsToMinutes } from "./time";
 
 describe("time remaining estimator", () => {
     it("Doesn't have an estimate after first progress", () => {
@@ -16,15 +16,14 @@ describe("time remaining estimator", () => {
         await sleep({ seconds: 2 });
         estimator.addProgress(2);
 
-        const time = estimator.getEstimatedTime();
+        const estimatedMinutes = estimator.getEstimatedMinutes();
 
         const expectedMilliseconds = 2 / (2 - 1) * (100 - 2) * 1000;
-        const expectedTime = millisecondsToTime(expectedMilliseconds)
+        const expectedMinutes = millisecondsToMinutes(expectedMilliseconds)
 
-        console.log(expectedTime);
+        console.log(expectedMinutes);
 
-        expect(time.minutes).equals(expectedTime.minutes);
-        expect(time.seconds).equal(expectedTime.seconds);
+        expect(estimatedMinutes).equals(expectedMinutes);
     })
 })
 

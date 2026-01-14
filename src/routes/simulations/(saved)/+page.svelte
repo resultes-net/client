@@ -12,7 +12,7 @@
 
 	import { getBreadCrumbsStore } from './breadCrumbs';
 
-	import { type Time, TimeRemainingEstimator, formatTime, millisecondsToTime } from './time';
+	import { TimeRemainingEstimator, millisecondsToMinutes } from './time';
 
 	export let data;
 
@@ -84,23 +84,49 @@
 		}
 	}
 
-	function getEllapsedTime(simulation: Simulation): Time {
+	function getEllapsedMinutes(simulation: Simulation): number {
 		const start = new Date(simulation.created_on);
 		const end = simulation.state === 'done' ? new Date(simulation.state_changed_on) : new Date();
 
-		const millisecondsElapsed = end - start;
+		const millisecondsElapsed = end.getTime() - start.getTime();
 
-		return millisecondsToTime(millisecondsElapsed);
+		return millisecondsToMinutes(millisecondsElapsed);
 	}
 
-	function toMilliseconds(time: Time): number {
-		const seconds = 60 * time.minutes + time.seconds;
-		return seconds * 1000;
+	function toMilliseconds(minutes: number): number {
+		return minutes * 60 * 1000;
+	}
+
+	function toLocalDateTimeIgnoringTodayDate(iso_date_time: string): string {
+		const date = new Date(iso_date_time);
+
+		const now = new Date();
+
+		if (areSameDates(date, now)) {
+			return date.toLocaleTimeString();
+		}
+
+		return date.toLocaleString();
+	}
+
+	function areSameDates(date1: Date, date2: Date): boolean {
+		return (
+			date1.getUTCFullYear() == date2.getUTCFullYear() &&
+			date1.getUTCMonth() == date2.getUTCMonth() &&
+			date1.getUTCDay() == date2.getUTCDay()
+		);
+	}
+
+	function formatEstimatedDoneTime(estimatedMinutesRemaining: number): string {
+		const milliseconds = Date.now() + toMilliseconds(estimatedMinutesRemaining);
+		const roundedMilliseconds = Math.round(milliseconds / 60000) * 60000;
+		const date = new Date(roundedMilliseconds);
+		return date.toLocaleTimeString(undefined, { timeStyle: 'short' });
 	}
 </script>
 
 <div class="w-4/5 mt-4 table-container self-center">
-	<table class="mt-4 table table-hover">
+	<table class="mt-4 table table-hover text-end">
 		<thead>
 			<tr>
 				<th>ID</th>
@@ -116,37 +142,44 @@
 		</thead>
 		<tbody>
 			{#each sortedSimulations as simulation}
-				{@const ellapsedTime = getEllapsedTime(simulation)}
+				{@const ellapsedMinutes = getEllapsedMinutes(simulation)}
 				<tr>
 					<td><a class="anchor" href="/simulations/{simulation.id}">{simulation.id}</a></td>
-					<td>{simulation.created_on}</td>
+					<td>{toLocalDateTimeIgnoringTodayDate(simulation.created_on)}</td>
 					<td>{simulation.parameters.values.type}</td>
 					<td>{simulation.state}</td>
 					<td class="flex flex-row">
-						{#if !(simulation.state === 'running-variations' && simulation.progress < 100) && simulation.state !== 'done'}
+						{#if simulation.state == 'done'}
 							<div class="flex flex-row w-24">
-								<ProgressBar class="self-center" />
+								<ProgressBar class="self-center" value={100} max={100} />
 							</div>
-							<span class="w-14 text-end"></span>
-						{:else}
+							<span class="w-14">100/100</span>
+						{:else if simulation.state === 'running-variations' && simulation.progress < 100}
 							<div class="flex flex-row w-24">
 								<ProgressBar class="self-center" value={simulation.progress} max={100} />
 							</div>
-							<span class="w-14 text-end">{simulation.progress}/100</span>
+							<span class="w-14">{simulation.progress}/100</span>
+						{:else if simulation.state === 'running-variations' && simulation.progress === 100}
+							<div class="flex flex-row w-24">
+								<ProgressBar class="self-center" />
+							</div>
+							<span class="w-14">100/100</span>
+						{:else}
+							<div class="flex flex-row w-24">
+								<ProgressBar class="self-center" />
+							</div>
+							<span class="w-14"></span>
 						{/if}
 					</td>
-					<td>{formatTime(ellapsedTime)} min</td>
+					<td>{ellapsedMinutes} min</td>
 					{#if simulation.state === 'done'}
-						<td>00:00 min</td>
+						<td>0 min</td>
 						<td>&ndash;</td>
 					{:else if simulation.id in timeRemainingEstimators && timeRemainingEstimators[simulation.id].hasEstimate()}
-						{@const estimatedTimeRemaining =
-							timeRemainingEstimators[simulation.id].getEstimatedTime()}
-						{@const estimatedDoneDate = new Date(
-							Date.now() + toMilliseconds(estimatedTimeRemaining)
-						)}
-						<td>{formatTime(estimatedTimeRemaining)} min</td>
-						<td>{estimatedDoneDate.toLocaleTimeString()}</td>
+						{@const estimatedMinutesRemaining =
+							timeRemainingEstimators[simulation.id].getEstimatedMinutes()}
+						<td>{estimatedMinutesRemaining} min</td>
+						<td>{formatEstimatedDoneTime(estimatedMinutesRemaining)}</td>
 					{:else}
 						<td>TBD</td>
 						<td>TBD</td>

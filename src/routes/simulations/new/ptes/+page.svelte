@@ -67,7 +67,7 @@
 			bearerToken
 		});
 
-		goto(`/simulations/${simulation.id}`);
+		goto(`/simulations`);
 	}
 </script>
 

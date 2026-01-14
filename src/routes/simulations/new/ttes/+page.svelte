@@ -64,6 +64,8 @@
 			body: JSON.stringify(parametersWrapper),
 			bearerToken
 		});
+
+		goto('/simulations');
 	}
 </script>
 

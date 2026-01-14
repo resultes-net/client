@@ -1,8 +1,6 @@
-export type Time = { minutes: number; seconds: number };
-
 export class TimeRemainingEstimator {
     #firstProgress: { progress: number; date: Date } | null = null;
-    #estimatedTime: Time | null = null;
+    estimatedMinutes: number | null = null;
 
     addProgress(progress: number): void {
         const date = new Date();
@@ -11,7 +9,7 @@ export class TimeRemainingEstimator {
             this.#firstProgress = { progress, date };
 
             if (progress === 100) {
-                this.#estimatedTime = { minutes: 0, seconds: 0 };
+                this.estimatedMinutes = 0.0;
             }
 
             return;
@@ -33,50 +31,30 @@ export class TimeRemainingEstimator {
             throw new Error('First progress not set.');
         }
 
-        const millisecondsRun = date - this.#firstProgress.date;
+        const millisecondsRun = date.getTime() - this.#firstProgress.date.getTime();
         const percentProgressed = progress - this.#firstProgress.progress;
 
         const percentRemaining = 100 - progress;
 
         const millisecondsRemaining = (millisecondsRun / percentProgressed) * percentRemaining;
 
-        this.#estimatedTime = millisecondsToTime(millisecondsRemaining);
+        this.estimatedMinutes = millisecondsToMinutes(millisecondsRemaining);
     }
 
     hasEstimate(): boolean {
-        return this.#estimatedTime !== null;
+        return this.estimatedMinutes !== null;
     }
 
-    getEstimatedTime(): Time {
-        if (this.#estimatedTime === null) {
+    getEstimatedMinutes(): number {
+        if (this.estimatedMinutes === null) {
             throw new Error("Don't have an estimated time.");
         }
 
-        return this.#estimatedTime;
+        return this.estimatedMinutes;
     }
 }
 
 
-function testTimeRemainingEstimator(): void {
-
-}
-
-export function millisecondsToTime(milliseconds: number): Time {
-    const totalSeconds = Math.round(milliseconds / 1000);
-
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds - minutes * 60;
-
-    return { minutes, seconds };
-}
-
-export function formatTime(time: Time): string {
-    const formattedMinutes = formatTimeComponent(time.minutes);
-    const formattedSeconds = formatTimeComponent(time.seconds);
-
-    return `${formattedMinutes}:${formattedSeconds}`;
-}
-
-function formatTimeComponent(component: number): string {
-    return component.toString().padStart(2, '0');
+export function millisecondsToMinutes(milliseconds: number): number {
+    return Math.round(milliseconds / 1000 / 60);
 }
