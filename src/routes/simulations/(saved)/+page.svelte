@@ -154,7 +154,7 @@
 								<ProgressBar class="self-center" value={100} max={100} />
 							</div>
 							<span class="w-14">100/100</span>
-						{:else if simulation.state === 'running-variations' && simulation.progress < 100}
+						{:else if (simulation.state === 'running-variations' || simulation.state === 'error') && simulation.progress < 100}
 							<div class="flex flex-row w-24">
 								<ProgressBar class="self-center" value={simulation.progress} max={100} />
 							</div>
@@ -172,7 +172,7 @@
 						{/if}
 					</td>
 					<td>{ellapsedMinutes} min</td>
-					{#if simulation.state === 'done'}
+					{#if simulation.state === 'done' || simulation.state === 'error'}
 						<td>0 min</td>
 						<td>&ndash;</td>
 					{:else if simulation.id in timeRemainingEstimators && timeRemainingEstimators[simulation.id].hasEstimate()}
