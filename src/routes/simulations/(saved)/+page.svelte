@@ -130,6 +130,7 @@
 		<thead>
 			<tr>
 				<th>ID</th>
+				<th>Name</th>
 				<th>Created on</th>
 				<th>System</th>
 				<th>State</th>
@@ -145,6 +146,7 @@
 				{@const ellapsedMinutes = getEllapsedMinutes(simulation)}
 				<tr>
 					<td><a class="anchor" href="/simulations/{simulation.id}">{simulation.id}</a></td>
+					<td>{simulation.name}</td>
 					<td>{toLocalDateTimeIgnoringTodayDate(simulation.created_on)}</td>
 					<td>{simulation.parameters.values.type}</td>
 					<td>{simulation.state}</td>

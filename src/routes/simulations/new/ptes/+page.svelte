@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { type PopupSettings, Tab, TabGroup, popup } from '@skeletonlabs/skeleton';
 
-	import { type ParametersInput } from 'src/lib/openapi/generated/model/parametersInput';
-
 	import { goto } from '$app/navigation';
+
+	import type { CreateSimulation } from 'src/lib/openapi/generated/model/createSimulation';
 
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
 	import { t } from '$lib/i18n/translations';
@@ -15,12 +15,12 @@
 
 	import { type Phase } from './parameters/phase';
 
-	import { type SimulationBase } from 'src/lib/openapi/generated/model/simulationBase';
 	import Collector from './parameters/collector.svelte';
 	import Demand from './parameters/demand.svelte';
 	import Tes from './parameters/tes/tes.svelte';
 	import SystemDescription from './systemDescription.svelte';
 
+	let projectName = '';
 	let parameters = createDefaultParameters();
 
 	type ActiveParamtersTab = 'collector' | 'storage' | 'demand';
@@ -59,11 +59,14 @@
 
 		const bearerToken = auth.getAccessToken();
 
-		const parametersWrapper: ParametersInput = { values: parameters };
+		const createSimulation: CreateSimulation = {
+			name: projectName,
+			parameters: { values: parameters }
+		};
 
-		const simulation = await getJson<SimulationBase>({
+		await getJson({
 			endPoint: '/simulations',
-			body: JSON.stringify(parametersWrapper),
+			body: JSON.stringify(createSimulation),
 			bearerToken
 		});
 
@@ -81,7 +84,13 @@
 
 			<div class="grid grid-cols-[--input-grid-cols] items-center">
 				<label for="project-name">{$t('common.projectName')}</label>
-				<input class="input" id="project-name" title={$t('common.projectName')} type="text" />
+				<input
+					class="input"
+					id="project-name"
+					title={$t('common.projectName')}
+					type="text"
+					bind:value={projectName}
+				/>
 			</div>
 
 			<div class="flex pt-8">
