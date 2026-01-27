@@ -24,8 +24,10 @@
 
 	export let data;
 
-	const parameters = data.parameters;
+	const simulation = data.simulation;
 	let displayResults = data.displayResults;
+
+	const parameters = simulation.parameters;
 
 	const modalStore = getModalStore();
 
@@ -69,6 +71,10 @@
 	}
 
 	onMount(async () => {
+		if (simulation.state !== 'done') {
+			return;
+		}
+		
 		await loadMoreResults({ displayResults, variationId, nResultsToLoad: null });
 		displayResults = displayResults;
 	});

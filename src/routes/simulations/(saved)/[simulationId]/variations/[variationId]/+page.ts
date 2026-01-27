@@ -21,11 +21,11 @@ export const load: PageLoad = async ({ params, fetch }) => {
         }
     )
 
-    const parameters = simulation.parameters;
-
     const displayResults = createDisplayResults();
 
-    await loadMoreResults({ displayResults, variationId: params.variationId, nResultsToLoad: 3 });
+    if (simulation.state === 'done') {
+        await loadMoreResults({ displayResults, variationId: params.variationId, nResultsToLoad: 3 });
+    }
 
-    return { parameters, displayResults }
+    return { simulation, displayResults }
 }

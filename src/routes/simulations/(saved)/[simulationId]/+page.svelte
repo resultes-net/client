@@ -27,7 +27,7 @@
 		<h3 class="h3">
 			Simulation {simulation.id}
 		</h3>
-		{#if simulation.state !== 'done'}
+		{#if simulation.state !== 'done' && simulation.state !== 'error'}
 			<LoaderCircle class="animate-spin ml-2" />
 		{/if}
 	</div>
@@ -44,7 +44,7 @@
 			{#each sortedVariations as variation}
 				<tr>
 					<td>
-						{#if variation.state !== 'done'}
+						{#if variation.state !== 'done' && variation.state !== 'error'}
 							{variation.id}
 						{:else}
 							<a class="anchor" href="/simulations/{simulation.id}/variations/{variation.id}">
