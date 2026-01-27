@@ -54,7 +54,7 @@
 					</td>
 					<td>{variation.created_on}</td>
 					<td class="flex flex-row">
-						{#if variation.state !== 'done'}
+						{#if variation.state !== 'done' && variation.state !== 'error'}
 							<LoaderCircle class="animate-spin mr-2" /> {variation.state}
 						{:else}
 							{variation.state}
