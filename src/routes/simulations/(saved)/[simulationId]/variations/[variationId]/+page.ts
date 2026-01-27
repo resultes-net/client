@@ -11,7 +11,7 @@ import { createDisplayResults, loadMoreResults } from './results';
 
 export const load: PageLoad = async ({ params, fetch }) => {
     const bearerToken = auth.getAccessToken();
-    
+
     const simulation: Simulation = await getJson(
         {
             endPoint: `/simulations/${params.simulationId}`,
@@ -21,11 +21,13 @@ export const load: PageLoad = async ({ params, fetch }) => {
         }
     )
 
-    const displayResults = createDisplayResults();
+    const parameters = simulation.parameters;
 
+    let displayResults = null;
     if (simulation.state === 'done') {
+        const displayResults = createDisplayResults();
         await loadMoreResults({ displayResults, variationId: params.variationId, nResultsToLoad: 3 });
     }
 
-    return { simulation, displayResults }
+    return { parameters, displayResults }
 }

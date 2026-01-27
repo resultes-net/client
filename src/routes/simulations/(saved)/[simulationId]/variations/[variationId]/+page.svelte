@@ -24,10 +24,8 @@
 
 	export let data;
 
-	const simulation = data.simulation;
+	const parameters = data.parameters;
 	let displayResults = data.displayResults;
-
-	const parameters = simulation.parameters;
 
 	const modalStore = getModalStore();
 
@@ -71,10 +69,10 @@
 	}
 
 	onMount(async () => {
-		if (simulation.state !== 'done') {
+		if (displayResults === null) {
 			return;
 		}
-		
+
 		await loadMoreResults({ displayResults, variationId, nResultsToLoad: null });
 		displayResults = displayResults;
 	});
@@ -165,14 +163,16 @@
 				</table>
 			</div>
 
-			{#each displayResults as displayResult}
-				<div class="mt-6">
-					<h5 class="h5" id={displayResult.id}>{displayResult.title}</h5>
-					{#if displayResult.url}
-						<img src={displayResult.url} alt={displayResult.title} />
-					{/if}
-				</div>
-			{/each}
+			{#if displayResults}
+				{#each displayResults as displayResult}
+					<div class="mt-6">
+						<h5 class="h5" id={displayResult.id}>{displayResult.title}</h5>
+						{#if displayResult.url}
+							<img src={displayResult.url} alt={displayResult.title} />
+						{/if}
+					</div>
+				{/each}
+			{/if}
 		</div>
 	</div>
 </div>
