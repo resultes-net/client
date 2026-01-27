@@ -78,6 +78,10 @@
 	});
 
 	onDestroy(() => {
+		if (displayResults === null) {
+			return;
+		}
+
 		for (const displayResult of displayResults) {
 			const url = displayResult.url;
 
