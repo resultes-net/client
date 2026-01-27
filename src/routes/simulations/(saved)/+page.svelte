@@ -86,7 +86,10 @@
 
 	function getEllapsedMinutes(simulation: Simulation): number {
 		const start = new Date(simulation.created_on);
-		const end = simulation.state === 'done' ? new Date(simulation.state_changed_on) : new Date();
+		const end =
+			simulation.state === 'done' || simulation.state == 'error'
+				? new Date(simulation.state_changed_on)
+				: new Date();
 
 		const millisecondsElapsed = end.getTime() - start.getTime();
 
