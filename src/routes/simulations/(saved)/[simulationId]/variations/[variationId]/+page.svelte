@@ -123,21 +123,21 @@
 </script>
 
 <div data-popup="variation-menu-drop-down">
-	<nav class="bg-secondary-50-900-token list-nav pt-2">
+	<nav class="bg-secondary-50-900-token list-nav w-52 pt-2">
 		<div class="bg-secondary-50-900-token arrow" />
 		<ul>
 			<li>
-				<button class="btn closes-popup" on:click={downloadAllResults}>Download all results</button>
+				<button class="btn w-full closes-popup" on:click={downloadAllResults}>Download all results</button>
 			</li>
 			<li>
 				{#if logFileStatus === 'unavailable'}
-					<div class="italic pt-2 pb-2 pl-4 pr-4 closes-popup">No log file available</div>
+					<div class="italic btn w-full closes-popup">No log file available</div>
 				{:else if logFileStatus === 'available'}
-					<button class="btn" on:click={downloadLogFile}>Download log file</button>
+					<button class="btn w-full text-left" on:click={downloadLogFile}>Download log file</button>
 				{:else if logFileStatus === 'downloading'}
-					<ProgressBar />
+					<ProgressBar class="w-full"/>
 				{:else}
-					<a href={logFileStatus.objectUrl} target="_blank" class="closes-popup">Open log file in new tab</a>
+					<a href={logFileStatus.objectUrl} target="_blank" class="btn w-full closes-popup">Open log file in new tab</a>
 				{/if}
 			</li>
 		</ul>
