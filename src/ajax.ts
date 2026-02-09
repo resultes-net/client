@@ -1,5 +1,18 @@
 import { PUBLIC_API_BASE_URI } from '$env/static/public';
 
+export class FetchError extends Error {
+    constructor(...params: any[]) {
+        super(...params);
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, FetchError);
+        }
+
+        this.name = "FetchError";
+    }
+}
+
+
 export async function getJson<O>(
     {
         endPoint,
@@ -28,7 +41,7 @@ export async function getJson<O>(
     if (response.status !== 200) {
         const error = JSON.stringify(json);
         console.error(`Error calling API: ${error}`);
-        throw new Error(error);
+        throw new FetchError(error);
     }
 
     return json as O;
@@ -47,7 +60,7 @@ export async function getBlob(
     }: {
         endPoint: string,
         body?: BodyInit | null,
-        httpVerb?: 'GET' | 'POST' | 'PUT',
+        httpVerb?: 'GET' | 'POST' | 'PUT' | 'HEAD',
         bearerToken?: string | null,
         contentType?: string | null,
         accept: string,
@@ -60,7 +73,7 @@ export async function getBlob(
     if (response.status !== 200) {
         const errorMessage = `Error calling API endpoint ${endPoint}`
         console.error(errorMessage);
-        throw new Error(errorMessage);
+        throw new FetchError(errorMessage);
     }
 
     const blob = await response.blob();
@@ -80,7 +93,7 @@ export async function getResponse({
 }: {
     endPoint: string,
     body?: BodyInit | null,
-    httpVerb?: 'GET' | 'POST' | 'PUT',
+    httpVerb?: 'GET' | 'POST' | 'PUT' | 'HEAD',
     bearerToken?: string | null,
     contentType?: string | null,
     accept: string,

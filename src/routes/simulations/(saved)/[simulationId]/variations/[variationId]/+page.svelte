@@ -13,13 +13,17 @@
 
 	import { EllipsisVertical } from 'lucide-svelte';
 
+	import { ProgressBar } from '@skeletonlabs/skeleton';
+
 	import { page } from '$app/stores';
 
 	import { t } from '$lib/i18n/translations';
 
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
 
+	import { FetchError } from 'src/ajax';
 	import DownladAllResults from './downladAllResults.svelte';
+	import { downloadResultToObjectUrl } from './downloadResult';
 	import { loadMoreResults } from './results';
 
 	export let data;
@@ -35,7 +39,8 @@
 	const variationMenuPopupSettings: PopupSettings = {
 		event: 'click',
 		target: 'variation-menu-drop-down',
-		placement: 'bottom'
+		placement: 'bottom',
+		closeQuery: '.closes-popup'
 	};
 
 	const breadCrumbs = getBreadCrumbsStore();
@@ -64,11 +69,36 @@
 			type: 'component',
 			component: modalComponent
 		};
-
 		modalStore.trigger(modal);
 	}
 
+	async function downloadLogFile() {
+		const objectUrl = await downloadResultToObjectUrl({
+			resultPath: '/variation.log',
+			variationId
+		});
+		logFileStatus = { objectUrl };
+	}
+
+	type LogFileStatus = 'unavailable' | 'available' | 'downloading' | { objectUrl: string };
+	let logFileStatus: LogFileStatus = 'unavailable';
+
 	onMount(async () => {
+		try {
+			await downloadResultToObjectUrl({
+				resultPath: 'variation.log',
+				variationId,
+				httpVerb: 'HEAD',
+				fetchFunction: fetch
+			});
+
+			logFileStatus = 'available';
+		} catch (error) {
+			if (!(error instanceof FetchError)) {
+				throw error;
+			}
+		}
+
 		if (displayResults === null) {
 			return;
 		}
@@ -93,11 +123,22 @@
 </script>
 
 <div data-popup="variation-menu-drop-down">
-	<nav class="list-nav bg-surface-50-900-token pt-2">
-		<div class="arrow bg-surface-50-900-token" />
+	<nav class="bg-secondary-50-900-token list-nav pt-2">
+		<div class="bg-secondary-50-900-token arrow" />
 		<ul>
 			<li>
-				<button on:click={downloadAllResults}>Download all results</button>
+				<button class="btn closes-popup" on:click={downloadAllResults}>Download all results</button>
+			</li>
+			<li>
+				{#if logFileStatus === 'unavailable'}
+					<div class="italic pt-2 pb-2 pl-4 pr-4 closes-popup">No log file available</div>
+				{:else if logFileStatus === 'available'}
+					<button class="btn" on:click={downloadLogFile}>Download log file</button>
+				{:else if logFileStatus === 'downloading'}
+					<ProgressBar />
+				{:else}
+					<a href={logFileStatus.objectUrl} target="_blank" class="closes-popup">Open log file in new tab</a>
+				{/if}
 			</li>
 		</ul>
 	</nav>
