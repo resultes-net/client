@@ -13,17 +13,13 @@
 
 	import { EllipsisVertical } from 'lucide-svelte';
 
-	import { ProgressBar } from '@skeletonlabs/skeleton';
-
 	import { page } from '$app/stores';
 
 	import { t } from '$lib/i18n/translations';
 
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
 
-	import { FetchError } from 'src/ajax';
 	import DownladAllResults from './downladAllResults.svelte';
-	import { downloadResultToObjectUrl } from './downloadResult';
 	import { loadMoreResults } from './results';
 
 	export let data;
@@ -51,7 +47,7 @@
 		{ href: `/simulations/${simulationId}`, text: simulationId },
 		{ text: 'Variations' },
 		{
-			href: `/simulations/${variationId}/variations/${variationId}`,
+			href: `/simulations/${simulationId}/variations/${variationId}`,
 			text: variationId
 		}
 	]);
@@ -72,33 +68,7 @@
 		modalStore.trigger(modal);
 	}
 
-	async function downloadLogFile() {
-		const objectUrl = await downloadResultToObjectUrl({
-			resultPath: '/variation.log',
-			variationId
-		});
-		logFileStatus = { objectUrl };
-	}
-
-	type LogFileStatus = 'unavailable' | 'available' | 'downloading' | { objectUrl: string };
-	let logFileStatus: LogFileStatus = 'unavailable';
-
 	onMount(async () => {
-		try {
-			await downloadResultToObjectUrl({
-				resultPath: 'variation.log',
-				variationId,
-				httpVerb: 'HEAD',
-				fetchFunction: fetch
-			});
-
-			logFileStatus = 'available';
-		} catch (error) {
-			if (!(error instanceof FetchError)) {
-				throw error;
-			}
-		}
-
 		if (displayResults === null) {
 			return;
 		}
@@ -127,18 +97,12 @@
 		<div class="bg-secondary-50-900-token arrow" />
 		<ul>
 			<li>
-				<button class="btn w-full closes-popup" on:click={downloadAllResults}>Download all results</button>
+				<button class="btn w-full" on:click={downloadAllResults}>Download all results</button>
 			</li>
 			<li>
-				{#if logFileStatus === 'unavailable'}
-					<div class="italic btn w-full closes-popup">No log file available</div>
-				{:else if logFileStatus === 'available'}
-					<button class="btn w-full text-left" on:click={downloadLogFile}>Download log file</button>
-				{:else if logFileStatus === 'downloading'}
-					<ProgressBar class="w-full"/>
-				{:else}
-					<a href={logFileStatus.objectUrl} target="_blank" class="btn w-full closes-popup">Open log file in new tab</a>
-				{/if}
+				<a href={`/simulations/${simulationId}/variations/${variationId}/log`} class="btn w-full"
+					>Logs</a
+				>
 			</li>
 		</ul>
 	</nav>
