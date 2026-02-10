@@ -68,9 +68,7 @@
 			accept: 'text/plain'
 		});
 
-		const textDecoder = new TextDecoder('windows-1251');
-		const arrayBuffer = await blob.arrayBuffer();
-		const contents = textDecoder.decode(arrayBuffer);
+		const contents = await blob.text();
 		const objectUrl = URL.createObjectURL(blob);
 
 		const logFileData = new LogFileData(contents, objectUrl);
@@ -117,9 +115,13 @@
 		<h2 class="h2">Log entries for Variation {variationId}</h2>
 		<div class="self-center" use:popup={logMenuPopupSettings}><EllipsisVertical /></div>
 	</div>
-	{#if logFileStatus === 'unavailable'}
-		<p class="italic mt-6">Log file not available</p>
-	{:else if logFileStatus instanceof LogFileData}
-		<pre class="pre mt-6">{logFileStatus.contents}</pre>
-	{/if}
+	<div class="mt-6">
+		{#if logFileStatus === null}
+			<p class="italic">Loading log file...</p>
+		{:else if logFileStatus === 'unavailable'}
+			<p class="italic">Log file not available</p>
+		{:else if logFileStatus instanceof LogFileData}
+			<pre class="pre">{logFileStatus.contents}</pre>
+		{/if}
+	</div>
 </div>
