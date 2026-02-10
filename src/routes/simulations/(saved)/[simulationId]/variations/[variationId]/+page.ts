@@ -11,7 +11,7 @@ export const load: PageLoad = async ({ params, parent }) => {
 
     let displayResults = null;
     if (simulation.state === 'done') {
-        const displayResults = createDisplayResults();
+        displayResults = createDisplayResults();
         await loadMoreResults({ displayResults, variationId: params.variationId, nResultsToLoad: 3 });
     }
 

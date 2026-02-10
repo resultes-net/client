@@ -8,7 +8,7 @@ export function createDisplayResults(): DisplayResult[] {
         { id: 'boiler', title: 'Boiler power', path: '/boiler/boiler-hourly-A4.png', url: null },
         { id: 'hpBalance', title: 'Heat pump energy balance', path: '/hp/balance-monthly-A4.png', url: null },
         { id: 'hpQt', title: 'Heat pump Q vs. T plot', path: '/hp/q_t-A4.png', url: null },
-        { id: 'hxEffectiveness', title: 'Heat exchanger effectiveness', path: '/hx/efficiency-hourly-A4.png', url: null },
+        { id: 'hxEffectiveness', title: 'Heat exchanger effectiveness', path: '/hx/effectiveness-hourly-A4.png', url: null },
         { id: 'hxLmtd', title: 'Heat exchanger LMTD', path: '/hx/LMTD-hourly-A4.png', url: null },
         { id: 'ptesBalance', title: 'PTES energy balance', path: '/ptes/balance-monthly-A4.png', url: null },
         { id: 'ptesSoc', title: 'PTES state of charge (SoC)', path: '/ptes/soc-hourly-A4.png', url: null },
