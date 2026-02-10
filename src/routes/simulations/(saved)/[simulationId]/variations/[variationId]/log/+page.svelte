@@ -96,18 +96,16 @@
 </script>
 
 <div data-popup="log-menu-drop-down">
-	<nav class="bg-secondary-50-900-token list-nav w-52 pt-2">
-		<div class="bg-secondary-50-900-token arrow" />
-		<ul>
-			<li>
-				{#if logFileStatus instanceof LogFileData}
+	{#if logFileStatus instanceof LogFileData}
+		<nav class="bg-secondary-50-900-token list-nav w-52 pt-2">
+			<div class="bg-secondary-50-900-token arrow" />
+			<ul>
+				<li>
 					<a href={logFileStatus.objectUrl} class="btn w-full closes-popup">Download log file</a>
-				{:else}
-					<span class="italic">Log file not available</span>
-				{/if}
-			</li>
-		</ul>
-	</nav>
+				</li>
+			</ul>
+		</nav>
+	{/if}
 </div>
 
 <div class="flex flex-col mt-6 ml-6">
