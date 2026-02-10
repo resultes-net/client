@@ -41,7 +41,8 @@ export async function loadMoreResults({
     const promises = displayResultsToLoad.map(async (r) => {
         r.url = await downloadResultToObjectUrl({
             resultPath: r.path,
-            variationId
+            variationId,
+            accept: 'image/png'
         });
     });
 

@@ -54,7 +54,7 @@ export async function getBlob(
         httpVerb = 'GET',
         bearerToken = null,
         contentType = null,
-        accept,
+        accept = null,
         baseUri = PUBLIC_API_BASE_URI,
         fetchFunction = fetch
     }: {
@@ -63,7 +63,7 @@ export async function getBlob(
         httpVerb?: 'GET' | 'POST' | 'PUT' | 'HEAD',
         bearerToken?: string | null,
         contentType?: string | null,
-        accept: string,
+        accept?: string | null,
         baseUri?: string,
         fetchFunction?: (...args: any[]) => Promise<Response>
     }
@@ -87,7 +87,7 @@ export async function getResponse({
     httpVerb = 'GET',
     bearerToken = null,
     contentType = null,
-    accept,
+    accept = null,
     baseUri = PUBLIC_API_BASE_URI,
     fetchFunction = fetch
 }: {
@@ -96,7 +96,7 @@ export async function getResponse({
     httpVerb?: 'GET' | 'POST' | 'PUT' | 'HEAD',
     bearerToken?: string | null,
     contentType?: string | null,
-    accept: string,
+    accept?: string | null,
     baseUri?: string,
     fetchFunction?: (...args: any[]) => Promise<Response>
 }): Promise<Response> {
