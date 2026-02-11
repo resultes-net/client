@@ -113,7 +113,7 @@
 		<h2 class="h2">Log entries for Variation {variationId}</h2>
 		<div class="self-center" use:popup={logMenuPopupSettings}><EllipsisVertical /></div>
 	</div>
-	<div class="mt-6">
+	<div class="mt-6 mr-6">
 		{#if logFileStatus === null}
 			<p class="italic">Loading log file...</p>
 		{:else if logFileStatus === 'unavailable'}
