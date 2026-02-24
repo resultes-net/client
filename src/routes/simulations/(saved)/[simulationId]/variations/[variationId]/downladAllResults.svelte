@@ -13,30 +13,14 @@
 
 	let closing = false;
 
-	class Progress {
-		constructor(
-			public downloadedInBytes: number,
-			public sizeInMiB: number
-		) {}
-	}
+	type DownloadStatus =
+		| { status: 'not-started' }
+		| { status: 'progressing'; downloadedInBytes: number; sizeInMiB: number }
+		| { status: 'done'; sizeInMiB: number; objectUrl: string }
+		| { status: 'closing' }
+		| { status: 'error'; message: string };
 
-	class Done extends Progress {
-		constructor(
-			downloadedInBytes: number,
-			sizeInMiB: number,
-			public objectUrl: string
-		) {
-			super(downloadedInBytes, sizeInMiB);
-		}
-	}
-
-	class DownloadError {
-		constructor(public message: string) {}
-	}
-
-	type DownloadStatus = 'not-started' | Progress | Done | 'closing' | DownloadError;
-
-	let downloadStatus: DownloadStatus = 'not-started';
+	let downloadStatus: DownloadStatus = { status: 'not-started' };
 
 	onMount(async () => {
 		for await (const state of download()) {
@@ -47,7 +31,7 @@
 	onDestroy(() => {
 		closing = true;
 
-		if (downloadStatus instanceof Done) {
+		if (downloadStatus.status === 'done') {
 			URL.revokeObjectURL(downloadStatus.objectUrl);
 		}
 	});
@@ -63,7 +47,7 @@
 				bearerToken
 			});
 		} catch (error) {
-			yield new DownloadError(`An error occurred fetching ${endPoint}: ${error}`);
+			yield { status: 'error', message: `An error occurred fetching ${endPoint}: ${error}` };
 			return;
 		}
 
@@ -74,23 +58,23 @@
 		}
 
 		if (response.status !== 200) {
-			yield new DownloadError(`Error calling API endpoint ${endPoint}.`);
+			yield { status: 'error', message: `Error calling API endpoint ${endPoint}.` };
 			return;
 		}
 
 		const contentLength = response.headers.get('Content-Length');
 
 		if (contentLength === null) {
-			yield new DownloadError(`${endPoint} did not set Content-Length.`);
+			yield { status: 'error', message: `${endPoint} did not set Content-Length.` };
 			return;
 		}
 
 		const sizeInMiB = Math.round(Number.parseInt(contentLength) / 1024 / 1024);
 
-		yield new Progress(0, sizeInMiB);
+		yield { status: 'progressing', downloadedInBytes: 0, sizeInMiB };
 
 		if (response.body === null) {
-			yield new DownloadError(`${endPoint} returned null body.`);
+			yield { status: 'error', message: `${endPoint} returned null body.` };
 			return;
 		}
 
@@ -109,7 +93,7 @@
 
 				downloadedInBytes += value.length;
 
-				yield new Progress(downloadedInBytes, sizeInMiB);
+				yield { status: 'progressing', downloadedInBytes, sizeInMiB };
 
 				array.push(value);
 			}
@@ -118,14 +102,14 @@
 				throw error;
 			}
 
-			yield new DownloadError(`An error occurred reading from the server: ${error}.`);
+			yield { status: 'error', message: `An error occurred reading from the server: ${error}.` };
 			return;
 		} finally {
 			reader.releaseLock();
 		}
 
 		if (closing) {
-			yield 'closing';
+			yield { status: 'closing' };
 			return;
 		}
 
@@ -133,32 +117,30 @@
 
 		const objectUrl = URL.createObjectURL(blob);
 
-		yield new Done(downloadedInBytes, sizeInMiB, objectUrl);
+		yield { status: 'done', sizeInMiB, objectUrl };
 	}
 </script>
 
 <div class="card p-4 w-80 flex flex-col">
-	<!-- ORDER IS IMPORTANT: `Done` inherits from `Progress` so must be checked against first -->
-	{#if downloadStatus instanceof Done}
-		{@const downloadedInMiB = Math.round(downloadStatus.downloadedInBytes / 1024 / 1024)}
-		{@const sizeInMiB = downloadStatus.sizeInMiB}
-		<div>Done.</div>
-		<ProgressBar class="mt-2 w-4/5 self-center" value={downloadedInMiB} max={sizeInMiB} />
-		<div class="text-xs mt-1 mb-2">{downloadedInMiB} of {sizeInMiB} MiB</div>
-		<a class="anchor" href={downloadStatus.objectUrl} on:click={onClose} download={targetFileName}
-			>Save</a
-		>
-	{:else if downloadStatus instanceof Progress}
+	{#if downloadStatus.status === 'progressing'}
 		{@const downloadedInMiB = Math.round(downloadStatus.downloadedInBytes / 1024 / 1024)}
 		{@const sizeInMiB = downloadStatus.sizeInMiB}
 		<div>Downloading results...</div>
 		<ProgressBar class="mt-2 w-4/5 self-center" value={downloadedInMiB} max={sizeInMiB} />
 		<div class="text-xs mt-1 mb-2">{downloadedInMiB} of {sizeInMiB} MiB</div>
-	{:else if downloadStatus === 'not-started'}
+	{:else if downloadStatus.status === 'done'}
+		{@const sizeInMiB = downloadStatus.sizeInMiB}
+		<div>Done.</div>
+		<ProgressBar class="mt-2 w-4/5 self-center" value={sizeInMiB} max={sizeInMiB} />
+		<div class="text-xs mt-1 mb-2">{sizeInMiB} of {sizeInMiB} MiB</div>
+		<a class="anchor" href={downloadStatus.objectUrl} on:click={onClose} download={targetFileName}
+			>Save</a
+		>
+	{:else if downloadStatus.status === 'not-started'}
 		<div>Not started.</div>
-	{:else if downloadStatus === 'closing'}
+	{:else if downloadStatus.status === 'closing'}
 		<div>Closing.</div>
-	{:else if downloadStatus instanceof DownloadError}
+	{:else if downloadStatus.status === 'error'}
 		<div>An error occurred while downloading. Please try again.</div>
 		<div class="mt-6 text-xs">Details: {downloadStatus.message}</div>
 	{/if}

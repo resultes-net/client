@@ -36,7 +36,6 @@
 		event: 'click',
 		target: 'variation-menu-drop-down',
 		placement: 'bottom',
-		closeQuery: '.closes-popup'
 	};
 
 	const breadCrumbs = getBreadCrumbsStore();
