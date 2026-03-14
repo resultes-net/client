@@ -15,7 +15,7 @@
 
 	type DownloadStatus =
 		| { status: 'not-started' }
-		| { status: 'progressing'; downloadedInBytes: number; sizeInMiB: number }
+		| { status: 'progressing'; downloadedInMiB: number; sizeInMiB: number }
 		| { status: 'done'; sizeInMiB: number; objectUrl: string }
 		| { status: 'closing' }
 		| { status: 'error'; message: string };
@@ -35,6 +35,10 @@
 			URL.revokeObjectURL(downloadStatus.objectUrl);
 		}
 	});
+
+	function bytesToFullMiB(bytes: number): number {
+		return Math.round(bytes / 1024 / 1024);
+	}
 
 	async function* download(): AsyncIterable<DownloadStatus> {
 		const bearerToken = auth.getAccessToken();
@@ -69,33 +73,36 @@
 			return;
 		}
 
-		const sizeInMiB = Math.round(Number.parseInt(contentLength) / 1024 / 1024);
+		const sizeInBytes = Number.parseInt(contentLength);
+		const sizeInMiB = bytesToFullMiB(sizeInBytes);
 
-		yield { status: 'progressing', downloadedInBytes: 0, sizeInMiB };
+		yield { status: 'progressing', downloadedInMiB: 0, sizeInMiB };
 
 		if (response.body === null) {
 			yield { status: 'error', message: `${endPoint} returned null body.` };
 			return;
 		}
 
-		const reader = response.body.getReader();
-
 		const array: Uint8Array<ArrayBuffer>[] = [];
 
 		let downloadedInBytes = 0;
+		let previouslyDownloadedInMiB = 0;
 		try {
-			while (!closing) {
-				const { value, done } = await reader.read();
-
-				if (done) {
+			for await (const chunk of response.body) {
+				if (closing) {
 					break;
 				}
 
-				downloadedInBytes += value.length;
+				downloadedInBytes += chunk.length;
 
-				yield { status: 'progressing', downloadedInBytes, sizeInMiB };
+				const downloadedInMiB = bytesToFullMiB(downloadedInBytes);
 
-				array.push(value);
+				if (downloadedInMiB > previouslyDownloadedInMiB) {
+					yield { status: 'progressing', downloadedInMiB, sizeInMiB };
+					previouslyDownloadedInMiB = downloadedInMiB;
+				}
+
+				array.push(chunk);
 			}
 		} catch (error) {
 			if (!(error instanceof TypeError)) {
@@ -104,8 +111,6 @@
 
 			yield { status: 'error', message: `An error occurred reading from the server: ${error}.` };
 			return;
-		} finally {
-			reader.releaseLock();
 		}
 
 		if (closing) {
@@ -123,11 +128,15 @@
 
 <div class="card p-4 w-80 flex flex-col">
 	{#if downloadStatus.status === 'progressing'}
-		{@const downloadedInMiB = Math.round(downloadStatus.downloadedInBytes / 1024 / 1024)}
-		{@const sizeInMiB = downloadStatus.sizeInMiB}
 		<div>Downloading results...</div>
-		<ProgressBar class="mt-2 w-4/5 self-center" value={downloadedInMiB} max={sizeInMiB} />
-		<div class="text-xs mt-1 mb-2">{downloadedInMiB} of {sizeInMiB} MiB</div>
+		<ProgressBar
+			class="mt-2 w-4/5 self-center"
+			value={downloadStatus.downloadedInMiB}
+			max={downloadStatus.sizeInMiB}
+		/>
+		<div class="text-xs mt-1 mb-2">
+			{downloadStatus.downloadedInMiB} of {downloadStatus.sizeInMiB} MiB
+		</div>
 	{:else if downloadStatus.status === 'done'}
 		{@const sizeInMiB = downloadStatus.sizeInMiB}
 		<div>Done.</div>
