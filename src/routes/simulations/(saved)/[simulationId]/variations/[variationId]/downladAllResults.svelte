@@ -9,7 +9,7 @@
 
 	export let endPoint: string;
 	export let targetFileName: string;
-	export let onClose: () => void;
+	export let onClose: ({ closeModal }: { closeModal?: boolean }) => void;
 
 	let closing = false;
 
@@ -34,6 +34,8 @@
 		if (downloadStatus.status === 'done') {
 			URL.revokeObjectURL(downloadStatus.objectUrl);
 		}
+
+		onClose({ closeModal: false });
 	});
 
 	function bytesToFullMiB(bytes: number): number {
@@ -56,7 +58,7 @@
 		}
 
 		if (response.status === 401) {
-			onClose();
+			onClose({ closeModal: true });
 			goto('/login');
 			return;
 		}
@@ -142,8 +144,11 @@
 		<div>Done.</div>
 		<ProgressBar class="mt-2 w-4/5 self-center" value={sizeInMiB} max={sizeInMiB} />
 		<div class="text-xs mt-1 mb-2">{sizeInMiB} of {sizeInMiB} MiB</div>
-		<a class="anchor" href={downloadStatus.objectUrl} on:click={onClose} download={targetFileName}
-			>Save</a
+		<a
+			class="anchor"
+			href={downloadStatus.objectUrl}
+			on:click={() => onClose({ closeModal: true })}
+			download={targetFileName}>Save</a
 		>
 	{:else if downloadStatus.status === 'not-started'}
 		<div>Not started.</div>

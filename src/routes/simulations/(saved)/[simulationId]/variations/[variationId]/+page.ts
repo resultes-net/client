@@ -3,7 +3,7 @@ import type { PageLoad } from './$types';
 import { createDisplayResults, loadMoreResults } from './results';
 
 
-export const load: PageLoad = async ({ params, parent }) => {
+export const load: PageLoad = async ({ params, parent, url }) => {
     const data = await parent();
 
     const simulation = data.simulation;
@@ -15,5 +15,7 @@ export const load: PageLoad = async ({ params, parent }) => {
         await loadMoreResults({ displayResults, variationId: params.variationId, nResultsToLoad: 3 });
     }
 
-    return { parameters, displayResults }
+    const shallDownload = url.searchParams.get("download") === '';
+
+    return { parameters, displayResults, shallDownload }
 }

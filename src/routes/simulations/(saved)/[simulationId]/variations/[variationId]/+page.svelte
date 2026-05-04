@@ -13,6 +13,7 @@
 
 	import { EllipsisVertical } from 'lucide-svelte';
 
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
 	import { t } from '$lib/i18n/translations';
@@ -35,7 +36,7 @@
 	const variationMenuPopupSettings: PopupSettings = {
 		event: 'click',
 		target: 'variation-menu-drop-down',
-		placement: 'bottom',
+		placement: 'bottom'
 	};
 
 	const breadCrumbs = getBreadCrumbsStore();
@@ -51,13 +52,27 @@
 		}
 	]);
 
+	$: {
+		if (data.shallDownload) {
+			downloadAllResults();
+		}
+	}
+
 	function downloadAllResults() {
 		const endPoint = `/variations/${variationId}/results`;
 		const targetFileName = `${variationId}.zip`;
 
+		const url = $page.url;
+		function onClose({ closeModal }: { closeModal: boolean }) {
+			if (closeModal) {
+				modalStore.close();
+			}
+			goto(url.pathname);
+		}
+
 		const modalComponent: ModalComponent = {
 			ref: DownladAllResults,
-			props: { endPoint, targetFileName, onClose: modalStore.close }
+			props: { endPoint, targetFileName, onClose }
 		};
 
 		const modal: ModalSettings = {
@@ -96,12 +111,10 @@
 		<div class="bg-secondary-50-900-token arrow" />
 		<ul>
 			<li>
-				<button class="btn w-full" on:click={downloadAllResults}>Download all results</button>
+				<a href="?download" class="btn w-full">Download all results</a>
 			</li>
 			<li>
-				<a href={`/simulations/${simulationId}/variations/${variationId}/log`} class="btn w-full"
-					>Logs</a
-				>
+				<a href="/log" class="btn w-full">Logs</a>
 			</li>
 		</ul>
 	</nav>
