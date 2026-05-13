@@ -7,18 +7,18 @@
 
 	import { type Demand } from '$lib/openapi/generated/model/demand';
 
-    import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
+	import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
 
 	export let parameters: Demand;
-    export let onAreParametersValidChanged: OnAreParametersValidChanged;
-
+	export let onShowProfileDetails;
+	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 	const profileInfoHoverPopupSettings: PopupSettings = {
 		event: 'hover',
 		target: 'profileInfoHoverPopup',
 		placement: 'top'
 	};
 
-	function onDemandProfileChanged(e: Event): void {
+	async function onDemandProfileChanged(e: Event): Promise<void> {
 		const inputElement = e.target as HTMLInputElement;
 
 		const file = inputElement?.files?.[0];
@@ -27,9 +27,19 @@
 			return;
 		}
 
+		// TODO: deal with reading and parsing errors
+		const text = await file.text();
+		const hourly_heat_demand_kW = text.split('\n').slice(1).map(Number);
+
+		const hoursInAYear = 365 * 24;
+
+		if (hourly_heat_demand_kW.length !== 365 * 24) {
+			throw new Error(`Demand profile must contain exactly ${hoursInAYear} lines.`);
+		}
+
 		parameters.profile = {
 			profile_type: 'user-provided',
-			data: file
+			hourly_heat_demand_kW
 		};
 	}
 </script>
@@ -47,15 +57,23 @@
 <div class="grid grid-cols-[--input-grid-cols] gap-y-[--input-gap-y]">
 	<p>{$t('common.demandProfile')}</p>
 	<div class="input-group input-group-divider grid grid-cols-[auto_1fr_auto] items-center gap-2">
-		<label>
+		<label class="label">
 			<span class="btn variant-filled-primary"><Folder /></span>
-			<input id="demand-profile" type="file" hidden on:change={onDemandProfileChanged} />
+			<input
+				id="demand-profile"
+				type="file"
+				hidden
+				aria-label={$t('common.demandProfile')}
+				on:change={onDemandProfileChanged}
+			/>
 		</label>
-		<label for="demand-profile"
-			>{parameters.profile.profile_type === 'predefined'
-				? parameters.profile.name
-				: '<User provided>'}</label
-		>
+		{#if parameters.profile.profile_type === 'predefined'}
+			<label for="demand-profile">
+				{parameters.profile.name}
+			</label>
+		{:else}
+			<button class="btn" on:click={onShowProfileDetails}>Custom...</button>
+		{/if}
 		<button
 			class="btn variant-filled-primary [&>*]:pointer-events-none"
 			use:popup={profileInfoHoverPopupSettings}
