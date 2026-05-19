@@ -37,7 +37,7 @@
 
 	function onLogout(): void {
 		auth.unsetToken();
-		goto('/');
+		goto('/', { invalidateAll: true });
 	}
 
 	function onLocaleChanged(event: Event): void {

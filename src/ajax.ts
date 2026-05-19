@@ -12,6 +12,14 @@ export class FetchError extends Error {
     }
 }
 
+export class UnauthorizedError extends FetchError {
+    constructor(...params: any[]) {
+        super(...params);
+
+        this.name = "UnauthorizedError";
+    }
+}
+
 
 export async function getJson<O>(
     {
@@ -40,8 +48,16 @@ export async function getJson<O>(
 
     if (response.status !== 200) {
         const error = JSON.stringify(json);
+
+        if (response.status == 401) {
+            console.error(`Unauthorized error calling API: {error}`);
+
+            throw new UnauthorizedError(error)
+        }
+
         console.error(`Error calling API: ${error}`);
         throw new FetchError(error);
+
     }
 
     return json as O;

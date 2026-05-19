@@ -7,9 +7,10 @@
 
 	import * as auth from 'src/auth';
 
-	import { getJson } from 'src/ajax';
+	import { getJson, UnauthorizedError } from 'src/ajax';
 
-	async function onClick(): Promise<void> {
+	let hasLoginFailed = false;
+	async function onSubmit(): Promise<void> {
 		const contentType = 'application/x-www-form-urlencoded';
 
 		assert(formData.password && formData.username);
@@ -19,13 +20,21 @@
 
 		const body = new URLSearchParams({ grant_type: 'password', username, password });
 
-		const token = await getJson<Token>({ endPoint: '/token', body, contentType });
-		
-		assert(token.token_type === "bearer");
+		try {
+			const token = await getJson<Token>({ endPoint: '/token', body, contentType });
 
-		auth.setToken(token);
+			assert(token.token_type === 'bearer');
 
-		goto('/');
+			auth.setToken(token);
+
+			goto('/');
+		} catch (error) {
+			if (error instanceof UnauthorizedError) {
+				hasLoginFailed = true;
+			}
+
+			throw error;
+		}
 	}
 
 	interface FormData {
@@ -43,11 +52,11 @@
 		return result;
 	}
 
-	var disabled: boolean;
+	let disabled: boolean;
 	$: disabled = isNullOrEmpty(formData.username) || isNullOrEmpty(formData.password);
 </script>
 
-<form class="flex flex-col w-[80%] self-center gap-y-4">
+<form class="flex flex-col w-[80%] self-center gap-y-4" on:submit|preventDefault={onSubmit}>
 	<label class="label">
 		<span>{$t('auth.username')}</span>
 		<input class="input" type="text" autocomplete="username" bind:value={formData.username} />
@@ -62,9 +71,15 @@
 		/>
 	</label>
 	<button
-		type="button"
+		type="submit"
 		class="btn variant-filled-primary self-center mt-2"
 		{disabled}
-		on:click={onClick}>{$t('auth.login')}</button
 	>
+		{$t('auth.login')}
+	</button>
 </form>
+{#if hasLoginFailed}
+	<div role="alert" class="alert">
+		<div class="alert-message text-sm text-error-900-50-token">Wrong username or password. Please try again.</div>
+	</div>
+{/if}
