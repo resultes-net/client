@@ -48,10 +48,12 @@
 			goto('/');
 		} catch (error) {
 			if (error instanceof UnauthorizedError) {
-				message = { type: 'error', value: 'Wrong username or password. Please try again.' };
+				message = { type: 'error', value: $t('auth.WrongUserNameOrPassword') };
+			} else if (error instanceof Error) {
+				message = { type: 'error', value: error.message };
+			} else {
+				throw error;
 			}
-
-			throw error;
 		}
 	}
 
@@ -64,20 +66,18 @@
 		username: null,
 		password: null
 	};
-
-	function isNullOrEmpty(value: string | null): boolean {
-		const result = value === null || value === '';
-		return result;
-	}
-
-	let disabled: boolean;
-	$: disabled = isNullOrEmpty(formData.username) || isNullOrEmpty(formData.password);
 </script>
 
 <form class="flex flex-col w-[80%] self-center gap-y-4" on:submit|preventDefault={onSubmit}>
 	<label class="label">
 		<span>{$t('auth.username')}</span>
-		<input class="input" type="text" autocomplete="username" bind:value={formData.username} />
+		<input
+			class="input"
+			type="text"
+			autocomplete="username"
+			required
+			bind:value={formData.username}
+		/>
 	</label>
 	<label class="label">
 		<span>{$t('auth.password')}</span>
@@ -85,16 +85,17 @@
 			class="input"
 			type="password"
 			autocomplete="current-password"
+			required
 			bind:value={formData.password}
 		/>
 	</label>
-	<button type="submit" class="btn variant-filled-primary self-center mt-2" {disabled}>
+	<button type="submit" class="btn variant-filled-primary self-center mt-2">
 		{$t('auth.login')}
 	</button>
 </form>
 
 {#if message}
-	<div role="alert" class="alert">
+	<div role="alert" class="alert mt-3">
 		<div class="alert-message text-sm {getVariant(message.type)}">
 			<div class="ml-1 mr-1">{message.value}</div>
 		</div>

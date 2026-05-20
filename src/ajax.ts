@@ -1,20 +1,19 @@
 import { PUBLIC_API_BASE_URI } from '$env/static/public';
 
 export class FetchError extends Error {
-    constructor(...params: any[]) {
+    constructor(public errorCode: number, ...params: any[]) {
         super(...params);
 
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, FetchError);
-        }
 
         this.name = "FetchError";
     }
 }
 
 export class UnauthorizedError extends FetchError {
+    public static ERROR_CODE = 401;
+
     constructor(...params: any[]) {
-        super(...params);
+        super(UnauthorizedError.ERROR_CODE, ...params);
 
         this.name = "UnauthorizedError";
     }
@@ -46,17 +45,18 @@ export async function getJson<O>(
 
     const json = await response.json();
 
-    if (response.status !== 200) {
+    const responseStatus = response.status;
+    if (responseStatus !== 200) {
         const error = JSON.stringify(json);
 
-        if (response.status == 401) {
+        if (responseStatus == 401) {
             console.error(`Unauthorized error calling API: {error}`);
 
-            throw new UnauthorizedError(error)
+            throw new UnauthorizedError(401, error)
         }
 
         console.error(`Error calling API: ${error}`);
-        throw new FetchError(error);
+        throw new FetchError(responseStatus, error);
 
     }
 
@@ -70,7 +70,7 @@ export async function getBlob(
         httpVerb = 'GET',
         bearerToken = null,
         contentType = null,
-        accept = null,
+        accept,
         baseUri = PUBLIC_API_BASE_URI,
         fetchFunction = fetch
     }: {
@@ -79,7 +79,7 @@ export async function getBlob(
         httpVerb?: 'GET' | 'POST' | 'PUT' | 'HEAD',
         bearerToken?: string | null,
         contentType?: string | null,
-        accept?: string | null,
+        accept: string,
         baseUri?: string,
         fetchFunction?: (...args: any[]) => Promise<Response>
     }
@@ -103,7 +103,7 @@ export async function getResponse({
     httpVerb = 'GET',
     bearerToken = null,
     contentType = null,
-    accept = null,
+    accept,
     baseUri = PUBLIC_API_BASE_URI,
     fetchFunction = fetch
 }: {
@@ -112,11 +112,11 @@ export async function getResponse({
     httpVerb?: 'GET' | 'POST' | 'PUT' | 'HEAD',
     bearerToken?: string | null,
     contentType?: string | null,
-    accept?: string | null,
+    accept: string,
     baseUri?: string,
     fetchFunction?: (...args: any[]) => Promise<Response>
 }): Promise<Response> {
-    var headers: Record<string, string> = {
+    let headers: Record<string, string> = {
         Accept: accept,
     };
 

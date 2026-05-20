@@ -5,9 +5,9 @@
 
 	import type { UserCreate } from '$lib/openapi/generated/model/userCreate';
 
-	import { getJson } from 'src/ajax';
+	import { FetchError, getJson } from 'src/ajax';
 
-	var user_create: UserCreate = {
+	let user_create: UserCreate = {
 		full_name: '',
 		email: '',
 		user_name: '',
@@ -15,21 +15,37 @@
 		registration_key: ''
 	};
 
-	async function onClick(): Promise<void> {
-		// assert(user_create.full_name && ...);
+	let errorMessage: string | null = null;
 
+	async function onSubmit(): Promise<void> {
 		const body = JSON.stringify(user_create);
 
-		await getJson({ endPoint: '/user', body });
+		try {
+			await getJson({ endPoint: '/user', body });
+		} catch (error) {
+			if (error instanceof FetchError && error.errorCode == 403) {
+				errorMessage = $t('auth.RegistrationCodeInvalid');
+			} else if (error instanceof Error) {
+				errorMessage = error.message;
+			} else {
+				throw error;
+			}
+		}
 
 		goto('/login?registered');
 	}
 </script>
 
-<form class="flex flex-col w-[80%] self-center gap-y-4">
+<form class="flex flex-col w-[80%] self-center gap-y-3" on:submit|preventDefault={onSubmit}>
 	<label class="label">
 		<span>{$t('auth.fullname')}</span>
-		<input class="input" type="text" autocomplete="name" bind:value={user_create.full_name} />
+		<input
+			class="input"
+			type="text"
+			autocomplete="name"
+			required
+			bind:value={user_create.full_name}
+		/>
 	</label>
 	<label class="label">
 		<span>{$t('auth.email')}</span>
@@ -37,12 +53,21 @@
 			class="input invalid:input-error"
 			type="email"
 			autocomplete="email"
+			required
+			title={$t('auth.MustContainTLD')}
+			pattern="[^@\s]+@[^@\s]+(\.[^@\s]+)+"
 			bind:value={user_create.email}
 		/>
 	</label>
 	<label class="label">
 		<span>{$t('auth.username')}</span>
-		<input class="input" type="text" autocomplete="username" bind:value={user_create.user_name} />
+		<input
+			class="input"
+			type="text"
+			autocomplete="username"
+			required
+			bind:value={user_create.user_name}
+		/>
 	</label>
 	<label class="label">
 		<span>{$t('auth.password')}</span>
@@ -50,14 +75,23 @@
 			class="input"
 			type="password"
 			autocomplete="new-password"
+			required
 			bind:value={user_create.plain_password}
 		/>
 	</label>
 	<label class="label">
 		<span>{$t('auth.registrationCode')}</span>
-		<input class="input" type="text" bind:value={user_create.registration_key} />
+		<input class="input" type="text" required bind:value={user_create.registration_key} />
 	</label>
-	<button type="button" class="btn variant-filled-primary self-center mt-2" on:click={onClick}
+	<button type="submit" class="btn variant-filled-primary self-center mt-2"
 		>{$t('auth.register')}</button
 	>
 </form>
+
+{#if errorMessage}
+	<div role="alert" class="alert mt-3">
+		<div class="alert-message text-sm variant-ghost-error">
+			<div class="ml-1 mr-1">{errorMessage}</div>
+		</div>
+	</div>
+{/if}

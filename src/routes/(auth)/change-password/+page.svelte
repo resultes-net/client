@@ -8,7 +8,7 @@
 	import { getJson } from 'src/ajax';
 	import * as auth from 'src/auth';
 
-	var user_create: UserModify = {
+	let user_create: UserModify = {
 		old_plain_password: '',
 		new_plain_password: ''
 	};

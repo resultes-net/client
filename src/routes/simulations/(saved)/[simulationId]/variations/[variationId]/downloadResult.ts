@@ -1,8 +1,8 @@
 import { getBlob } from 'src/ajax';
 import * as auth from 'src/auth';
 
-export async function downloadResultToObjectUrl({ resultPath, variationId, httpVerb = 'GET', accept = null, fetchFunction = fetch }: {
-    resultPath: string, variationId: string, accept?: string | null, httpVerb?: 'GET' | 'POST' | 'PUT' | 'HEAD', fetchFunction?: (...args: any[]) => Promise<Response>
+export async function downloadResultToObjectUrl({ resultPath, variationId, httpVerb = 'GET', accept, fetchFunction = fetch }: {
+    resultPath: string, variationId: string, accept: string, httpVerb?: 'GET' | 'POST' | 'PUT' | 'HEAD', fetchFunction?: (...args: any[]) => Promise<Response>
 }): Promise<string> {
     const variationEndPoint = `/variations/${variationId}`
 
