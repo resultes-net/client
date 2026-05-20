@@ -5,7 +5,8 @@
 
 	import { t } from '$lib/i18n/translations';
 
-	const checked = $page.url.pathname === '/register';
+	let checked;
+	$: checked = $page.url.pathname === '/register';
 
 	function onCheckedChanged(event: Event): void {
 		const target = event.target as HTMLInputElement;
