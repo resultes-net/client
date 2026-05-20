@@ -23,14 +23,21 @@
 		try {
 			await getJson({ endPoint: '/user', body });
 		} catch (error) {
-			if (error instanceof FetchError && error.errorCode == 403) {
-				errorMessage = $t('auth.RegistrationCodeInvalid');
-				return;
+			if (error instanceof FetchError) {
+				if (error.errorCode == 403) {
+					errorMessage = $t('auth.RegistrationCodeInvalid');
+					return;
+				}
+
+				if (error.errorCode == 409) {
+					errorMessage = $t('auth.UsernameAlreadyTaken');
+					return;
+				}
 			} else if (error instanceof Error) {
-				errorMessage = error.message;
+				errorMessage = `${$t('common.AnErrorOccurred')}: ${error.message}`;
 				return;
 			}
-			
+
 			throw error;
 		}
 

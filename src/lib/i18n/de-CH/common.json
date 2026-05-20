@@ -36,5 +36,6 @@
     "portsMustBeInOrder": "Die Anschluss-Höhen müssen von oben nach unten abnehmen.",
     "portHeightTop": "Anschlusshöhe oben",
     "portHeightMiddle": "Anschlusshöhe mittig",
-    "portHeightBottom": "Anschlusshöhe unten"
+    "portHeightBottom": "Anschlusshöhe unten",
+    "AnErrorOccurred": "Es ist ein Fehler aufgetreten"
 }

@@ -36,5 +36,6 @@
     "portsMustBeInOrder": "The ports heights must be decreasing from top to bottom.",
     "portHeightTop": "Top port position",
     "portHeightMiddle": "Middle port position",
-    "portHeightBottom": "Bottom port position"
+    "portHeightBottom": "Bottom port position",
+    "AnErrorOccurred": "An error occurred"
 }
