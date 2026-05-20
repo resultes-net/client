@@ -43,24 +43,18 @@ export async function getJson<O>(
 
     const response = await getResponse({ endPoint, body, httpVerb, bearerToken, contentType, accept, baseUri, fetchFunction });
 
-    const json = await response.json();
+    const json = await response.text();
 
     const responseStatus = response.status;
     if (responseStatus !== 200) {
-        const error = JSON.stringify(json);
-
         if (responseStatus == 401) {
-            console.error(`Unauthorized error calling API: {error}`);
-
-            throw new UnauthorizedError(401, error)
+            throw new UnauthorizedError(401, json)
         }
 
-        console.error(`Error calling API: ${error}`);
-        throw new FetchError(responseStatus, error);
-
+        throw new FetchError(responseStatus, json);
     }
 
-    return json as O;
+    return JSON.parse(json);
 }
 
 export async function getBlob(

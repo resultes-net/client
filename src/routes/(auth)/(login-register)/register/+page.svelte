@@ -33,7 +33,9 @@
 					errorMessage = $t('auth.UsernameAlreadyTaken');
 					return;
 				}
-			} else if (error instanceof Error) {
+			} 
+			
+			if (error instanceof Error) {
 				errorMessage = `${$t('common.AnErrorOccurred')}: ${error.message}`;
 				return;
 			}
