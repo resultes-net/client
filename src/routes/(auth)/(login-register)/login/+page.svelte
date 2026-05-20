@@ -49,11 +49,13 @@
 		} catch (error) {
 			if (error instanceof UnauthorizedError) {
 				message = { type: 'error', value: $t('auth.WrongUserNameOrPassword') };
+				return;
 			} else if (error instanceof Error) {
 				message = { type: 'error', value: error.message };
-			} else {
-				throw error;
+				return;
 			}
+
+			throw error;
 		}
 	}
 

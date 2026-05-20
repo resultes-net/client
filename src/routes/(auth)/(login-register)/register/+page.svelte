@@ -25,11 +25,13 @@
 		} catch (error) {
 			if (error instanceof FetchError && error.errorCode == 403) {
 				errorMessage = $t('auth.RegistrationCodeInvalid');
+				return;
 			} else if (error instanceof Error) {
 				errorMessage = error.message;
-			} else {
-				throw error;
+				return;
 			}
+			
+			throw error;
 		}
 
 		goto('/login?registered');
@@ -50,12 +52,12 @@
 	<label class="label">
 		<span>{$t('auth.email')}</span>
 		<input
-			class="input invalid:input-error"
+			class="input"
 			type="email"
 			autocomplete="email"
 			required
 			title={$t('auth.MustContainTLD')}
-			pattern="[^@\s]+@[^@\s]+(\.[^@\s]+)+"
+			pattern="([^@\s]+@[^@\s]+(\.[^@\s]+)+)?"
 			bind:value={user_create.email}
 		/>
 	</label>
