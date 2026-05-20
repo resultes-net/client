@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { t } from '$lib/i18n/translations';
 	import { assert } from '$lib/utils';
+	import { page } from '$app/stores';
 
 	import { type Token } from 'src/lib/openapi/generated/model/token';
 
@@ -9,7 +10,24 @@
 
 	import { getJson, UnauthorizedError } from 'src/ajax';
 
-	let hasLoginFailed = false;
+	const hasJustRegistered = $page.url.searchParams.has('registered');
+
+	type MessageType = 'info' | 'error';
+	let message: { type: MessageType; value: string } | null = hasJustRegistered
+		? { type: 'info', value: 'Registration successful. You can now log in.' }
+		: null;
+
+	function getVariant(type: MessageType) {
+		switch (type) {
+			case 'info':
+				return 'variant-ghost-success';
+			case 'error':
+				return 'variant-ghost-error';
+			default:
+				throw new Error(`Unknown message type: '${type}'.`);
+		}
+	}
+
 	async function onSubmit(): Promise<void> {
 		const contentType = 'application/x-www-form-urlencoded';
 
@@ -30,7 +48,7 @@
 			goto('/');
 		} catch (error) {
 			if (error instanceof UnauthorizedError) {
-				hasLoginFailed = true;
+				message = { type: 'error', value: 'Wrong username or password. Please try again.' };
 			}
 
 			throw error;
@@ -70,16 +88,15 @@
 			bind:value={formData.password}
 		/>
 	</label>
-	<button
-		type="submit"
-		class="btn variant-filled-primary self-center mt-2"
-		{disabled}
-	>
+	<button type="submit" class="btn variant-filled-primary self-center mt-2" {disabled}>
 		{$t('auth.login')}
 	</button>
 </form>
-{#if hasLoginFailed}
+
+{#if message}
 	<div role="alert" class="alert">
-		<div class="alert-message text-sm text-error-900-50-token">Wrong username or password. Please try again.</div>
+		<div class="alert-message text-sm {getVariant(message.type)}">
+			<div class="ml-1 mr-1">{message.value}</div>
+		</div>
 	</div>
 {/if}
