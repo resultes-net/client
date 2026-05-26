@@ -18,6 +18,12 @@
 		placement: 'top'
 	};
 
+	const scalingFactorInfoHoverPopupSettings: PopupSettings = {
+		event: 'hover',
+		target: 'scalingFactorInfoHoverPopup',
+		placement: 'top'
+	};
+
 	async function onDemandProfileChanged(e: Event): Promise<void> {
 		const inputElement = e.target as HTMLInputElement;
 
@@ -48,14 +54,31 @@
 			hourly_heat_demand_MW
 		};
 	}
+
+	let profileYearlyHeatDemandGWh: number;
+	$: if (parameters.profile.profile_type === 'user-provided') {
+		profileYearlyHeatDemandGWh =
+			parameters.profile.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000;
+	} else {
+		profileYearlyHeatDemandGWh = 30;
+	}
+
+	let scalingFactor = 1;
 </script>
 
 <div data-popup="profileInfoHoverPopup">
 	<div class="card p-4 variant-filled-secondary z-50">
 		<p>
-			A CSV file giving for each time step the time, mass flow rate in kg/h and the temperature in
-			°C required.
+			A CSV file giving for each with one header row and one column giving, for each hour of the
+			year, the heat demand in MW.
 		</p>
+		<div class="arrow variant-filled-secondary" />
+	</div>
+</div>
+
+<div data-popup="scalingFactorInfoHoverPopup">
+	<div class="card p-4 variant-filled-secondary z-50">
+		<p>Every hourly demand will be multiplied by this factor before being applied.</p>
 		<div class="arrow variant-filled-secondary" />
 	</div>
 </div>
@@ -86,5 +109,36 @@
 		>
 			<Info />
 		</button>
+	</div>
+
+	<label for="demand-scaling-factor">{$t('common.scalingFactor')}</label>
+	<div class="input-group input-group-divider grid grid-cols-[1fr_auto] items-center gap-2">
+		<input
+			class="input"
+			id="demand-scaling-factor"
+			title={$t('common.scalingFactor')}
+			type="number"
+			min="0"
+			bind:value={scalingFactor}
+		/>
+		<button
+			class="btn variant-filled-primary [&>*]:pointer-events-none"
+			use:popup={scalingFactorInfoHoverPopupSettings}
+		>
+			<Info />
+		</button>
+	</div>
+
+	<label for="yearly-demand">{$t('common.yearlyHeatDemand')}</label>
+	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+		<input
+			class="input"
+			id="yearly-demand"
+			title={$t('common.yearlyHeatDemand')}
+			type="number"
+			value={(scalingFactor * profileYearlyHeatDemandGWh).toFixed(1)}
+			readonly
+		/>
+		<div><span class="flex flex-grow justify-center">GWh</span></div>
 	</div>
 </div>

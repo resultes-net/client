@@ -54,9 +54,9 @@
 
 	const demandProfile = parameters.values.demand.profile;
 
-	let yearlyHeatDemandGwh = 1000;
+	let yearlyHeatDemandGWh = 30;
 	if (demandProfile.profile_type === 'user-provided') {
-		yearlyHeatDemandGwh = demandProfile.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000;
+		yearlyHeatDemandGWh = demandProfile.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000;
 	}
 
 	$: {
@@ -153,7 +153,7 @@
 					<tbody>
 						<tr>
 							<td>{$t('common.yearlyHeatDemand')}</td>
-							<td>{yearlyHeatDemandGwh.toFixed(1)}</td>
+							<td>{yearlyHeatDemandGWh.toFixed(1)}</td>
 							<td> GWh </td>
 							<td />
 						</tr>
@@ -169,21 +169,30 @@
 								<td>
 									m<sup>2</sup>MWh<sup>-1</sup>
 								</td>
-								<td>Relative to total yearly demand</td>
+								<td
+									>{(
+										parameters.values.collector_field.area.value *
+										yearlyHeatDemandGWh *
+										1000
+									).toFixed(0)} m<sup>2</sup>
+								</td>
 							{/if}
 						</tr>
 						{#if parameters.values.type === 'ptes'}
 							<tr>
 								<td>{$t('common.storageVolume')}</td>
 								<td>{parameters.values.storage.volume.value}</td>
-								<td>
-									{#if parameters.values.storage.volume.scaling == 'absolute_m3'}
-										m<sup>3</sup>
-									{:else if parameters.values.storage.volume.scaling == 'relative_to_demand_m3_per_MWh'}
-										m<sup>3</sup>MWh<sup>-1</sup>
-									{/if}
-								</td>
-								<td />
+								{#if parameters.values.storage.volume.scaling == 'absolute_m3'}
+									<td>m<sup>3</sup></td>
+									<td />
+								{:else if parameters.values.storage.volume.scaling == 'relative_to_demand_m3_per_MWh'}
+									<td>m<sup>3</sup>MWh<sup>-1</sup></td>
+									<td
+										>{(parameters.values.storage.volume.value * yearlyHeatDemandGWh * 1000).toFixed(
+											0
+										)} m<sup>3</sup>
+									</td>
+								{/if}
 							</tr>
 							<tr>
 								<td>{$t('common.portHeightTop')}</td>

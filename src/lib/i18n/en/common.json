@@ -38,5 +38,6 @@
     "portHeightTop": "Top port position",
     "portHeightMiddle": "Middle port position",
     "portHeightBottom": "Bottom port position",
-    "AnErrorOccurred": "An error occurred"
+    "AnErrorOccurred": "An error occurred",
+    "scalingFactor": "Scaling factor"
 }
