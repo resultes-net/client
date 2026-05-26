@@ -114,7 +114,9 @@
 				<a href="?download" class="btn w-full">Download all results</a>
 			</li>
 			<li>
-				<a href="/log" class="btn w-full">Logs</a>
+				<a href={`/simulations/${simulationId}/variations/${variationId}/log`} class="btn w-full"
+					>Logs</a
+				>
 			</li>
 		</ul>
 	</nav>
