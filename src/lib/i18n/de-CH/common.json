@@ -14,6 +14,7 @@
     "storage": "Wärmespeicher",
     "storageVolume": "Speichervolumen",
     "demand": "Wärmebedarf",
+    "yearlyHeatDemand": "Wärmebedarf pro Jahr",
     "demandProfile": "Bedarfsprofil",
     "newSimulation": "Neue Simulation",
     "savedSimulations": "Gespeicherte Simulationen",

@@ -29,17 +29,23 @@
 
 		// TODO: deal with reading and parsing errors
 		const text = await file.text();
-		const hourly_heat_demand_kW = text.split('\n').slice(1).map(Number);
+		const hourly_heat_demand_MW = text
+			.split('\n')
+			.slice(1)
+			.filter((s) => s.trim())
+			.map(Number);
 
 		const hoursInAYear = 365 * 24;
 
-		if (hourly_heat_demand_kW.length !== 365 * 24) {
-			throw new Error(`Demand profile must contain exactly ${hoursInAYear} lines.`);
+		if (hourly_heat_demand_MW.length !== hoursInAYear) {
+			throw new Error(
+				`Demand profile must contain exactly ${hoursInAYear} lines, but got ${hourly_heat_demand_MW.length}.`
+			);
 		}
 
 		parameters.profile = {
 			profile_type: 'user-provided',
-			hourly_heat_demand_kW
+			hourly_heat_demand_MW
 		};
 	}
 </script>

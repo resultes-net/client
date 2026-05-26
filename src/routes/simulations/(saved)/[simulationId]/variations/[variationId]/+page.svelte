@@ -52,6 +52,13 @@
 		}
 	]);
 
+	const demandProfile = parameters.values.demand.profile;
+
+	let yearlyHeatDemandGwh = 1000;
+	if (demandProfile.profile_type === 'user-provided') {
+		yearlyHeatDemandGwh = demandProfile.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000;
+	}
+
 	$: {
 		if (data.shallDownload) {
 			downloadAllResults();
@@ -140,19 +147,30 @@
 							<th>Description</th>
 							<th>Value</th>
 							<th>Unit</th>
+							<th>Notes</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
+							<td>{$t('common.yearlyHeatDemand')}</td>
+							<td>{yearlyHeatDemandGwh.toFixed(1)}</td>
+							<td> GWh </td>
+							<td />
+						</tr>
+						<tr>
 							<td>{$t('common.collectorArea')}</td>
 							<td>{parameters.values.collector_field.area.value}</td>
-							<td>
-								{#if parameters.values.collector_field.area.scaling == 'absolute_m2'}
+							{#if parameters.values.collector_field.area.scaling == 'absolute_m2'}
+								<td>
 									m<sup>2</sup>
-								{:else if parameters.values.collector_field.area.scaling == 'relative_to_demand_m2_per_MWh'}
-									m<sup>2</sup>GWh<sup>-1</sup>
-								{/if}
-							</td>
+								</td>
+								<td />
+							{:else if parameters.values.collector_field.area.scaling == 'relative_to_demand_m2_per_MWh'}
+								<td>
+									m<sup>2</sup>MWh<sup>-1</sup>
+								</td>
+								<td>Relative to total yearly demand</td>
+							{/if}
 						</tr>
 						{#if parameters.values.type === 'ptes'}
 							<tr>
@@ -162,24 +180,28 @@
 									{#if parameters.values.storage.volume.scaling == 'absolute_m3'}
 										m<sup>3</sup>
 									{:else if parameters.values.storage.volume.scaling == 'relative_to_demand_m3_per_MWh'}
-										m<sup>3</sup>GWh<sup>-1</sup>
+										m<sup>3</sup>MWh<sup>-1</sup>
 									{/if}
 								</td>
+								<td />
 							</tr>
 							<tr>
 								<td>{$t('common.portHeightTop')}</td>
 								<td>{parameters.values.storage.ports_relative_heights_1.top}</td>
 								<td>&percnt;</td>
+								<td />
 							</tr>
 							<tr>
 								<td>{$t('common.portHeightMiddle')}</td>
 								<td>{parameters.values.storage.ports_relative_heights_1.middle}</td>
 								<td>&percnt;</td>
+								<td />
 							</tr>
 							<tr>
 								<td>{$t('common.portHeightBottom')}</td>
 								<td>{parameters.values.storage.ports_relative_heights_1.bottom}</td>
 								<td>&percnt;</td>
+								<td />
 							</tr>
 						{/if}
 					</tbody>

@@ -2,7 +2,7 @@
 	import Plotly from 'plotly.js-dist-min';
 	import { onMount } from 'svelte';
 
-	export let hourlyDemandKW: number[];
+	export let hourlyDemandMW: number[];
 
 	const currentYearMs = new Date(new Date().getUTCFullYear(), 0).getTime();
 
@@ -18,14 +18,14 @@
 		return hSinceStartOfYear;
 	}
 
-	const dates = hourlyDemandKW.map((_, i) => hourToDate(i));
+	const dates = hourlyDemandMW.map((_, i) => hourToDate(i));
 
-	const yearlyDemandKWh = Math.round(hourlyDemandKW.reduce((sum, x) => sum + x, 0));
-	const maxPower = Math.max(...hourlyDemandKW);
-	const minPower = Math.min(...hourlyDemandKW);
+	const yearlyDemandMWh = Math.round(hourlyDemandMW.reduce((sum, x) => sum + x, 0));
+	const maxPower = Math.max(...hourlyDemandMW);
+	const minPower = Math.min(...hourlyDemandMW);
 
-	const maxIndex = hourlyDemandKW.findIndex((v) => v === maxPower)!;
-	const minIndex = hourlyDemandKW.findIndex((v) => v === minPower)!;
+	const maxIndex = hourlyDemandMW.findIndex((v) => v === maxPower)!;
+	const minIndex = hourlyDemandMW.findIndex((v) => v === minPower)!;
 
 	const maxDate = dates[maxIndex];
 	const minDate = dates[minIndex];
@@ -36,15 +36,15 @@
 			[
 				{
 					x: dates,
-					y: hourlyDemandKW,
+					y: hourlyDemandMW,
 					type: 'scatter',
 					mode: 'markers',
-					hovertemplate: '%{x}: %{y} kW<extra></extra>',
+					hovertemplate: '%{x}: %{y} MW<extra></extra>',
 					xhoverformat: '%x %H h',
 					yhoverformat: '.2f'
 				}
 			],
-			{ xaxis: { title: { text: 'Time ' } }, yaxis: { title: { text: 'Demand [kW]' } } }
+			{ xaxis: { title: { text: 'Time ' } }, yaxis: { title: { text: 'Demand [MW]' } } }
 		);
 	});
 </script>
@@ -64,21 +64,21 @@
 				<tbody>
 					<tr>
 						<td>Yearly energy demand</td>
-						<td>{yearlyDemandKWh.toFixed(0)}</td>
-						<td>kWh</td>
+						<td>{yearlyDemandMWh.toFixed(0)}</td>
+						<td>MWh</td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>(First) time of maximum energy demand</td>
 						<td>{maxDate.toLocaleTimeString()} {maxDate.toLocaleDateString()}</td>
-						<td>kWh</td>
-						<td>{dateToHourInYear(maxDate)}h</td>
+						<td>-</td>
+						<td>{dateToHourInYear(maxDate)}h: {maxPower.toFixed(2)} MW</td>
 					</tr>
 					<tr>
 						<td>(First) time of minimum energy demand</td>
 						<td>{minDate.toLocaleTimeString()} {minDate.toLocaleDateString()}</td>
-						<td>kWh</td>
-						<td>{dateToHourInYear(minDate)}h</td>
+						<td>-</td>
+						<td>{dateToHourInYear(minDate)}h: {minPower.toFixed(2)} MW</td>
 					</tr>
 				</tbody>
 			</table>

@@ -84,7 +84,7 @@
 	{#if $page.state.isShowProfileDetails && parameters.demand.profile.profile_type === 'user-provided'}
 		<div class="flex flex-col gap-4">
 			<h5 class="h5">Demand profile properties</h5>
-			<Profile hourlyDemandKW={parameters.demand.profile.hourly_heat_demand_kW} />
+			<Profile hourlyDemandMW={parameters.demand.profile.hourly_heat_demand_MW} />
 		</div>
 	{:else}
 		<!-- Parameters input section -->
