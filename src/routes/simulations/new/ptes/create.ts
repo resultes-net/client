@@ -1,15 +1,11 @@
+import { createDefaultDemand } from "src/lib/createDefaultDemand";
 import { PtesParametersInput } from "src/lib/openapi/generated/model/ptesParametersInput";
 
 export function createDefaultParameters(): PtesParametersInput {
     const defaultParameters: PtesParametersInput = {
         type: "ptes",
         time: { start: 5760, stop: 17280, dt_sim: 0.5 },
-        demand: {
-            profile: {
-                profile_type: "predefined",
-                name: "default",
-            },
-        },
+        demand: createDefaultDemand(),
         collector_field: {
             area: {
                 scaling: "relative_to_demand_m2_per_MWh",

@@ -52,12 +52,8 @@
 		}
 	]);
 
-	const demandProfile = parameters.values.demand.profile;
-
-	let yearlyHeatDemandGWh = 30;
-	if (demandProfile.profile_type === 'user-provided') {
-		yearlyHeatDemandGWh = demandProfile.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000;
-	}
+	const yearlyHeatDemandGWh =
+		parameters.values.demand.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000;
 
 	$: {
 		if (data.shallDownload) {

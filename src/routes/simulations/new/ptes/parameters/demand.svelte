@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
 
-	import { Info, Folder } from 'lucide-svelte';
+	import { Folder, Info } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
 
 	import { type Demand } from '$lib/openapi/generated/model/demand';
 
+	import { createDefaultDemand } from 'src/lib/createDefaultDemand';
 	import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
 
 	export let parameters: Demand;
@@ -49,21 +50,22 @@
 			);
 		}
 
-		parameters.profile = {
-			profile_type: 'user-provided',
+		parameters = {
+			name: file.name,
+			scaling_factor: parameters.scaling_factor,
 			hourly_heat_demand_MW
 		};
 	}
 
-	let profileYearlyHeatDemandGWh: number;
-	$: if (parameters.profile.profile_type === 'user-provided') {
-		profileYearlyHeatDemandGWh =
-			parameters.profile.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000;
-	} else {
-		profileYearlyHeatDemandGWh = 30;
+	function resetProfile() {
+		const demand = createDefaultDemand();
+		demand.scaling_factor = parameters.scaling_factor;
+		parameters = demand;
 	}
 
-	let scalingFactor = 1;
+	let unscaledYearlyHeatDemandGwh: number;
+	$: unscaledYearlyHeatDemandGwh =
+		parameters.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000;
 </script>
 
 <div data-popup="profileInfoHoverPopup">
@@ -85,30 +87,29 @@
 
 <div class="grid grid-cols-[--input-grid-cols] gap-y-[--input-gap-y]">
 	<p>{$t('common.demandProfile')}</p>
-	<div class="input-group input-group-divider grid grid-cols-[auto_1fr_auto] items-center gap-2">
-		<label class="label">
-			<span class="btn variant-filled-primary"><Folder /></span>
-			<input
-				id="demand-profile"
-				type="file"
-				hidden
-				aria-label={$t('common.demandProfile')}
-				on:change={onDemandProfileChanged}
-			/>
-		</label>
-		{#if parameters.profile.profile_type === 'predefined'}
-			<label for="demand-profile">
-				{parameters.profile.name}
+	<div class="flex flex-col mb-2">
+		<div class="input-group input-group-divider grid grid-cols-[auto_1fr_auto] items-center gap-2">
+			<label class="label">
+				<span class="btn variant-filled-primary"><Folder /></span>
+				<input
+					id="demand-profile"
+					type="file"
+					hidden
+					aria-label={$t('common.demandProfile')}
+					on:change={onDemandProfileChanged}
+				/>
 			</label>
-		{:else}
-			<button class="btn" on:click={onShowProfileDetails}>Custom...</button>
-		{/if}
-		<button
-			class="btn variant-filled-primary [&>*]:pointer-events-none"
-			use:popup={profileInfoHoverPopupSettings}
+			<button class="btn" on:click={onShowProfileDetails}>{parameters.name}...</button>
+			<button
+				class="btn variant-filled-primary [&>*]:pointer-events-none"
+				use:popup={profileInfoHoverPopupSettings}
+			>
+				<Info />
+			</button>
+		</div>
+		<button type="button" class="anchor self-end text-xs" on:click={resetProfile}
+			>{$t('common.reset')}</button
 		>
-			<Info />
-		</button>
 	</div>
 
 	<label for="demand-scaling-factor">{$t('common.scalingFactor')}</label>
@@ -119,7 +120,7 @@
 			title={$t('common.scalingFactor')}
 			type="number"
 			min="0"
-			bind:value={scalingFactor}
+			bind:value={parameters.scaling_factor}
 		/>
 		<button
 			class="btn variant-filled-primary [&>*]:pointer-events-none"
@@ -136,7 +137,7 @@
 			id="yearly-demand"
 			title={$t('common.yearlyHeatDemand')}
 			type="number"
-			value={(scalingFactor * profileYearlyHeatDemandGWh).toFixed(1)}
+			value={(parameters.scaling_factor * unscaledYearlyHeatDemandGwh).toFixed(1)}
 			readonly
 		/>
 		<div><span class="flex flex-grow justify-center">GWh</span></div>

@@ -39,5 +39,6 @@
     "portHeightMiddle": "Anschlusshöhe mittig",
     "portHeightBottom": "Anschlusshöhe unten",
     "AnErrorOccurred": "Es ist ein Fehler aufgetreten",
-    "scalingFactor": "Skalierungsfaktor"
+    "scalingFactor": "Skalierungsfaktor",
+    "reset": "Zurücksetzen"
 }

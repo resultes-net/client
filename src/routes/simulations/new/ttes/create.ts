@@ -1,14 +1,11 @@
 import { type TtesParametersInput } from "$lib/openapi/generated/model/ttesParametersInput";
+import { createDefaultDemand } from "src/lib/createDefaultDemand";
 
 export function createDefaultParameters(): TtesParametersInput {
     const defaultParameters: TtesParametersInput = {
         type: "ttes",
-        demand: {
-            profile: {
-                profile_type: "predefined",
-                name: "default",
-            },
-        },
+        time: { start: 5760, stop: 17280, dt_sim: 0.5 },
+        demand: createDefaultDemand(),
         collector_field: {
             area: {
                 scaling: "relative_to_demand_m2_per_MWh",

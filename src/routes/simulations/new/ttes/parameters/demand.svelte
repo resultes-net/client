@@ -7,10 +7,10 @@
 
 	import { type Demand } from '$lib/openapi/generated/model/demand';
 
-    import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
+	import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
 
 	export let parameters: Demand;
-    export let onAreParametersValidChanged: OnAreParametersValidChanged;
+	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 
 	const profileInfoHoverPopupSettings: PopupSettings = {
 		event: 'hover',
@@ -51,16 +51,14 @@
 			<span class="btn variant-filled-primary"><Folder /></span>
 			<input id="demand-profile" type="file" hidden on:change={onDemandProfileChanged} />
 		</label>
-		<label for="demand-profile"
-			>{parameters.profile.profile_type === 'predefined'
-				? parameters.profile.name
-				: '<User provided>'}</label
-		>
-		<button
-			class="btn variant-filled-primary [&>*]:pointer-events-none"
-			use:popup={profileInfoHoverPopupSettings}
-		>
-			<Info />
-		</button>
+		<label for="demand-profile">
+			{parameters.name}
+			<button
+				class="btn variant-filled-primary [&>*]:pointer-events-none"
+				use:popup={profileInfoHoverPopupSettings}
+			>
+				<Info />
+			</button>
+		</label>
 	</div>
 </div>

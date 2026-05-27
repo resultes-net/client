@@ -81,10 +81,10 @@
 </script>
 
 <div class="flex gap-[2%] ltr:mr-[2%] rtl:ml-[2%]">
-	{#if $page.state.isShowProfileDetails && parameters.demand.profile.profile_type === 'user-provided'}
+	{#if $page.state.isShowProfileDetails}
 		<div class="flex flex-col gap-4">
 			<h5 class="h5">Demand profile properties</h5>
-			<Profile hourlyDemandMW={parameters.demand.profile.hourly_heat_demand_MW} />
+			<Profile bind:demand={parameters.demand} />
 		</div>
 	{:else}
 		<!-- Parameters input section -->
@@ -153,7 +153,7 @@
 									/>
 								{:else if activeParametersTab === 'demand'}
 									<Demand
-										parameters={parameters.demand}
+										bind:parameters={parameters.demand}
 										{onShowProfileDetails}
 										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'demand')}
 									/>
