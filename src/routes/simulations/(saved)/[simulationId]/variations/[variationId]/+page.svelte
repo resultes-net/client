@@ -52,8 +52,10 @@
 		}
 	]);
 
+	const demand = parameters.values.demand;
+
 	const yearlyHeatDemandGWh =
-		parameters.values.demand.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000;
+		demand.hourly_heat_demand_MW.reduce((s, p) => s + demand.scaling_factor * p, 0) / 1000;
 
 	$: {
 		if (data.shallDownload) {
