@@ -80,10 +80,11 @@ export async function getBlob(
 ): Promise<Blob> {
     const response = await getResponse({ endPoint, body, httpVerb, bearerToken, contentType, accept, baseUri, fetchFunction });
 
-    if (response.status !== 200) {
+    const responseStatus = response.status;
+    if (responseStatus !== 200) {
         const errorMessage = `Error calling API endpoint ${endPoint}`
         console.error(errorMessage);
-        throw new FetchError(errorMessage);
+        throw new FetchError(responseStatus, errorMessage);
     }
 
     const blob = await response.blob();

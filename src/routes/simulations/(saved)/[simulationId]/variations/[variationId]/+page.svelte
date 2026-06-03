@@ -20,7 +20,7 @@
 
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
 
-	import DownladAllResults from './downladAllResults.svelte';
+	import DownladAllResults from './downloadAllResults.svelte';
 	import { loadMoreResults } from './results';
 
 	export let data;
