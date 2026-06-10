@@ -11,19 +11,17 @@ export function assert(condition: unknown, message?: string): asserts condition 
 }
 
 export function parseAndClampInputValue(
-    inputElement: HTMLInputElement,
-    fallbackValue: number,
+    string: string,
     min: number,
-    max: number
-): number | null {
-    const string = inputElement.value;
+    max: number,
+    fallbackValue: number
+): number {
     const isEmpty = string.trim() === "";
 
     const number = Number(string);
 
     if (isEmpty || isNaN(number)) {
-        inputElement.value = fallbackValue.toString();
-        return null;
+        return fallbackValue;
     }
 
     let value = number;
