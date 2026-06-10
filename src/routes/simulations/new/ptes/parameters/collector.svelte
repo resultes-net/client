@@ -162,12 +162,6 @@
 		/>
 		<div><span class="flex flex-grow justify-center">°C</span></div>
 	</div>
-
-	<label for="collector-type">{$t('common.collectorType')}</label>
-	<select class="select w-auto" id="collector-type" bind:value={parameters.type}>
-		<option value="flat-plate">{$t('common.flatPlateCollector')}</option>
-		<option value="parabolic-through">{$t('common.parabolicTroughCollector')}</option>
-	</select>
 </div>
 
 {#if projectPhase === 'design'}
