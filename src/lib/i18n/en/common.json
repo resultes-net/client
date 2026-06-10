@@ -11,6 +11,7 @@
     "perfCoeffA1": "A1",
     "perfCoeffA2": "A2",
     "nominalMassFlowRate": "Nominal mass flow rate",
+    "outputTemperatureSetpoint": "Output temperature setpoint",
     "storage": "Heat storage",
     "storageVolume": "Storage volume",
     "demand": "Heat demand",

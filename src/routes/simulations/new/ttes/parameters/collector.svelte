@@ -131,6 +131,18 @@
 		<div><span class="flex flex-grow justify-center">°</span></div>
 	</div>
 
+	<label for="collector-output-temperature-setpoint">{$t('common.outputTemperatureSetpoint')}</label>
+	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+		<input
+			class="input"
+			id="collector-output-temperature-setpoint"
+			title={$t('common.outputTemperatureSetpoint')}
+			type="number"
+			bind:value={parameters.output_temperature_setpoint_degC}
+		/>
+		<div><span class="flex flex-grow justify-center">°C</span></div>
+	</div>
+
 	<label for="collector-type">{$t('common.collectorType')}</label>
 	<select class="select w-auto" id="collector-type" bind:value={parameters.type}>
 		<option value="flat-plate">{$t('common.flatPlateCollector')}</option>
