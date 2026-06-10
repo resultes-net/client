@@ -3,6 +3,7 @@
 	import { ChevronDown } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
+	import { parseAndClampInputValue } from '$lib/utils';
 
 	import type { CollectorField } from '$lib/openapi/generated/model/collectorField';
 
@@ -41,23 +42,15 @@
 	function setOutputTemperatureSetpoint(event: Event): void {
 		const inputElement = event.target as HTMLInputElement;
 
-		const string = inputElement.value;
-		const isEmpty = string.trim() === '';
+		const temperature = parseAndClampInputValue(
+			inputElement,
+			parameters.output_temperature_setpoint_degC,
+			20,
+			200
+		);
 
-		const number = Number(string);
-
-		if (isEmpty || isNaN(number)) {
-			inputElement.value = parameters.output_temperature_setpoint_degC.toString();
+		if (temperature === null) {
 			return;
-		}
-
-		let temperature = number;
-
-		if (temperature < 20) {
-			temperature = 20;
-		}
-		if (temperature > 200) {
-			temperature = 200;
 		}
 
 		parameters.output_temperature_setpoint_degC = temperature;

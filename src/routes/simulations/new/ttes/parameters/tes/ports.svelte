@@ -4,6 +4,7 @@
 	import { TriangleAlert } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
+	import { parseAndClampInputValue } from '$lib/utils';
 
 	import { type TtesPortRelativeHeights } from '$lib/openapi/generated/model/ttesPortRelativeHeights';
 
@@ -30,26 +31,13 @@
 	function setRelativeHeight(event: Event, position: keyof TtesPortRelativeHeights): void {
 		const inputElement = event.target as HTMLInputElement;
 
-		const string = inputElement.value;
-		const isEmpty = string.trim() === '';
+		const percent = parseAndClampInputValue(inputElement, parameters[position] * 100, 0, 100);
 
-		const number = Number(string);
-
-		if (isEmpty || isNaN(number)) {
-			inputElement.value = (parameters[position] * 100).toString();
+		if (percent === null) {
 			return;
 		}
 
-		let percent = Math.round(number);
-
-		if (percent < 0) {
-			percent = 0;
-		}
-		if (percent > 100) {
-			percent = 100;
-		}
-
-		parameters[position] = percent / 100;
+		parameters[position] = Math.round(percent) / 100;
 
 		validate();
 	}
