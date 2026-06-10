@@ -11,14 +11,14 @@ export function assert(condition: unknown, message?: string): asserts condition 
 }
 
 export function parseAndClampInputValue(
-    string: string,
+    input: string,
     min: number,
     max: number,
     fallbackValue: number
 ): number {
-    const isEmpty = string.trim() === "";
+    const isEmpty = input.trim() === "";
 
-    const number = Number(string);
+    const number = Number(input);
 
     if (isEmpty || isNaN(number)) {
         return fallbackValue;
