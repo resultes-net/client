@@ -1,6 +1,8 @@
 import { createDefaultDemand } from "src/lib/createDefaultDemand";
 import { PtesParametersInput } from "src/lib/openapi/generated/model/ptesParametersInput";
 
+import { createPresetTemperatures, DEFAULT_DEMAND_SETPOINT_DEGC } from "./parameters/temperaturePresets";
+
 export function createDefaultParameters(): PtesParametersInput {
     const defaultParameters: PtesParametersInput = {
         type: "ptes",
@@ -35,7 +37,8 @@ export function createDefaultParameters(): PtesParametersInput {
                 middle: 0.50,
                 bottom: 0.05,
             }
-        }
+        },
+        temperatures: createPresetTemperatures(DEFAULT_DEMAND_SETPOINT_DEGC)
     };
 
     return defaultParameters;

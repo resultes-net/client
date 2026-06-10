@@ -41,5 +41,11 @@
     "portHeightBottom": "Anschlusshöhe unten",
     "AnErrorOccurred": "Es ist ein Fehler aufgetreten",
     "scalingFactor": "Skalierungsfaktor",
-    "reset": "Zurücksetzen"
+    "reset": "Zurücksetzen",
+    "temperatures": "Temperaturen",
+    "demandSetpointTemperature": "Bedarfs-Solltemperatur",
+    "boilerOutputSetpointTemperature": "Kessel-Soll-Ausgangstemperatur",
+    "heatPumpOutputSetpointTemperature": "Wärmepumpen-Soll-Ausgangstemperatur",
+    "maximumStorageTemperature": "Maximale Speichertemperatur",
+    "temperaturesArePresetFromDemandSetpoint": "Die übrigen Temperaturen werden anhand der Bedarfs-Solltemperatur voreingestellt, bis sie direkt bearbeitet werden."
 }

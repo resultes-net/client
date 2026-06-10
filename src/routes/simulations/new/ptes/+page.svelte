@@ -19,13 +19,14 @@
 	import Collector from './parameters/collector.svelte';
 	import Demand from './parameters/demand.svelte';
 	import Profile from './parameters/profile.svelte';
+	import Temperatures from './parameters/temperatures.svelte';
 	import Tes from './parameters/tes/tes.svelte';
 	import SystemDescription from './systemDescription.svelte';
 
 	let projectName = '';
 	let parameters = createDefaultParameters();
 
-	type ActiveParamtersTab = 'collector' | 'storage' | 'demand';
+	type ActiveParamtersTab = 'collector' | 'storage' | 'demand' | 'temperatures';
 	let activeParametersTab: ActiveParamtersTab = 'collector';
 	let projectPhase: Phase = 'pre-design';
 
@@ -33,9 +34,10 @@
 		collector: true,
 		demand: true,
 		storage: true,
+		temperatures: true,
 
 		all(): boolean {
-			return this.collector && this.demand && this.demand;
+			return this.collector && this.demand && this.storage && this.temperatures;
 		}
 	};
 	let areAllParametersValid;
@@ -136,6 +138,12 @@
 								config={{ shallWarn: !areParametersValid.demand, errorMessage: null }}
 							/>
 						</Tab>
+						<Tab bind:group={activeParametersTab} name="temperatures" value="temperatures">
+							<TextWithWarning
+								text={$t('common.temperatures')}
+								config={{ shallWarn: !areParametersValid.temperatures, errorMessage: null }}
+							/>
+						</Tab>
 
 						<svelte:fragment slot="panel">
 							<div class="ltr:ml-[1%] rtl:mr-[1%]">
@@ -157,6 +165,8 @@
 										{onShowProfileDetails}
 										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'demand')}
 									/>
+								{:else if activeParametersTab === 'temperatures'}
+									<Temperatures bind:parameters={parameters.temperatures} />
 								{/if}
 							</div>
 						</svelte:fragment>
