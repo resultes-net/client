@@ -22,7 +22,8 @@ export function createDefaultParameters(): TtesParametersInput {
                 a1_kW_per_m2_per_K: 4.16e-3,
                 a2_kW_per_m2_per_K2: 0.0089e-3
             },
-            type: "flat-plate"
+            type: "flat-plate",
+            output_temperature_setpoint_degC: 95.0
         },
         storage: {
             heat_conductance_kW_per_m2_per_K: 0.08e-3,
