@@ -39,7 +39,7 @@
 		};
 	}
 
-	function setOutputTemperatureSetpoint(event: Event): void {
+	function onSetOutputTemperatureSetpoint(event: Event): void {
 		const inputElement = event.target as HTMLInputElement;
 
 		const temperature = parseAndClampInputValue(
@@ -161,7 +161,7 @@
 			value={parameters.output_temperature_setpoint_degC}
 			min="20"
 			max="200"
-			on:change={setOutputTemperatureSetpoint}
+			on:change={onSetOutputTemperatureSetpoint}
 		/>
 		<div><span class="flex flex-grow justify-center">°C</span></div>
 	</div>
