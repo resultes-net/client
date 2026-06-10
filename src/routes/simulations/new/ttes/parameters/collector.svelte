@@ -42,12 +42,15 @@
 	function onSetOutputTemperatureSetpoint(event: Event): void {
 		const inputElement = event.target as HTMLInputElement;
 
-		parameters.output_temperature_setpoint_degC = parseAndClampInputValue(
+		const temperature = parseAndClampInputValue(
 			inputElement.value,
 			20,
 			200,
 			parameters.output_temperature_setpoint_degC
 		);
+
+		parameters.output_temperature_setpoint_degC = temperature;
+		inputElement.value = temperature.toString();
 	}
 </script>
 

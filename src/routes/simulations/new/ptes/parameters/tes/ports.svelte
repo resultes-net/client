@@ -30,9 +30,12 @@
 	function setRelativeHeight(event: Event, position: keyof PtesPortRelativeHeights): void {
 		const inputElement = event.target as HTMLInputElement;
 
-		const percent = parseAndClampInputValue(inputElement.value, 0, 100, parameters[position] * 100);
+		const roundedPercent = Math.round(
+			parseAndClampInputValue(inputElement.value, 0, 100, parameters[position] * 100)
+		);
 
-		parameters[position] = Math.round(percent) / 100;
+		parameters[position] = roundedPercent / 100;
+		inputElement.value = roundedPercent.toString();
 
 		validate();
 	}
