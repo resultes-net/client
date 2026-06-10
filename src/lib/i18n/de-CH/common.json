@@ -11,7 +11,7 @@
     "perfCoeffA1": "A1",
     "perfCoeffA2": "A2",
     "nominalMassFlowRate": "Nomineller Massenfluss",
-    "outputTemperatureSetpoint": "Soll-Ausgangstemperatur",
+    "collectorOutputSetpointTemperature": "Kollektor-Soll-Ausgangstemperatur",
     "storage": "Wärmespeicher",
     "storageVolume": "Speichervolumen",
     "demand": "Wärmebedarf",

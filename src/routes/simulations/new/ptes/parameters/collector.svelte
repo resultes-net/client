@@ -37,6 +37,31 @@
 			}
 		};
 	}
+
+	function setOutputTemperatureSetpoint(event: Event): void {
+		const inputElement = event.target as HTMLInputElement;
+
+		const string = inputElement.value;
+		const isEmpty = string.trim() === '';
+
+		const number = Number(string);
+
+		if (isEmpty || isNaN(number)) {
+			inputElement.value = parameters.output_temperature_setpoint_degC.toString();
+			return;
+		}
+
+		let temperature = number;
+
+		if (temperature < 20) {
+			temperature = 20;
+		}
+		if (temperature > 200) {
+			temperature = 200;
+		}
+
+		parameters.output_temperature_setpoint_degC = temperature;
+	}
 </script>
 
 <div class="z-50 bg-surface-200-700-token-token" data-popup="area-size-scaling-combobox">
@@ -131,14 +156,19 @@
 		<div><span class="flex flex-grow justify-center">°</span></div>
 	</div>
 
-	<label for="collector-output-temperature-setpoint">{$t('common.outputTemperatureSetpoint')}</label>
+	<label for="collector-output-setpoint-temperature"
+		>{$t('common.collectorOutputSetpointTemperature')}</label
+	>
 	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 		<input
 			class="input"
-			id="collector-output-temperature-setpoint"
-			title={$t('common.outputTemperatureSetpoint')}
+			id="collector-output-setpoint-temperature"
+			title={$t('common.collectorOutputSetpointTemperature')}
 			type="number"
-			bind:value={parameters.output_temperature_setpoint_degC}
+			value={parameters.output_temperature_setpoint_degC}
+			min="20"
+			max="200"
+			on:change={setOutputTemperatureSetpoint}
 		/>
 		<div><span class="flex flex-grow justify-center">°C</span></div>
 	</div>

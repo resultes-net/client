@@ -177,7 +177,7 @@
 							{/if}
 						</tr>
 						<tr>
-							<td>{$t('common.outputTemperatureSetpoint')}</td>
+							<td>{$t('common.collectorOutputSetpointTemperature')}</td>
 							<td>{parameters.values.collector_field.output_temperature_setpoint_degC}</td>
 							<td>°C</td>
 							<td />
