@@ -166,7 +166,7 @@
 										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'demand')}
 									/>
 								{:else if activeParametersTab === 'temperatures'}
-									<Temperatures bind:parameters={parameters.temperatures} collectorField={parameters.collector_field} />
+									<Temperatures bind:parameters={parameters.temperatures} />
 								{/if}
 							</div>
 						</svelte:fragment>

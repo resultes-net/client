@@ -16,8 +16,6 @@
 
 	export let parameters: Temperatures;
 
-	export let collectorField: any;
-
 	const MIN_TEMPERATURE_DEGC = 20;
 	const MAX_TEMPERATURE_DEGC = 200;
 
@@ -104,9 +102,9 @@
 	function onSetOutputTemperatureSetpoint(event: Event): void {
 		const inputElement = event.target as HTMLInputElement;
 
-		const temperature = parseTemperature(inputElement.value, collectorField.output_temperature_setpoint_degC);
+		const temperature = parseTemperature(inputElement.value, parameters.output_temperature_setpoint_degC);
 
-		collectorField.output_temperature_setpoint_degC = temperature;
+		parameters.output_temperature_setpoint_degC = temperature;
 		inputElement.value = temperature.toString();
 	}
 </script>
@@ -199,7 +197,7 @@
 				id="collector-output-setpoint-temperature"
 				title={$t('common.collectorOutputSetpointTemperature')}
 				type="number"
-				value={collectorField.output_temperature_setpoint_degC}
+				value={parameters.output_temperature_setpoint_degC}
 				min={MIN_TEMPERATURE_DEGC}
 				max={MAX_TEMPERATURE_DEGC}
 				on:change={onSetOutputTemperatureSetpoint}
