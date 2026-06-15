@@ -16,6 +16,8 @@
 
 	export let parameters: Temperatures;
 
+	export let collectorField: any;
+
 	const MIN_TEMPERATURE_DEGC = 20;
 	const MAX_TEMPERATURE_DEGC = 200;
 
@@ -98,6 +100,14 @@
 		inputElement.value = temperature.toString();
 
 		haveBeenEditedDirectly.storageMaximum = true;
+
+	function onSetOutputTemperatureSetpoint(event: Event): void {
+		const inputElement = event.target as HTMLInputElement;
+
+		const temperature = parseTemperature(inputElement.value, collectorField.output_temperature_setpoint_degC);
+
+		collectorField.output_temperature_setpoint_degC = temperature;
+		inputElement.value = temperature.toString();
 	}
 </script>
 
@@ -164,7 +174,8 @@
 		<div><span class="flex flex-grow justify-center">°C</span></div>
 	</div>
 
-	<label for="maximum-storage-temperature">{$t('common.maximumStorageTemperature')}</label>
+	
+<label for="maximum-storage-temperature">{$t('common.maximumStorageTemperature')}</label>
 	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 		<input
 			class="input"
@@ -178,4 +189,21 @@
 		/>
 		<div><span class="flex flex-grow justify-center">°C</span></div>
 	</div>
+
+		<label for="collector-output-setpoint-temperature"
+			>{$t('common.collectorOutputSetpointTemperature')}</label
+		>
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+			<input
+				class="input"
+				id="collector-output-setpoint-temperature"
+				title={$t('common.collectorOutputSetpointTemperature')}
+				type="number"
+				value={collectorField.output_temperature_setpoint_degC}
+				min={MIN_TEMPERATURE_DEGC}
+				max={MAX_TEMPERATURE_DEGC}
+				on:change={onSetOutputTemperatureSetpoint}
+			/>
+			<div><span class="flex flex-grow justify-center">°C</span></div>
+		</div>
 </div>
