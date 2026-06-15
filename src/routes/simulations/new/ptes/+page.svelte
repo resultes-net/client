@@ -30,6 +30,8 @@
 	let activeParametersTab: ActiveParamtersTab = 'collector';
 	let projectPhase: Phase = 'pre-design';
 
+let temperatureMode: 'absolute' | 'relative' = 'relative';
+
 	let areParametersValid = {
 		collector: true,
 		demand: true,
@@ -151,22 +153,24 @@
 									<Collector
 										{projectPhase}
 										parameters={parameters.collector_field}
+										temperatures={parameters.temperatures}
+										bind:temperatureMode
 										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'collector')}
 									/>
 								{:else if activeParametersTab === 'storage'}
-									<Tes
-										parameters={parameters.storage}
-										{projectPhase}
-										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'storage')}
-									/>
+								<Tes
+									parameters={parameters.storage}
+									{projectPhase}
+									onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'storage')}
+								/>
 								{:else if activeParametersTab === 'demand'}
-									<Demand
-										bind:parameters={parameters.demand}
-										{onShowProfileDetails}
-										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'demand')}
-									/>
+								<Demand
+									bind:parameters={parameters.demand}
+									{onShowProfileDetails}
+									onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'demand')}
+								/>
 								{:else if activeParametersTab === 'temperatures'}
-									<Temperatures bind:parameters={parameters.temperatures} />
+									<Temperatures bind:parameters={parameters.temperatures} bind:temperatureMode />
 								{/if}
 							</div>
 						</svelte:fragment>

@@ -7,6 +7,7 @@ export const DEFAULT_DEMAND_SETPOINT_DEGC = 80;
 export const BOILER_OUTPUT_SETPOINT_OFFSET_K = 0;
 export const HEAT_PUMP_OUTPUT_SETPOINT_OFFSET_K = 0;
 export const STORAGE_MAXIMUM_OFFSET_K = 5;
+export const COLLECTOR_MAXIMUM_OFFSET_K = 15;
 
 export function createPresetTemperatures(demandSetpointDegC: number): Temperatures {
 	return {

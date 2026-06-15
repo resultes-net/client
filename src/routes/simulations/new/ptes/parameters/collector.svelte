@@ -16,6 +16,9 @@
 	export let parameters: CollectorField;
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 
+export let temperatures: Temperatures;
+export let temperatureMode: 'absolute' | 'relative';
+
 	const areaSizeScalingPopupSettings: PopupSettings = createPopupSettings(
 		'area-size-scaling-combobox'
 	);
@@ -42,15 +45,27 @@
 	function onSetOutputTemperatureSetpoint(event: Event): void {
 		const inputElement = event.target as HTMLInputElement;
 
-		const temperature = parseAndClampInputValue(
-			inputElement.value,
-			20,
-			200,
-			parameters.output_temperature_setpoint_degC
-		);
+		if (temperatureMode === 'absolute') {
+			const temperature = parseAndClampInputValue(
+				inputElement.value,
+				20,
+				200,
+				parameters.output_temperature_setpoint_degC
+			);
 
-		parameters.output_temperature_setpoint_degC = temperature;
-		inputElement.value = temperature.toString();
+			parameters.output_temperature_setpoint_degC = temperature;
+			inputElement.value = temperature.toString();
+		} else {
+			const offset = parseAndClampInputValue(
+				inputElement.value,
+				-100,
+				100,
+				parameters.output_temperature_setpoint_degC - temperatures.storage_maximum_degC
+			);
+
+			parameters.output_temperature_setpoint_degC = temperatures.storage_maximum_degC + offset;
+			inputElement.value = offset.toString();
+		}
 	}
 </script>
 
@@ -146,21 +161,26 @@
 		<div><span class="flex flex-grow justify-center">°</span></div>
 	</div>
 
-	<label for="collector-output-setpoint-temperature"
-		>{$t('common.collectorOutputSetpointTemperature')}</label
-	>
-	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-		<input
-			class="input"
-			id="collector-output-setpoint-temperature"
-			title={$t('common.collectorOutputSetpointTemperature')}
-			type="number"
-			value={parameters.output_temperature_setpoint_degC}
-			min="20"
-			max="200"
-			on:change={onSetOutputTemperatureSetpoint}
-		/>
-		<div><span class="flex flex-grow justify-center">°C</span></div>
+		<label for="collector-output-setpoint-temperature">
+			{#if temperatureMode === 'absolute'}
+				{$t('common.collectorOutputSetpointTemperature')}
+			{:else}
+				{$t('common.dtCollectorMaxStorage')}
+			{/if}
+		</label>
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+			<input
+				class="input"
+				id="collector-output-setpoint-temperature"
+				title={temperatureMode === 'absolute' ? $t('common.collectorOutputSetpointTemperature') : $t('common.dtCollectorMaxStorage')}
+				type="number"
+				value={temperatureMode === 'absolute' ? parameters.output_temperature_setpoint_degC : parameters.output_temperature_setpoint_degC - temperatures.storage_maximum_degC}
+				min={temperatureMode === 'absolute' ? "20" : "-100"}
+				max={temperatureMode === 'absolute' ? "200" : "100"}
+				on:change={onSetOutputTemperatureSetpoint}
+			/>
+			<div><span class="flex flex-grow justify-center">{temperatureMode === 'absolute' ? '°C' : 'K'}</span></div>
+		</div>
 	</div>
 </div>
 
