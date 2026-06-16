@@ -243,7 +243,7 @@
 			/>
 			<div><span class="flex flex-grow justify-center">°C</span></div>
 		</div>
-	{:else}
+	{:else if mode === 'relative'}
 		<label for="boiler-output-setpoint-temperature">{$t('common.dtBoilerDemand')}</label>
 		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 			<input
@@ -303,5 +303,7 @@
 			/>
 			<div><span class="flex flex-grow justify-center">K</span></div>
 		</div>
-	{/if}
+		{:else}
+			<div class="text-red-500">Unknown mode: {mode}</div>
+		{/if}
 </div>
