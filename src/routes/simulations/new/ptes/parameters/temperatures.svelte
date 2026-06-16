@@ -10,7 +10,6 @@
 
 	export let temperatures: Temperatures;
 
-	// Helper function to parse number input and reset invalid values
 	function getNumberOrReset(event: Event, fallbackValue: number): number {
 		const inputElement = event.target as HTMLInputElement;
 		const value = parseFloat(inputElement.value);
