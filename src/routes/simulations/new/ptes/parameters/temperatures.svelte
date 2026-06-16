@@ -8,24 +8,47 @@
 
 	import { type Temperatures } from '$lib/openapi/generated/model/temperatures';
 
-	import {
-		BOILER_OUTPUT_SETPOINT_OFFSET_K,
-		HEAT_PUMP_OUTPUT_SETPOINT_OFFSET_K,
-		STORAGE_MAXIMUM_OFFSET_K
-	} from './temperaturePresets';
+	export let temperatures: Temperatures;
 
-	export let parameters: Temperatures;
+	function getNumberOrReset(event: Event, fallbackValue: number): number {
+		const inputElement = event.target as HTMLInputElement;
+		const value = parseFloat(inputElement.value);
+		const result = !isNaN(value) ? value : fallbackValue;
+		inputElement.value = result.toString();
+		return result;
+	}
 
 	const MIN_TEMPERATURE_DEGC = 20;
 	const MAX_TEMPERATURE_DEGC = 200;
 
-	// Fields the user has edited directly are no longer preset from the
-	// demand setpoint temperature
-	const haveBeenEditedDirectly = {
-		boiler: false,
-		heatPump: false,
-		storageMaximum: false
-	};
+	let mode: 'absolute' | 'relative' = 'relative';
+
+	let dtBoilerDemand = 0;
+	let dtHeatPumpBoiler = 0;
+	let dtStorageMaxHeatPump = 5;
+	let dtCollectorStorageMax = 15;
+
+	$: {
+		if (mode === 'relative') {
+			dtBoilerDemand = temperatures.boiler_output_setpoint_degC - temperatures.demand_setpoint_degC;
+			dtHeatPumpBoiler =
+				temperatures.heat_pump_output_setpoint_degC - temperatures.boiler_output_setpoint_degC;
+			dtStorageMaxHeatPump =
+				temperatures.storage_maximum_degC - temperatures.heat_pump_output_setpoint_degC;
+			dtCollectorStorageMax =
+				temperatures.output_temperature_setpoint_degC - temperatures.storage_maximum_degC;
+		}
+	}
+
+	function syncAbsoluteFromRelative(): void {
+		temperatures.boiler_output_setpoint_degC = temperatures.demand_setpoint_degC + dtBoilerDemand;
+		temperatures.heat_pump_output_setpoint_degC =
+			temperatures.boiler_output_setpoint_degC + dtHeatPumpBoiler;
+		temperatures.storage_maximum_degC =
+			temperatures.heat_pump_output_setpoint_degC + dtStorageMaxHeatPump;
+		temperatures.output_temperature_setpoint_degC =
+			temperatures.storage_maximum_degC + dtCollectorStorageMax;
+	}
 
 	const presetsInfoHoverPopupSettings: PopupSettings = {
 		event: 'hover',
@@ -45,19 +68,13 @@
 	function onDemandSetpointChanged(event: Event): void {
 		const inputElement = event.target as HTMLInputElement;
 
-		const temperature = parseTemperature(inputElement.value, parameters.demand_setpoint_degC);
+		const temperature = parseTemperature(inputElement.value, temperatures.demand_setpoint_degC);
 
-		parameters.demand_setpoint_degC = temperature;
+		temperatures.demand_setpoint_degC = temperature;
 		inputElement.value = temperature.toString();
 
-		if (!haveBeenEditedDirectly.boiler) {
-			parameters.boiler_output_setpoint_degC = temperature + BOILER_OUTPUT_SETPOINT_OFFSET_K;
-		}
-		if (!haveBeenEditedDirectly.heatPump) {
-			parameters.heat_pump_output_setpoint_degC = temperature + HEAT_PUMP_OUTPUT_SETPOINT_OFFSET_K;
-		}
-		if (!haveBeenEditedDirectly.storageMaximum) {
-			parameters.storage_maximum_degC = temperature + STORAGE_MAXIMUM_OFFSET_K;
+		if (mode === 'relative') {
+			syncAbsoluteFromRelative();
 		}
 	}
 
@@ -66,13 +83,11 @@
 
 		const temperature = parseTemperature(
 			inputElement.value,
-			parameters.boiler_output_setpoint_degC
+			temperatures.boiler_output_setpoint_degC
 		);
 
-		parameters.boiler_output_setpoint_degC = temperature;
+		temperatures.boiler_output_setpoint_degC = temperature;
 		inputElement.value = temperature.toString();
-
-		haveBeenEditedDirectly.boiler = true;
 	}
 
 	function onHeatPumpOutputSetpointChanged(event: Event): void {
@@ -80,32 +95,52 @@
 
 		const temperature = parseTemperature(
 			inputElement.value,
-			parameters.heat_pump_output_setpoint_degC
+			temperatures.heat_pump_output_setpoint_degC
 		);
 
-		parameters.heat_pump_output_setpoint_degC = temperature;
+		temperatures.heat_pump_output_setpoint_degC = temperature;
 		inputElement.value = temperature.toString();
-
-		haveBeenEditedDirectly.heatPump = true;
 	}
 
 	function onStorageMaximumChanged(event: Event): void {
 		const inputElement = event.target as HTMLInputElement;
 
-		const temperature = parseTemperature(inputElement.value, parameters.storage_maximum_degC);
+		const temperature = parseTemperature(inputElement.value, temperatures.storage_maximum_degC);
 
-		parameters.storage_maximum_degC = temperature;
+		temperatures.storage_maximum_degC = temperature;
 		inputElement.value = temperature.toString();
+	}
 
-		haveBeenEditedDirectly.storageMaximum = true;
-
-	function onSetOutputTemperatureSetpoint(event: Event): void {
+	function onSetCollectorOutputTemperature(event: Event): void {
 		const inputElement = event.target as HTMLInputElement;
 
-		const temperature = parseTemperature(inputElement.value, parameters.output_temperature_setpoint_degC);
+		const temperature = parseTemperature(
+			inputElement.value,
+			temperatures.output_temperature_setpoint_degC
+		);
 
-		parameters.output_temperature_setpoint_degC = temperature;
+		temperatures.output_temperature_setpoint_degC = temperature;
 		inputElement.value = temperature.toString();
+	}
+
+	function onDtBoilerDemandChanged(event: Event): void {
+		dtBoilerDemand = getNumberOrReset(event, dtBoilerDemand);
+		syncAbsoluteFromRelative();
+	}
+
+	function onDtHeatPumpBoilerChanged(event: Event): void {
+		dtHeatPumpBoiler = getNumberOrReset(event, dtHeatPumpBoiler);
+		syncAbsoluteFromRelative();
+	}
+
+	function onDtStorageMaxHeatPumpChanged(event: Event): void {
+		dtStorageMaxHeatPump = getNumberOrReset(event, dtStorageMaxHeatPump);
+		syncAbsoluteFromRelative();
+	}
+
+	function onDtCollectorStorageMaxChanged(event: Event): void {
+		dtCollectorStorageMax = getNumberOrReset(event, dtCollectorStorageMax);
+		syncAbsoluteFromRelative();
 	}
 </script>
 
@@ -116,92 +151,163 @@
 	</div>
 </div>
 
+<div class="flex flex-col gap-4 mb-4">
+	<label for="temperature-mode" class="font-bold">{$t('common.temperatureInputMode')}</label>
+	<select id="temperature-mode" class="select w-full" bind:value={mode}>
+		<option value="absolute">{$t('common.temperatureModeAbsolute')}</option>
+		<option value="relative">{$t('common.temperatureModeRelative')}</option>
+	</select>
+</div>
+
 <div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] m-2 p-2">
 	<label for="demand-setpoint-temperature">{$t('common.demandSetpointTemperature')}</label>
 	<div class="input-group input-group-divider grid grid-cols-[1fr_auto_auto] items-center">
 		<input
 			class="input"
 			id="demand-setpoint-temperature"
-			title={$t('common.demandSetpointTemperature')}
+		title={$t('common.demandSetpointTemperature')}
 			type="number"
-			value={parameters.demand_setpoint_degC}
-			min={MIN_TEMPERATURE_DEGC}
-			max={MAX_TEMPERATURE_DEGC}
-			on:change={onDemandSetpointChanged}
+		value={temperatures.demand_setpoint_degC}
+		min={MIN_TEMPERATURE_DEGC}
+		max={MAX_TEMPERATURE_DEGC}
+		on:change={onDemandSetpointChanged}
 		/>
 		<div><span class="flex flex-grow justify-center">°C</span></div>
 		<button
 			class="btn variant-filled-primary [&>*]:pointer-events-none"
-			use:popup={presetsInfoHoverPopupSettings}
+		use:popup={presetsInfoHoverPopupSettings}
 		>
 			<Info />
 		</button>
 	</div>
 
-	<label for="boiler-output-setpoint-temperature"
+	{#if mode === 'absolute'}
+		<label for="boiler-output-setpoint-temperature"
 		>{$t('common.boilerOutputSetpointTemperature')}</label
-	>
-	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-		<input
-			class="input"
-			id="boiler-output-setpoint-temperature"
+		>
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+			<input
+				class="input"
+				id="boiler-output-setpoint-temperature"
 			title={$t('common.boilerOutputSetpointTemperature')}
-			type="number"
-			value={parameters.boiler_output_setpoint_degC}
+				type="number"
+			value={temperatures.boiler_output_setpoint_degC}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
 			on:change={onBoilerOutputSetpointChanged}
-		/>
-		<div><span class="flex flex-grow justify-center">°C</span></div>
-	</div>
+			/>
+			<div><span class="flex flex-grow justify-center">°C</span></div>
+		</div>
 
-	<label for="heat-pump-output-setpoint-temperature"
+		<label for="heat-pump-output-setpoint-temperature"
 		>{$t('common.heatPumpOutputSetpointTemperature')}</label
-	>
-	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-		<input
-			class="input"
-			id="heat-pump-output-setpoint-temperature"
+		>
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+			<input
+				class="input"
+				id="heat-pump-output-setpoint-temperature"
 			title={$t('common.heatPumpOutputSetpointTemperature')}
-			type="number"
-			value={parameters.heat_pump_output_setpoint_degC}
+				type="number"
+			value={temperatures.heat_pump_output_setpoint_degC}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
 			on:change={onHeatPumpOutputSetpointChanged}
-		/>
-		<div><span class="flex flex-grow justify-center">°C</span></div>
-	</div>
+			/>
+			<div><span class="flex flex-grow justify-center">°C</span></div>
+		</div>
 
-	
-<label for="maximum-storage-temperature">{$t('common.maximumStorageTemperature')}</label>
-	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-		<input
-			class="input"
-			id="maximum-storage-temperature"
+		<label for="maximum-storage-temperature">{$t('common.maximumStorageTemperature')}</label>
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+			<input
+				class="input"
+				id="maximum-storage-temperature"
 			title={$t('common.maximumStorageTemperature')}
-			type="number"
-			value={parameters.storage_maximum_degC}
+				type="number"
+			value={temperatures.storage_maximum_degC}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
 			on:change={onStorageMaximumChanged}
-		/>
-		<div><span class="flex flex-grow justify-center">°C</span></div>
-	</div>
+			/>
+			<div><span class="flex flex-grow justify-center">°C</span></div>
+		</div>
 
 		<label for="collector-output-setpoint-temperature"
-			>{$t('common.collectorOutputSetpointTemperature')}</label
+		>{$t('common.collectorOutputSetpointTemperature')}</label
 		>
 		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 			<input
 				class="input"
 				id="collector-output-setpoint-temperature"
-				title={$t('common.collectorOutputSetpointTemperature')}
+			title={$t('common.collectorOutputSetpointTemperature')}
 				type="number"
-				value={parameters.output_temperature_setpoint_degC}
-				min={MIN_TEMPERATURE_DEGC}
-				max={MAX_TEMPERATURE_DEGC}
-				on:change={onSetOutputTemperatureSetpoint}
+			value={temperatures.output_temperature_setpoint_degC}
+			min={MIN_TEMPERATURE_DEGC}
+			max={MAX_TEMPERATURE_DEGC}
+			on:change={onSetCollectorOutputTemperature}
 			/>
 			<div><span class="flex flex-grow justify-center">°C</span></div>
 		</div>
+	{:else if mode === 'relative'}
+		<label for="boiler-output-setpoint-temperature">{$t('common.dtBoilerDemand')}</label>
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+			<input
+				class="input"
+				id="boiler-output-setpoint-temperature"
+			title={$t('common.dtBoilerDemand')}
+				type="number"
+			value={dtBoilerDemand}
+			min={MIN_TEMPERATURE_DEGC}
+			max={MAX_TEMPERATURE_DEGC}
+			on:change={onDtBoilerDemandChanged}
+			/>
+			<div><span class="flex flex-grow justify-center">K</span></div>
+		</div>
+
+		<label for="heat-pump-output-setpoint-temperature">{$t('common.dtHeatPumpBoiler')}</label>
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+			<input
+				class="input"
+				id="heat-pump-output-setpoint-temperature"
+			title={$t('common.dtHeatPumpBoiler')}
+				type="number"
+			value={dtHeatPumpBoiler}
+			min={MIN_TEMPERATURE_DEGC}
+			max={MAX_TEMPERATURE_DEGC}
+			on:change={onDtHeatPumpBoilerChanged}
+			/>
+			<div><span class="flex flex-grow justify-center">K</span></div>
+		</div>
+
+		<label for="maximum-storage-temperature">{$t('common.dtStorageMaxHeatPump')}</label>
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+			<input
+				class="input"
+				id="maximum-storage-temperature"
+			title={$t('common.dtStorageMaxHeatPump')}
+				type="number"
+			value={dtStorageMaxHeatPump}
+			min={MIN_TEMPERATURE_DEGC}
+			max={MAX_TEMPERATURE_DEGC}
+			on:change={onDtStorageMaxHeatPumpChanged}
+			/>
+			<div><span class="flex flex-grow justify-center">K</span></div>
+		</div>
+
+		<label for="collector-output-setpoint-temperature">{$t('common.dtCollectorStorageMax')}</label>
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+			<input
+				class="input"
+				id="collector-output-setpoint-temperature"
+			title={$t('common.dtCollectorStorageMax')}
+				type="number"
+			value={dtCollectorStorageMax}
+			min={MIN_TEMPERATURE_DEGC}
+			max={MAX_TEMPERATURE_DEGC}
+			on:change={onDtCollectorStorageMaxChanged}
+			/>
+			<div><span class="flex flex-grow justify-center">K</span></div>
+		</div>
+		{:else}
+		<div class="text-red-500">Unknown mode: {mode}</div>
+		{/if}
 </div>
