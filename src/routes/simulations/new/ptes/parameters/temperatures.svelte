@@ -4,9 +4,17 @@
 	import { Info } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
-	import { parseAndClampInputValue, getNumberOrReset } from '$lib/utils';
+	import { parseAndClampInputValue } from '$lib/utils';
 
 	import { type Temperatures } from '$lib/openapi/generated/model/temperatures';
+
+	// Helper function to parse number input and reset invalid values
+	function getNumberOrReset(inputElement: HTMLInputElement, fallbackValue: number): number {
+		const value = parseFloat(inputElement.value);
+		const result = !isNaN(value) ? value : fallbackValue;
+		inputElement.value = result.toString();
+		return result;
+	}
 
 	export let temperatures: Temperatures;
 
