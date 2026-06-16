@@ -51,8 +51,8 @@
     "temperatureInputMode": "Temperatureingabe-Modus",
     "temperatureModeAbsolute": "Absolut",
     "temperatureModeRelative": "Relativ (ΔT)",
-    "dtBoilerDemand": "DT Kessel-Bedarf",
-    "dtHeatPumpBoiler": "DT Wärmepumpe-Kessel",
-    "dtStorageMaxHeatPump": "DT maximale Speichertemperatur-Wärmepumpe",
-    "dtCollectorStorageMax": "DT Kollektor-maximale Speichertemperatur"
+    "dtBoilerDemand": "ΔT Kessel-Bedarf",
+    "dtHeatPumpBoiler": "ΔT Wärmepumpe-Kessel",
+    "dtStorageMaxHeatPump": "ΔT maximale Speichertemperatur-Wärmepumpe",
+    "dtCollectorStorageMax": "ΔT Kollektor-maximale Speichertemperatur"
 }

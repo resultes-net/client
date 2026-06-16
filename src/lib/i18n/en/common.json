@@ -51,9 +51,9 @@
     "temperatureInputMode": "Temperature input mode",
     "temperatureModeAbsolute": "Absolute",
     "temperatureModeRelative": "Relative (ΔT)",
-    "dtBoilerDemand": "DT boiler-demand",
-    "dtHeatPumpBoiler": "DT heat pump-boiler",
-    "dtStorageMaxHeatPump": "DT maximum storage temperature-heat pump",
-    "dtCollectorStorageMax": "DT collector-maximum storage temperature"
+    "dtBoilerDemand": "ΔT boiler-demand",
+    "dtHeatPumpBoiler": "ΔT heat pump-boiler",
+    "dtStorageMaxHeatPump": "ΔT maximum storage temperature-heat pump",
+    "dtCollectorStorageMax": "ΔT collector-maximum storage temperature"
 }
 

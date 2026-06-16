@@ -15,13 +15,11 @@
 
 	let mode: 'absolute' | 'relative' = 'relative';
 
-	// Relative offsets (DTs)
 	let dtBoilerDemand = 0;
 	let dtHeatPumpBoiler = 0;
 	let dtStorageMaxHeatPump = 5;
 	let dtCollectorStorageMax = 15;
 
-	// Initialize DTs from absolute values when switching to relative mode or on load
 	$: {
 		if (mode === 'relative') {
 			dtBoilerDemand = temperatures.boiler_output_setpoint_degC - temperatures.demand_setpoint_degC;
@@ -34,7 +32,6 @@
 		}
 	}
 
-	// Sync Absolute values when DTs change in relative mode
 	function syncAbsoluteFromRelative(): void {
 		temperatures.boiler_output_setpoint_degC = temperatures.demand_setpoint_degC + dtBoilerDemand;
 		temperatures.heat_pump_output_setpoint_degC =
