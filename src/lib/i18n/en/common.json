@@ -47,5 +47,13 @@
     "boilerOutputSetpointTemperature": "Boiler output setpoint temperature",
     "heatPumpOutputSetpointTemperature": "Heat pump output setpoint temperature",
     "maximumStorageTemperature": "Maximum storage temperature",
-    "temperaturesArePresetFromDemandSetpoint": "The other temperatures are preset based on the demand setpoint temperature until they are edited directly."
+    "temperaturesArePresetFromDemandSetpoint": "The other temperatures are preset based on the demand setpoint temperature until they are edited directly.",
+    "temperatureMode": "Temperature mode",
+    "temperatureModeAbsolute": "Absolute",
+    "temperatureModeRelative": "Relative (DT)",
+    "dtBoilerDemand": "DT boiler-demand",
+    "dtHeatPumpBoiler": "DT heat pump-boiler",
+    "dtStorageMaxHeatPump": "DT maximum storage temperature-heat pump",
+    "dtCollectorStorageMax": "DT collector-maximum storage temperature"
 }
+
