@@ -35,10 +35,4 @@ export function parseAndClampInputValue(
 
     return value;
 }
-export function getNumberOrReset(inputElement: HTMLInputElement, fallbackValue: number): number {
-    const value = parseFloat(inputElement.value);
-    const result = !isNaN(value) ? value : fallbackValue;
-    inputElement.value = result.toString();
-    return result;
-}
 

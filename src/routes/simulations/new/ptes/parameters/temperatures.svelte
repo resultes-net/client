@@ -8,15 +8,16 @@
 
 	import { type Temperatures } from '$lib/openapi/generated/model/temperatures';
 
+	export let temperatures: Temperatures;
+
 	// Helper function to parse number input and reset invalid values
-	function getNumberOrReset(inputElement: HTMLInputElement, fallbackValue: number): number {
+	function getNumberOrReset(event: Event, fallbackValue: number): number {
+		const inputElement = event.target as HTMLInputElement;
 		const value = parseFloat(inputElement.value);
 		const result = !isNaN(value) ? value : fallbackValue;
 		inputElement.value = result.toString();
 		return result;
 	}
-
-	export let temperatures: Temperatures;
 
 	const MIN_TEMPERATURE_DEGC = 20;
 	const MAX_TEMPERATURE_DEGC = 200;
@@ -124,26 +125,22 @@
 	}
 
 	function onDtBoilerDemandChanged(event: Event): void {
-		const inputElement = event.target as HTMLInputElement;
-		dtBoilerDemand = getNumberOrReset(inputElement, dtBoilerDemand);
+		dtBoilerDemand = getNumberOrReset(event, dtBoilerDemand);
 		syncAbsoluteFromRelative();
 	}
 
 	function onDtHeatPumpBoilerChanged(event: Event): void {
-		const inputElement = event.target as HTMLInputElement;
-		dtHeatPumpBoiler = getNumberOrReset(inputElement, dtHeatPumpBoiler);
+		dtHeatPumpBoiler = getNumberOrReset(event, dtHeatPumpBoiler);
 		syncAbsoluteFromRelative();
 	}
 
 	function onDtStorageMaxHeatPumpChanged(event: Event): void {
-		const inputElement = event.target as HTMLInputElement;
-		dtStorageMaxHeatPump = getNumberOrReset(inputElement, dtStorageMaxHeatPump);
+		dtStorageMaxHeatPump = getNumberOrReset(event, dtStorageMaxHeatPump);
 		syncAbsoluteFromRelative();
 	}
 
 	function onDtCollectorStorageMaxChanged(event: Event): void {
-		const inputElement = event.target as HTMLInputElement;
-		dtCollectorStorageMax = getNumberOrReset(inputElement, dtCollectorStorageMax);
+		dtCollectorStorageMax = getNumberOrReset(event, dtCollectorStorageMax);
 		syncAbsoluteFromRelative();
 	}
 </script>
