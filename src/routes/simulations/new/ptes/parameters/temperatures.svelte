@@ -90,10 +90,6 @@
 		temperatures.boiler_output_setpoint_degC = temperature;
 		inputElement.value = temperature.toString();
 
-		if (mode === 'relative') {
-			dtBoilerDemand = temperatures.boiler_output_setpoint_degC - temperatures.demand_setpoint_degC;
-			syncAbsoluteFromRelative();
-		}
 	}
 
 	function onHeatPumpOutputSetpointChanged(event: Event): void {
@@ -107,11 +103,6 @@
 		temperatures.heat_pump_output_setpoint_degC = temperature;
 		inputElement.value = temperature.toString();
 
-		if (mode === 'relative') {
-			dtHeatPumpBoiler =
-				temperatures.heat_pump_output_setpoint_degC - temperatures.boiler_output_setpoint_degC;
-			syncAbsoluteFromRelative();
-		}
 	}
 
 	function onStorageMaximumChanged(event: Event): void {
@@ -122,11 +113,6 @@
 		temperatures.storage_maximum_degC = temperature;
 		inputElement.value = temperature.toString();
 
-		if (mode === 'relative') {
-			dtStorageMaxHeatPump =
-				temperatures.storage_maximum_degC - temperatures.heat_pump_output_setpoint_degC;
-			syncAbsoluteFromRelative();
-		}
 	}
 
 	function onSetCollectorOutputTemperature(event: Event): void {
@@ -140,11 +126,6 @@
 		temperatures.output_temperature_setpoint_degC = temperature;
 		inputElement.value = temperature.toString();
 
-		if (mode === 'relative') {
-			dtCollectorStorageMax =
-				temperatures.output_temperature_setpoint_degC - temperatures.storage_maximum_degC;
-			syncAbsoluteFromRelative();
-		}
 	}
 
 	function onDtBoilerDemandChanged(event: Event): void {
