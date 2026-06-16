@@ -4,7 +4,7 @@
 	import { Info } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
-	import { parseAndClampInputValue } from '$lib/utils';
+	import { parseAndClampInputValue, getNumberOrReset } from '$lib/utils';
 
 	import { type Temperatures } from '$lib/openapi/generated/model/temperatures';
 
@@ -117,41 +117,25 @@
 
 	function onDtBoilerDemandChanged(event: Event): void {
 		const inputElement = event.target as HTMLInputElement;
-		const value = parseFloat(inputElement.value);
-		if (!isNaN(value)) {
-			dtBoilerDemand = value;
-		}
-		inputElement.value = dtBoilerDemand.toString();
+		dtBoilerDemand = getNumberOrReset(inputElement, dtBoilerDemand);
 		syncAbsoluteFromRelative();
 	}
 
 	function onDtHeatPumpBoilerChanged(event: Event): void {
 		const inputElement = event.target as HTMLInputElement;
-		const value = parseFloat(inputElement.value);
-		if (!isNaN(value)) {
-			dtHeatPumpBoiler = value;
-		}
-		inputElement.value = dtHeatPumpBoiler.toString();
+		dtHeatPumpBoiler = getNumberOrReset(inputElement, dtHeatPumpBoiler);
 		syncAbsoluteFromRelative();
 	}
 
 	function onDtStorageMaxHeatPumpChanged(event: Event): void {
 		const inputElement = event.target as HTMLInputElement;
-		const value = parseFloat(inputElement.value);
-		if (!isNaN(value)) {
-			dtStorageMaxHeatPump = value;
-		}
-		inputElement.value = dtStorageMaxHeatPump.toString();
+		dtStorageMaxHeatPump = getNumberOrReset(inputElement, dtStorageMaxHeatPump);
 		syncAbsoluteFromRelative();
 	}
 
 	function onDtCollectorStorageMaxChanged(event: Event): void {
 		const inputElement = event.target as HTMLInputElement;
-		const value = parseFloat(inputElement.value);
-		if (!isNaN(value)) {
-			dtCollectorStorageMax = value;
-		}
-		inputElement.value = dtCollectorStorageMax.toString();
+		dtCollectorStorageMax = getNumberOrReset(inputElement, dtCollectorStorageMax);
 		syncAbsoluteFromRelative();
 	}
 </script>
