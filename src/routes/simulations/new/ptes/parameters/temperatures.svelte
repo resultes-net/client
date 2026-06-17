@@ -4,7 +4,7 @@
 	import { Info } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
-	import { parseAndClampInputValue, clampValue, assert } from '$lib/utils';
+	import { parseAndClampInputValue, clampValue } from '$lib/utils';
 
 	import { type Temperatures } from '$lib/openapi/generated/model/temperatures';
 
@@ -46,7 +46,9 @@
 
 	function targetOf(baseProperty: TemperatureKey): TemperatureKey {
 		const targetProperty = temperatureSequence.at(temperatureSequence.indexOf(baseProperty) + 1);
-		assert(targetProperty !== undefined, `No temperature follows ${baseProperty} in the sequence.`);
+		if (targetProperty === undefined) {
+			throw new Error(`No temperature follows ${baseProperty} in the sequence.`);
+		}
 		return targetProperty;
 	}
 
