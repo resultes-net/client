@@ -34,17 +34,16 @@
 		);
 	}
 
-	const deltaTargetByBase = {
+	const deltaTargetByBase: Partial<Record<keyof Temperatures, keyof Temperatures>> = {
 		demand_setpoint_degC: 'boiler_output_setpoint_degC',
 		boiler_output_setpoint_degC: 'heat_pump_output_setpoint_degC',
 		heat_pump_output_setpoint_degC: 'storage_maximum_degC',
 		storage_maximum_degC: 'output_temperature_setpoint_degC'
-	} as const satisfies Record<string, keyof Temperatures>;
+	};
 
-	type DeltaBase = keyof typeof deltaTargetByBase;
-
-	function getDelta(baseProperty: DeltaBase): number {
-		return temperatures[deltaTargetByBase[baseProperty]] - temperatures[baseProperty];
+	function getDelta(baseProperty: keyof Temperatures): number {
+		const targetProperty = deltaTargetByBase[baseProperty];
+		return targetProperty ? temperatures[targetProperty] - temperatures[baseProperty] : 0;
 	}
 
 	function onDemandSetpointChanged(event: Event): void {
@@ -82,13 +81,17 @@
 		inputElement.value = temperature.toString();
 	}
 
-	function onDeltaChanged(event: Event, baseProperty: DeltaBase): void {
+	function onDeltaChanged(event: Event, baseProperty: keyof Temperatures): void {
+		const targetProperty = deltaTargetByBase[baseProperty];
+		if (targetProperty === undefined) {
+			return;
+		}
+
 		const inputElement = event.target as HTMLInputElement;
 		const delta = parseFloat(inputElement.value);
 
 		if (!isNaN(delta)) {
-			const baseTemperature = temperatures[baseProperty];
-			temperatures[deltaTargetByBase[baseProperty]] = clampTemperature(baseTemperature + delta);
+			temperatures[targetProperty] = clampTemperature(temperatures[baseProperty] + delta);
 		}
 
 		inputElement.value = getDelta(baseProperty).toString();
