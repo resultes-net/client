@@ -34,20 +34,17 @@
 		);
 	}
 
-	function getDtBoilerDemand(): number {
-		return temperatures.boiler_output_setpoint_degC - temperatures.demand_setpoint_degC;
-	}
+	const deltaTargetByBase = {
+		demand_setpoint_degC: 'boiler_output_setpoint_degC',
+		boiler_output_setpoint_degC: 'heat_pump_output_setpoint_degC',
+		heat_pump_output_setpoint_degC: 'storage_maximum_degC',
+		storage_maximum_degC: 'output_temperature_setpoint_degC'
+	} as const satisfies Record<string, keyof Temperatures>;
 
-	function getDtHeatPumpBoiler(): number {
-		return temperatures.heat_pump_output_setpoint_degC - temperatures.boiler_output_setpoint_degC;
-	}
+	type DeltaBase = keyof typeof deltaTargetByBase;
 
-	function getDtStorageMaxHeatPump(): number {
-		return temperatures.storage_maximum_degC - temperatures.heat_pump_output_setpoint_degC;
-	}
-
-	function getDtCollectorStorageMax(): number {
-		return temperatures.output_temperature_setpoint_degC - temperatures.storage_maximum_degC;
+	function getDelta(baseProperty: DeltaBase): number {
+		return temperatures[deltaTargetByBase[baseProperty]] - temperatures[baseProperty];
 	}
 
 	function onDemandSetpointChanged(event: Event): void {
@@ -55,10 +52,10 @@
 		const temperature = parseTemperature(inputElement.value, temperatures.demand_setpoint_degC);
 
 		if (mode === 'relative') {
-			const dtBoilerDemand = getDtBoilerDemand();
-			const dtHeatPumpBoiler = getDtHeatPumpBoiler();
-			const dtStorageMaxHeatPump = getDtStorageMaxHeatPump();
-			const dtCollectorStorageMax = getDtCollectorStorageMax();
+			const dtBoilerDemand = getDelta('demand_setpoint_degC');
+			const dtHeatPumpBoiler = getDelta('boiler_output_setpoint_degC');
+			const dtStorageMaxHeatPump = getDelta('heat_pump_output_setpoint_degC');
+			const dtCollectorStorageMax = getDelta('storage_maximum_degC');
 
 			temperatures.demand_setpoint_degC = temperature;
 			temperatures.boiler_output_setpoint_degC = clampTemperature(temperature + dtBoilerDemand);
@@ -85,22 +82,16 @@
 		inputElement.value = temperature.toString();
 	}
 
-	function onDeltaChanged(
-		event: Event,
-		baseProperty: keyof Temperatures,
-		targetProperty: keyof Temperatures
-	): void {
+	function onDeltaChanged(event: Event, baseProperty: DeltaBase): void {
 		const inputElement = event.target as HTMLInputElement;
 		const delta = parseFloat(inputElement.value);
 
-		if (isNaN(delta)) {
-			inputElement.value = (temperatures[targetProperty] - temperatures[baseProperty]).toString();
-			return;
+		if (!isNaN(delta)) {
+			const baseTemperature = temperatures[baseProperty];
+			temperatures[deltaTargetByBase[baseProperty]] = clampTemperature(baseTemperature + delta);
 		}
 
-		const target = clampTemperature(temperatures[baseProperty] + delta);
-		temperatures[targetProperty] = target;
-		inputElement.value = (target - temperatures[baseProperty]).toString();
+		inputElement.value = getDelta(baseProperty).toString();
 	}
 </script>
 
@@ -215,8 +206,8 @@
 				id="boiler-output-setpoint-temperature"
 				title={$t('common.dtBoilerDemand')}
 				type="number"
-				value={getDtBoilerDemand()}
-				on:change={(e) => onDeltaChanged(e, 'demand_setpoint_degC', 'boiler_output_setpoint_degC')}
+				value={getDelta('demand_setpoint_degC')}
+				on:change={(e) => onDeltaChanged(e, 'demand_setpoint_degC')}
 			/>
 			<div><span class="flex flex-grow justify-center">K</span></div>
 		</div>
@@ -228,9 +219,8 @@
 				id="heat-pump-output-setpoint-temperature"
 				title={$t('common.dtHeatPumpBoiler')}
 				type="number"
-				value={getDtHeatPumpBoiler()}
-				on:change={(e) =>
-					onDeltaChanged(e, 'boiler_output_setpoint_degC', 'heat_pump_output_setpoint_degC')}
+				value={getDelta('boiler_output_setpoint_degC')}
+				on:change={(e) => onDeltaChanged(e, 'boiler_output_setpoint_degC')}
 			/>
 			<div><span class="flex flex-grow justify-center">K</span></div>
 		</div>
@@ -242,9 +232,8 @@
 				id="maximum-storage-temperature"
 				title={$t('common.dtStorageMaxHeatPump')}
 				type="number"
-				value={getDtStorageMaxHeatPump()}
-				on:change={(e) =>
-					onDeltaChanged(e, 'heat_pump_output_setpoint_degC', 'storage_maximum_degC')}
+				value={getDelta('heat_pump_output_setpoint_degC')}
+				on:change={(e) => onDeltaChanged(e, 'heat_pump_output_setpoint_degC')}
 			/>
 			<div><span class="flex flex-grow justify-center">K</span></div>
 		</div>
@@ -256,9 +245,8 @@
 				id="collector-output-setpoint-temperature"
 				title={$t('common.dtCollectorStorageMax')}
 				type="number"
-				value={getDtCollectorStorageMax()}
-				on:change={(e) =>
-					onDeltaChanged(e, 'storage_maximum_degC', 'output_temperature_setpoint_degC')}
+				value={getDelta('storage_maximum_degC')}
+				on:change={(e) => onDeltaChanged(e, 'storage_maximum_degC')}
 			/>
 			<div><span class="flex flex-grow justify-center">K</span></div>
 		</div>
