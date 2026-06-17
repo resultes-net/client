@@ -98,7 +98,6 @@
 			return;
 		}
 
-		// Clamp the resulting absolute temperature; this implicitly bounds the delta.
 		const target = clampTemperature(temperatures[baseProperty] + delta);
 		temperatures[targetProperty] = target;
 		inputElement.value = (target - temperatures[baseProperty]).toString();
