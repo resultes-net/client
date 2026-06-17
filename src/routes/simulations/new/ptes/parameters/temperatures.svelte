@@ -4,7 +4,7 @@
 	import { Info } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
-	import { parseAndClampInputValue, clampValue } from '$lib/utils';
+	import { parseAndClampInputValue, clampValue, assert } from '$lib/utils';
 
 	import { type Temperatures } from '$lib/openapi/generated/model/temperatures';
 
@@ -44,13 +44,14 @@
 
 	type TemperatureKey = (typeof temperatureSequence)[number];
 
-	function targetOf(baseProperty: TemperatureKey): TemperatureKey | undefined {
-		return temperatureSequence.at(temperatureSequence.indexOf(baseProperty) + 1);
+	function targetOf(baseProperty: TemperatureKey): TemperatureKey {
+		const targetProperty = temperatureSequence.at(temperatureSequence.indexOf(baseProperty) + 1);
+		assert(targetProperty !== undefined, `No temperature follows ${baseProperty} in the sequence.`);
+		return targetProperty;
 	}
 
 	function getDelta(baseProperty: TemperatureKey): number {
-		const targetProperty = targetOf(baseProperty);
-		return targetProperty ? temperatures[targetProperty] - temperatures[baseProperty] : 0;
+		return temperatures[targetOf(baseProperty)] - temperatures[baseProperty];
 	}
 
 	function onDemandSetpointChanged(event: Event): void {
@@ -90,9 +91,6 @@
 
 	function onDeltaChanged(event: Event, baseProperty: TemperatureKey): void {
 		const targetProperty = targetOf(baseProperty);
-		if (targetProperty === undefined) {
-			return;
-		}
 
 		const inputElement = event.target as HTMLInputElement;
 		const delta = parseFloat(inputElement.value);
