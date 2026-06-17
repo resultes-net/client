@@ -91,8 +91,12 @@
 		targetProperty: keyof Temperatures
 	): void {
 		const inputElement = event.target as HTMLInputElement;
-		const value = parseFloat(inputElement.value);
-		const delta = !isNaN(value) ? value : temperatures[targetProperty] - temperatures[baseProperty];
+		const delta = parseFloat(inputElement.value);
+
+		if (isNaN(delta)) {
+			inputElement.value = (temperatures[targetProperty] - temperatures[baseProperty]).toString();
+			return;
+		}
 
 		// Clamp the resulting absolute temperature; this implicitly bounds the delta.
 		const target = clampTemperature(temperatures[baseProperty] + delta);
