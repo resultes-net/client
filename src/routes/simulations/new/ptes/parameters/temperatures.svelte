@@ -4,7 +4,7 @@
 	import { Info } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
-	import { parseAndClampInputValue } from '$lib/utils';
+	import { parseAndClampInputValue, clampValue } from '$lib/utils';
 
 	import { type Temperatures } from '$lib/openapi/generated/model/temperatures';
 
@@ -13,7 +13,7 @@
 	function getNumberOrReset(event: Event, fallbackValue: number): number {
 		const inputElement = event.target as HTMLInputElement;
 		const value = parseFloat(inputElement.value);
-		const result = !isNaN(value) ? value : fallbackValue;
+		const result = !isNaN(value) ? clampValue(value, -100, 100) : fallbackValue;
 		inputElement.value = result.toString();
 		return result;
 	}
@@ -23,7 +23,6 @@
 
 	let mode: 'absolute' | 'relative' = 'relative';
 
-	// Helper functions to calculate deltas on-the-fly for display
 	function getDtBoilerDemand(): number {
 		return temperatures.boiler_output_setpoint_degC - temperatures.demand_setpoint_degC;
 	}
@@ -83,70 +82,18 @@
 		}
 	}
 
-	function onBoilerOutputSetpointChanged(event: Event): void {
-		const inputElement = event.target as HTMLInputElement;
 
-		const temperature = parseTemperature(
-			inputElement.value,
-			temperatures.boiler_output_setpoint_degC
-		);
+        function onTemperatureChanged(event: Event, property: keyof Temperatures): void {
+                const inputElement = event.target as HTMLInputElement;
+                const temperature = parseTemperature(inputElement.value, temperatures[property]);
+                temperatures[property] = temperature;
+                inputElement.value = temperature.toString();
+        }
 
-		temperatures.boiler_output_setpoint_degC = temperature;
-		inputElement.value = temperature.toString();
-	}
-
-	function onHeatPumpOutputSetpointChanged(event: Event): void {
-		const inputElement = event.target as HTMLInputElement;
-
-		const temperature = parseTemperature(
-			inputElement.value,
-			temperatures.heat_pump_output_setpoint_degC
-		);
-
-		temperatures.heat_pump_output_setpoint_degC = temperature;
-		inputElement.value = temperature.toString();
-	}
-
-	function onStorageMaximumChanged(event: Event): void {
-		const inputElement = event.target as HTMLInputElement;
-
-		const temperature = parseTemperature(inputElement.value, temperatures.storage_maximum_degC);
-
-		temperatures.storage_maximum_degC = temperature;
-		inputElement.value = temperature.toString();
-	}
-
-	function onSetCollectorOutputTemperature(event: Event): void {
-		const inputElement = event.target as HTMLInputElement;
-
-		const temperature = parseTemperature(
-			inputElement.value,
-			temperatures.output_temperature_setpoint_degC
-		);
-
-		temperatures.output_temperature_setpoint_degC = temperature;
-		inputElement.value = temperature.toString();
-	}
-
-	function onDtBoilerDemandChanged(event: Event): void {
-		const delta = getNumberOrReset(event, getDtBoilerDemand());
-		temperatures.boiler_output_setpoint_degC = parseTemperature((temperatures.demand_setpoint_degC + delta).toString(), temperatures.boiler_output_setpoint_degC);
-	}
-
-	function onDtHeatPumpBoilerChanged(event: Event): void {
-		const delta = getNumberOrReset(event, getDtHeatPumpBoiler());
-		temperatures.heat_pump_output_setpoint_degC = parseTemperature((temperatures.boiler_output_setpoint_degC + delta).toString(), temperatures.heat_pump_output_setpoint_degC);
-	}
-
-	function onDtStorageMaxHeatPumpChanged(event: Event): void {
-		const delta = getNumberOrReset(event, getDtStorageMaxHeatPump());
-		temperatures.storage_maximum_degC = parseTemperature((temperatures.heat_pump_output_setpoint_degC + delta).toString(), temperatures.storage_maximum_degC);
-	}
-
-	function onDtCollectorStorageMaxChanged(event: Event): void {
-		const delta = getNumberOrReset(event, getDtCollectorStorageMax());
-		temperatures.output_temperature_setpoint_degC = parseTemperature((temperatures.storage_maximum_degC + delta).toString(), temperatures.output_temperature_setpoint_degC);
-	}
+        function onDeltaChanged(event: Event, deltaGetter: () => number, setter: (value: number) => void): void {
+                const delta = getNumberOrReset(event, deltaGetter());
+                setter(delta);
+        }
 </script>
 
 <div data-popup="presetsInfoHoverPopup">
@@ -199,7 +146,7 @@
 			value={temperatures.boiler_output_setpoint_degC}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
-			on:change={onBoilerOutputSetpointChanged}
+			on:change={(e) => onTemperatureChanged(e, 'boiler_output_setpoint_degC')}
 			/>
 			<div><span class="flex flex-grow justify-center">°C</span></div>
 		</div>
@@ -216,7 +163,7 @@
 			value={temperatures.heat_pump_output_setpoint_degC}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
-			on:change={onHeatPumpOutputSetpointChanged}
+			on:change={(e) => onTemperatureChanged(e, 'heat_pump_output_setpoint_degC')}
 			/>
 			<div><span class="flex flex-grow justify-center">°C</span></div>
 		</div>
@@ -231,7 +178,7 @@
 			value={temperatures.storage_maximum_degC}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
-			on:change={onStorageMaximumChanged}
+			on:change={(e) => onTemperatureChanged(e, 'storage_maximum_degC')}
 			/>
 			<div><span class="flex flex-grow justify-center">°C</span></div>
 		</div>
@@ -248,7 +195,7 @@
 			value={temperatures.output_temperature_setpoint_degC}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
-			on:change={onSetCollectorOutputTemperature}
+			on:change={(e) => onTemperatureChanged(e, 'output_temperature_setpoint_degC')}
 			/>
 			<div><span class="flex flex-grow justify-center">°C</span></div>
 		</div>
@@ -263,7 +210,9 @@
 			value={getDtBoilerDemand()}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
-			on:change={onDtBoilerDemandChanged}
+			on:change={(e) => onDeltaChanged(e, getDtBoilerDemand, (delta) => {
+                                temperatures.boiler_output_setpoint_degC = parseTemperature((temperatures.demand_setpoint_degC + delta).toString(), temperatures.boiler_output_setpoint_degC);
+                        })}
 			/>
 			<div><span class="flex flex-grow justify-center">K</span></div>
 		</div>
@@ -278,7 +227,9 @@
 			value={getDtHeatPumpBoiler()}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
-			on:change={onDtHeatPumpBoilerChanged}
+			on:change={(e) => onDeltaChanged(e, getDtHeatPumpBoiler, (delta) => {
+                                temperatures.heat_pump_output_setpoint_degC = parseTemperature((temperatures.boiler_output_setpoint_degC + delta).toString(), temperatures.heat_pump_output_setpoint_degC);
+                        })}
 			/>
 			<div><span class="flex flex-grow justify-center">K</span></div>
 		</div>
@@ -293,7 +244,9 @@
 			value={getDtStorageMaxHeatPump()}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
-			on:change={onDtStorageMaxHeatPumpChanged}
+			on:change={(e) => onDeltaChanged(e, getDtStorageMaxHeatPump, (delta) => {
+                                temperatures.storage_maximum_degC = parseTemperature((temperatures.heat_pump_output_setpoint_degC + delta).toString(), temperatures.storage_maximum_degC);
+                        })}
 			/>
 			<div><span class="flex flex-grow justify-center">K</span></div>
 		</div>
@@ -308,7 +261,9 @@
 			value={getDtCollectorStorageMax()}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
-			on:change={onDtCollectorStorageMaxChanged}
+			on:change={(e) => onDeltaChanged(e, getDtCollectorStorageMax, (delta) => {
+                                temperatures.output_temperature_setpoint_degC = parseTemperature((temperatures.storage_maximum_degC + delta).toString(), temperatures.output_temperature_setpoint_degC);
+                        })}
 			/>
 			<div><span class="flex flex-grow justify-center">K</span></div>
 		</div>

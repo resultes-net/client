@@ -10,6 +10,16 @@ export function assert(condition: unknown, message?: string): asserts condition 
     }
 }
 
+export function clampValue(value: number, min: number, max: number): number {
+    if (value < min) {
+        return min;
+    }
+    if (value > max) {
+        return max;
+    }
+    return value;
+}
+
 export function parseAndClampInputValue(
     input: string,
     min: number,
@@ -24,15 +34,6 @@ export function parseAndClampInputValue(
         return fallbackValue;
     }
 
-    let value = number;
-
-    if (value < min) {
-        value = min;
-    }
-    if (value > max) {
-        value = max;
-    }
-
-    return value;
+    return clampValue(number, min, max);
 }
 
