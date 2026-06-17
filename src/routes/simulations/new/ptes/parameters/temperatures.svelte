@@ -23,32 +23,24 @@
 
 	let mode: 'absolute' | 'relative' = 'relative';
 
-	let dtBoilerDemand = 0;
-	let dtHeatPumpBoiler = 0;
-	let dtStorageMaxHeatPump = 5;
-	let dtCollectorStorageMax = 15;
-
-	$: {
-		if (mode === 'relative') {
-			dtBoilerDemand = temperatures.boiler_output_setpoint_degC - temperatures.demand_setpoint_degC;
-			dtHeatPumpBoiler =
-				temperatures.heat_pump_output_setpoint_degC - temperatures.boiler_output_setpoint_degC;
-			dtStorageMaxHeatPump =
-				temperatures.storage_maximum_degC - temperatures.heat_pump_output_setpoint_degC;
-			dtCollectorStorageMax =
-				temperatures.output_temperature_setpoint_degC - temperatures.storage_maximum_degC;
-		}
+	// Helper functions to calculate deltas on-the-fly for display
+	function getDtBoilerDemand(): number {
+		return temperatures.boiler_output_setpoint_degC - temperatures.demand_setpoint_degC;
 	}
 
-	function syncAbsoluteFromRelative(): void {
-		temperatures.boiler_output_setpoint_degC = temperatures.demand_setpoint_degC + dtBoilerDemand;
-		temperatures.heat_pump_output_setpoint_degC =
-			temperatures.boiler_output_setpoint_degC + dtHeatPumpBoiler;
-		temperatures.storage_maximum_degC =
-			temperatures.heat_pump_output_setpoint_degC + dtStorageMaxHeatPump;
-		temperatures.output_temperature_setpoint_degC =
-			temperatures.storage_maximum_degC + dtCollectorStorageMax;
+	function getDtHeatPumpBoiler(): number {
+		return temperatures.heat_pump_output_setpoint_degC - temperatures.boiler_output_setpoint_degC;
 	}
+
+	function getDtStorageMaxHeatPump(): number {
+		return temperatures.storage_maximum_degC - temperatures.heat_pump_output_setpoint_degC;
+	}
+
+	function getDtCollectorStorageMax(): number {
+		return temperatures.output_temperature_setpoint_degC - temperatures.storage_maximum_degC;
+	}
+
+
 
 	const presetsInfoHoverPopupSettings: PopupSettings = {
 		event: 'hover',
@@ -74,7 +66,17 @@
 		inputElement.value = temperature.toString();
 
 		if (mode === 'relative') {
-			syncAbsoluteFromRelative();
+			// When demand setpoint changes in relative mode, adjust other temperatures
+			// to maintain the same deltas relative to the new demand setpoint
+			const dtBoilerDemand = getDtBoilerDemand();
+			const dtHeatPumpBoiler = getDtHeatPumpBoiler();
+			const dtStorageMaxHeatPump = getDtStorageMaxHeatPump();
+			const dtCollectorStorageMax = getDtCollectorStorageMax();
+
+			temperatures.boiler_output_setpoint_degC = temperature + dtBoilerDemand;
+			temperatures.heat_pump_output_setpoint_degC = temperatures.boiler_output_setpoint_degC + dtHeatPumpBoiler;
+			temperatures.storage_maximum_degC = temperatures.heat_pump_output_setpoint_degC + dtStorageMaxHeatPump;
+			temperatures.output_temperature_setpoint_degC = temperatures.storage_maximum_degC + dtCollectorStorageMax;
 		}
 	}
 
@@ -124,23 +126,27 @@
 	}
 
 	function onDtBoilerDemandChanged(event: Event): void {
-		dtBoilerDemand = getNumberOrReset(event, dtBoilerDemand);
-		syncAbsoluteFromRelative();
+		const delta = getNumberOrReset(event, getDtBoilerDemand());
+		// Keep demand_setpoint_degC fixed, adjust boiler_output_setpoint_degC
+		temperatures.boiler_output_setpoint_degC = temperatures.demand_setpoint_degC + delta;
 	}
 
 	function onDtHeatPumpBoilerChanged(event: Event): void {
-		dtHeatPumpBoiler = getNumberOrReset(event, dtHeatPumpBoiler);
-		syncAbsoluteFromRelative();
+		const delta = getNumberOrReset(event, getDtHeatPumpBoiler());
+		// Keep boiler_output_setpoint_degC fixed, adjust heat_pump_output_setpoint_degC
+		temperatures.heat_pump_output_setpoint_degC = temperatures.boiler_output_setpoint_degC + delta;
 	}
 
 	function onDtStorageMaxHeatPumpChanged(event: Event): void {
-		dtStorageMaxHeatPump = getNumberOrReset(event, dtStorageMaxHeatPump);
-		syncAbsoluteFromRelative();
+		const delta = getNumberOrReset(event, getDtStorageMaxHeatPump());
+		// Keep heat_pump_output_setpoint_degC fixed, adjust storage_maximum_degC
+		temperatures.storage_maximum_degC = temperatures.heat_pump_output_setpoint_degC + delta;
 	}
 
 	function onDtCollectorStorageMaxChanged(event: Event): void {
-		dtCollectorStorageMax = getNumberOrReset(event, dtCollectorStorageMax);
-		syncAbsoluteFromRelative();
+		const delta = getNumberOrReset(event, getDtCollectorStorageMax());
+		// Keep storage_maximum_degC fixed, adjust output_temperature_setpoint_degC
+		temperatures.output_temperature_setpoint_degC = temperatures.storage_maximum_degC + delta;
 	}
 </script>
 
@@ -255,7 +261,7 @@
 				id="boiler-output-setpoint-temperature"
 			title={$t('common.dtBoilerDemand')}
 				type="number"
-			value={dtBoilerDemand}
+			value={getDtBoilerDemand()}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
 			on:change={onDtBoilerDemandChanged}
@@ -270,7 +276,7 @@
 				id="heat-pump-output-setpoint-temperature"
 			title={$t('common.dtHeatPumpBoiler')}
 				type="number"
-			value={dtHeatPumpBoiler}
+			value={getDtHeatPumpBoiler()}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
 			on:change={onDtHeatPumpBoilerChanged}
@@ -285,7 +291,7 @@
 				id="maximum-storage-temperature"
 			title={$t('common.dtStorageMaxHeatPump')}
 				type="number"
-			value={dtStorageMaxHeatPump}
+			value={getDtStorageMaxHeatPump()}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
 			on:change={onDtStorageMaxHeatPumpChanged}
@@ -300,7 +306,7 @@
 				id="collector-output-setpoint-temperature"
 			title={$t('common.dtCollectorStorageMax')}
 				type="number"
-			value={dtCollectorStorageMax}
+			value={getDtCollectorStorageMax()}
 			min={MIN_TEMPERATURE_DEGC}
 			max={MAX_TEMPERATURE_DEGC}
 			on:change={onDtCollectorStorageMaxChanged}
