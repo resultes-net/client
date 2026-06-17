@@ -34,15 +34,22 @@
 		);
 	}
 
-	const deltaTargetByBase: Partial<Record<keyof Temperatures, keyof Temperatures>> = {
-		demand_setpoint_degC: 'boiler_output_setpoint_degC',
-		boiler_output_setpoint_degC: 'heat_pump_output_setpoint_degC',
-		heat_pump_output_setpoint_degC: 'storage_maximum_degC',
-		storage_maximum_degC: 'output_temperature_setpoint_degC'
-	};
+	const temperatureSequence = [
+		'demand_setpoint_degC',
+		'boiler_output_setpoint_degC',
+		'heat_pump_output_setpoint_degC',
+		'storage_maximum_degC',
+		'output_temperature_setpoint_degC'
+	] as const satisfies readonly (keyof Temperatures)[];
 
-	function getDelta(baseProperty: keyof Temperatures): number {
-		const targetProperty = deltaTargetByBase[baseProperty];
+	type TemperatureKey = (typeof temperatureSequence)[number];
+
+	function targetOf(baseProperty: TemperatureKey): TemperatureKey | undefined {
+		return temperatureSequence.at(temperatureSequence.indexOf(baseProperty) + 1);
+	}
+
+	function getDelta(baseProperty: TemperatureKey): number {
+		const targetProperty = targetOf(baseProperty);
 		return targetProperty ? temperatures[targetProperty] - temperatures[baseProperty] : 0;
 	}
 
@@ -81,8 +88,8 @@
 		inputElement.value = temperature.toString();
 	}
 
-	function onDeltaChanged(event: Event, baseProperty: keyof Temperatures): void {
-		const targetProperty = deltaTargetByBase[baseProperty];
+	function onDeltaChanged(event: Event, baseProperty: TemperatureKey): void {
+		const targetProperty = targetOf(baseProperty);
 		if (targetProperty === undefined) {
 			return;
 		}
