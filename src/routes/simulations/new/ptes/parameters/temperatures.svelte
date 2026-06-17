@@ -92,15 +92,15 @@
 	}
 
 	function onDeltaChanged(event: Event, baseProperty: TemperatureKey): void {
-		const targetProperty = targetOf(baseProperty);
-
 		const inputElement = event.target as HTMLInputElement;
 		const delta = parseFloat(inputElement.value);
 
-		if (!isNaN(delta)) {
-			temperatures[targetProperty] = clampTemperature(temperatures[baseProperty] + delta);
+		if (isNaN(delta)) {
+			inputElement.value = getDelta(baseProperty).toString();
+			return;
 		}
 
+		temperatures[targetOf(baseProperty)] = clampTemperature(temperatures[baseProperty] + delta);
 		inputElement.value = getDelta(baseProperty).toString();
 	}
 </script>
