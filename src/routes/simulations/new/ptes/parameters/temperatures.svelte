@@ -12,8 +12,6 @@
 
 	const MIN_TEMPERATURE_DEGC = 20;
 	const MAX_TEMPERATURE_DEGC = 200;
-	const MIN_DELTA_DEGC = -100;
-	const MAX_DELTA_DEGC = 100;
 
 	let mode: 'absolute' | 'relative' = 'relative';
 
@@ -34,16 +32,6 @@
 			MAX_TEMPERATURE_DEGC,
 			fallbackValue
 		);
-	}
-
-	function getDelta(event: Event, fallbackValue: number): number {
-		const inputElement = event.target as HTMLInputElement;
-		const value = parseFloat(inputElement.value);
-		const result = !isNaN(value)
-			? clampValue(value, MIN_DELTA_DEGC, MAX_DELTA_DEGC)
-			: fallbackValue;
-		inputElement.value = result.toString();
-		return result;
 	}
 
 	function getDtBoilerDemand(): number {
@@ -102,8 +90,14 @@
 		baseProperty: keyof Temperatures,
 		targetProperty: keyof Temperatures
 	): void {
-		const delta = getDelta(event, temperatures[targetProperty] - temperatures[baseProperty]);
-		temperatures[targetProperty] = clampTemperature(temperatures[baseProperty] + delta);
+		const inputElement = event.target as HTMLInputElement;
+		const value = parseFloat(inputElement.value);
+		const delta = !isNaN(value) ? value : temperatures[targetProperty] - temperatures[baseProperty];
+
+		// Clamp the resulting absolute temperature; this implicitly bounds the delta.
+		const target = clampTemperature(temperatures[baseProperty] + delta);
+		temperatures[targetProperty] = target;
+		inputElement.value = (target - temperatures[baseProperty]).toString();
 	}
 </script>
 
@@ -219,8 +213,6 @@
 				title={$t('common.dtBoilerDemand')}
 				type="number"
 				value={getDtBoilerDemand()}
-				min={MIN_DELTA_DEGC}
-				max={MAX_DELTA_DEGC}
 				on:change={(e) => onDeltaChanged(e, 'demand_setpoint_degC', 'boiler_output_setpoint_degC')}
 			/>
 			<div><span class="flex flex-grow justify-center">K</span></div>
@@ -234,8 +226,6 @@
 				title={$t('common.dtHeatPumpBoiler')}
 				type="number"
 				value={getDtHeatPumpBoiler()}
-				min={MIN_DELTA_DEGC}
-				max={MAX_DELTA_DEGC}
 				on:change={(e) =>
 					onDeltaChanged(e, 'boiler_output_setpoint_degC', 'heat_pump_output_setpoint_degC')}
 			/>
@@ -250,8 +240,6 @@
 				title={$t('common.dtStorageMaxHeatPump')}
 				type="number"
 				value={getDtStorageMaxHeatPump()}
-				min={MIN_DELTA_DEGC}
-				max={MAX_DELTA_DEGC}
 				on:change={(e) =>
 					onDeltaChanged(e, 'heat_pump_output_setpoint_degC', 'storage_maximum_degC')}
 			/>
@@ -266,8 +254,6 @@
 				title={$t('common.dtCollectorStorageMax')}
 				type="number"
 				value={getDtCollectorStorageMax()}
-				min={MIN_DELTA_DEGC}
-				max={MAX_DELTA_DEGC}
 				on:change={(e) =>
 					onDeltaChanged(e, 'storage_maximum_degC', 'output_temperature_setpoint_degC')}
 			/>
