@@ -46,13 +46,12 @@
     "demandSetpointTemperature": "Bedarfs-Solltemperatur",
     "boilerOutputSetpointTemperature": "Kessel-Soll-Ausgangstemperatur",
     "heatPumpOutputSetpointTemperature": "Wärmepumpen-Soll-Ausgangstemperatur",
-    "maximumStorageTemperature": "Maximale Speichertemperatur",
-    "temperaturesArePresetFromDemandSetpoint": "Die übrigen Temperaturen werden anhand der Bedarfs-Solltemperatur voreingestellt, bis sie direkt bearbeitet werden.",
-    "temperatureInputMode": "Temperatureingabe-Modus",
-    "temperatureModeAbsolute": "Absolut",
-    "temperatureModeRelative": "Relativ (ΔT)",
+    "maximumStorageTemperature": "Max. Speichertemperatur",
+    "temperatureInputMode": "Eingabemodus",
+    "setpointTemperaturesInputModeAbsolute": "Absolut",
+    "setpointTemperaturesInputModeRelative": "Relativ (ΔT)",
     "dtBoilerDemand": "ΔT Kessel-Bedarf",
     "dtHeatPumpBoiler": "ΔT Wärmepumpe-Kessel",
-    "dtStorageMaxHeatPump": "ΔT maximale Speichertemperatur-Wärmepumpe",
-    "dtCollectorStorageMax": "ΔT Kollektor-maximale Speichertemperatur"
+    "dtStorageMaxHeatPump": "ΔT max. Speichertemperatur-Wärmepumpe",
+    "dtCollectorStorageMax": "ΔT Kollektor-max. Speichertemperatur"
 }
