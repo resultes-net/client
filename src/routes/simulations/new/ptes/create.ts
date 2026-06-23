@@ -1,7 +1,6 @@
 import { createDefaultDemand } from "src/lib/createDefaultDemand";
 import { PtesParametersInput } from "src/lib/openapi/generated/model/ptesParametersInput";
 
-import { createPresetTemperatures, DEFAULT_DEMAND_SETPOINT_DEGC } from "./parameters/temperaturePresets";
 
 export function createDefaultParameters(): PtesParametersInput {
     const defaultParameters: PtesParametersInput = {
@@ -25,7 +24,6 @@ export function createDefaultParameters(): PtesParametersInput {
                 a2_kW_per_m2_per_K2: 0.0089e-3
             },
             type: "flat-plate",
-            output_temperature_setpoint_degC: 100.0
         },
         storage: {
             volume: {
@@ -38,7 +36,14 @@ export function createDefaultParameters(): PtesParametersInput {
                 bottom: 0.05,
             }
         },
-        temperatures: createPresetTemperatures(DEFAULT_DEMAND_SETPOINT_DEGC)
+        temperatures: {
+            demand_setpoint_degC: 80,
+            boiler_output_setpoint_degC: 80,
+            heat_pump_output_setpoint_degC: 80,
+            storage_maximum_degC: 85,
+            collector_output_setpoint_degC: 90
+
+        }
     };
 
     return defaultParameters;

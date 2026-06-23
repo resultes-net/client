@@ -39,7 +39,7 @@
 		'boiler_output_setpoint_degC',
 		'heat_pump_output_setpoint_degC',
 		'storage_maximum_degC',
-		'output_temperature_setpoint_degC'
+		'collector_output_setpoint_degC'
 	] as const satisfies readonly (keyof Temperatures)[];
 
 	type TemperatureKey = (typeof temperatureSequence)[number];
@@ -74,7 +74,7 @@
 			temperatures.storage_maximum_degC = clampTemperature(
 				temperatures.heat_pump_output_setpoint_degC + dtStorageMaxHeatPump
 			);
-			temperatures.output_temperature_setpoint_degC = clampTemperature(
+			temperatures.collector_output_setpoint_degC = clampTemperature(
 				temperatures.storage_maximum_degC + dtCollectorStorageMax
 			);
 		} else {
@@ -201,10 +201,10 @@
 				id="collector-output-setpoint-temperature"
 				title={$t('common.collectorOutputSetpointTemperature')}
 				type="number"
-				value={temperatures.output_temperature_setpoint_degC}
+				value={temperatures.collector_output_setpoint_degC}
 				min={MIN_TEMPERATURE_DEGC}
 				max={MAX_TEMPERATURE_DEGC}
-				on:change={(e) => onTemperatureChanged(e, 'output_temperature_setpoint_degC')}
+				on:change={(e) => onTemperatureChanged(e, 'collector_output_setpoint_degC')}
 			/>
 			<div><span class="flex flex-grow justify-center">°C</span></div>
 		</div>
