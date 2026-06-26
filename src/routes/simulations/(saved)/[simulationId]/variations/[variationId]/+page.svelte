@@ -176,13 +176,13 @@
 								</td>
 							{/if}
 						</tr>
-						<tr>
-							<td>{$t('common.collectorOutputSetpointTemperature')}</td>
-							<td>{parameters.values.collector_field.output_temperature_setpoint_degC}</td>
-							<td>°C</td>
-							<td />
-						</tr>
 						{#if parameters.values.type === 'ptes'}
+							<tr>
+								<td>{$t('common.collectorOutputSetpointTemperature')}</td>
+								<td>{parameters.values.temperatures.collector_output_setpoint_degC}</td>
+								<td>°C</td>
+								<td />
+							</tr>
 							<tr>
 								<td>{$t('common.storageVolume')}</td>
 								<td>{parameters.values.storage.volume.value}</td>
