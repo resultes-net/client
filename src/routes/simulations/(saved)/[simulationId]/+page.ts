@@ -6,7 +6,9 @@ import type { PageLoad } from './$types';
 
 import { getJson } from 'src/ajax';
 
-export const load: PageLoad = async ({ params, fetch }) => {
+export const load: PageLoad = async ({ params, fetch, depends }) => {
+    depends(`resultes:simulation:${params.simulationId}`);
+
     const bearerToken = auth.getAccessToken();
 
     const simulation: Simulation = await getJson(

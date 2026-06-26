@@ -112,7 +112,7 @@
 </script>
 
 <div data-popup="variation-menu-drop-down">
-	<nav class="bg-secondary-50-900-token list-nav w-52 pt-2">
+	<div class="bg-secondary-50-900-token list-nav w-52 pt-2">
 		<div class="bg-secondary-50-900-token arrow" />
 		<ul>
 			<li>
@@ -124,7 +124,7 @@
 				>
 			</li>
 		</ul>
-	</nav>
+	</div>
 </div>
 
 <div class="flex flex-row mt-6">

@@ -23,7 +23,7 @@ export function getIsAuthenticated(): boolean {
     return getIsTokenValid();
 }
 
-export function getIsTokenValid(): boolean {
+function getIsTokenValid(): boolean {
     const token = getToken();
 
     const valid_until = new Date(token.valid_until);

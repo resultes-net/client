@@ -53,5 +53,6 @@
     "dtBoilerDemand": "ΔT Kessel-Bedarf",
     "dtHeatPumpBoiler": "ΔT Wärmepumpe-Kessel",
     "dtStorageMaxHeatPump": "ΔT max. Speichertemperatur-Wärmepumpe",
-    "dtCollectorStorageMax": "ΔT Kollektor-max. Speichertemperatur"
+    "dtCollectorStorageMax": "ΔT Kollektor-max. Speichertemperatur",
+    "Restart": "Neu starten"
 }
