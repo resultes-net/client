@@ -1,6 +1,5 @@
 {
     "absolute": "absolute",
     "relativeToDemand": "relative to demand",
-    "heightRelativeToDemand": "Height realtive to demand",
-    "floorAreaRelativeToDemand": "Floor area relative to demand"    
+    "relativeToCollectorArea": "relative to collector area"
 }

@@ -3,14 +3,13 @@
 	import { ChevronDown } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
-	import { parseAndClampInputValue } from '$lib/utils';
 
 	import type { CollectorField } from '$lib/openapi/generated/model/collectorField';
 
+	import { popupSizeApplyReferenceWidthIncludingBorder } from './common';
+	import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
 	import type { Phase } from './phase';
 	import { AreaScalingEnum, MassFlowScalingEnum } from './units';
-	import { popupSizeApplyReferenceWidthIncludingBorder } from './common'
-	import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
 
 	export let projectPhase: Phase;
 	export let parameters: CollectorField;
@@ -38,20 +37,6 @@
 			}
 		};
 	}
-
-	function onSetOutputTemperatureSetpoint(event: Event): void {
-		const inputElement = event.target as HTMLInputElement;
-
-		const temperature = parseAndClampInputValue(
-			inputElement.value,
-			20,
-			200,
-			parameters.output_temperature_setpoint_degC
-		);
-
-		parameters.output_temperature_setpoint_degC = temperature;
-		inputElement.value = temperature.toString();
-	}
 </script>
 
 <div class="z-50 bg-surface-200-700-token-token" data-popup="area-size-scaling-combobox">
@@ -69,7 +54,7 @@
 		<ListBoxItem
 			bind:group={parameters.area.scaling}
 			name="scaling"
-			value={AreaScalingEnum.RelativeToDemandM2PerGwh}
+			value={AreaScalingEnum.RelativeToDemandM2PerMwh}
 			>{$t('units.relativeToDemand')} [m<sup>2</sup>GWh<sup>-1</sup>]</ListBoxItem
 		>
 	</ListBox>
@@ -94,7 +79,7 @@
 			name="scaling"
 			value={MassFlowScalingEnum.RelativeToCollectorAreaKgPerHM2}
 		>
-			{$t('units.relativeToDemand')} [kg h<sup>-1</sup>GWh<sup>-1</sup>]
+			{$t('units.relativeToCollectorArea')} [kg h<sup>-1</sup>m<sup>-2</sup>]
 		</ListBoxItem>
 	</ListBox>
 </div>
@@ -114,10 +99,12 @@
 			use:popup={areaSizeScalingPopupSettings}
 		>
 			<span>
-				{#if parameters.area.scaling == 'absolute_m2'}
+				{#if parameters.area.scaling === 'absolute_m2'}
 					{$t('units.absolute')} [m<sup>2</sup>]
+				{:else if parameters.area.scaling === 'relative_to_demand_m2_per_MWh'}
+					{$t('units.relativeToCollectorArea')} [kg h<sup>-1</sup>m<sup>-2</sup>]
 				{:else}
-					{$t('units.relativeToDemand')} [m<sup>2</sup>GWh<sup>-1</sup>]
+					ERROR: unknown scaling factor: {parameters.area.scaling}
 				{/if}
 			</span>
 			<ChevronDown class="text-surface-400-500-token" size="20" />
@@ -145,34 +132,11 @@
 		/>
 		<div><span class="flex flex-grow justify-center">°</span></div>
 	</div>
-
-	<label for="collector-output-setpoint-temperature"
-		>{$t('common.collectorOutputSetpointTemperature')}</label
-	>
-	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-		<input
-			class="input"
-			id="collector-output-setpoint-temperature"
-			title={$t('common.collectorOutputSetpointTemperature')}
-			type="number"
-			value={parameters.output_temperature_setpoint_degC}
-			min="20"
-			max="200"
-			on:change={onSetOutputTemperatureSetpoint}
-		/>
-		<div><span class="flex flex-grow justify-center">°C</span></div>
-	</div>
-
-	<label for="collector-type">{$t('common.collectorType')}</label>
-	<select class="select w-auto" id="collector-type" bind:value={parameters.type}>
-		<option value="flat-plate">{$t('common.flatPlateCollector')}</option>
-		<option value="parabolic-through">{$t('common.parabolicTroughCollector')}</option>
-	</select>
 </div>
 
 {#if projectPhase === 'design'}
 	<hr class="!border-t-2 mt-6 mb-4" />
-	
+
 	<h7 class="h7">{$t('common.collectorPerformanceCoefficients')}</h7>
 	<div
 		class="m-2 border rounded-lg dark:border-surface-600 light:boder-surface-300 p-2 grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]"
@@ -219,10 +183,12 @@
 				use:popup={nominalMassflowScalingPopupSettings}
 			>
 				<span>
-					{#if parameters.nominal_massflow.scaling == 'absolute_kg_per_h'}
+					{#if parameters.nominal_massflow.scaling === 'absolute_kg_per_h'}
 						{$t('units.absolute')} [kg h<sup>-1</sup>]
+					{:else if parameters.nominal_massflow.scaling === 'relative_to_collector_area_kg_per_h_m2'}
+						{$t('units.relativeToCollectorArea')} [kg h<sup>-1</sup>m<sup>-2</sup>]
 					{:else}
-						{$t('units.relativeToDemand')} [kg h<sup>-1</sup>GWh<sup>-1</sup>]
+						ERROR: Unknown scaling factor: {parameters.nominal_massflow.scaling}.
 					{/if}
 				</span>
 				<ChevronDown class="text-surface-400-500-token" size="20" />

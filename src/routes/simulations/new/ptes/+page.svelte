@@ -14,14 +14,14 @@
 
 	import { createDefaultParameters } from './create';
 
-	import { type Phase } from './parameters/phase';
+	import { type Phase } from 'src/lib/components/parameters/phase';
 
-	import Collector from './parameters/collector.svelte';
-	import Demand from './parameters/demand.svelte';
-	import Profile from './parameters/profile.svelte';
-	import Temperatures from './parameters/temperatures.svelte';
-	import Tes from './parameters/tes/tes.svelte';
+	import Collector from 'src/lib/components/parameters/collector.svelte';
+	import Demand from 'src/lib/components/parameters/demand.svelte';
+	import Tes from 'src/lib/components/parameters/tes.svelte';
+	import Profile from 'src/lib/components/parameters/demand/profile.svelte';
 	import SystemDescription from './systemDescription.svelte';
+	import Temperatures from './temperatures.svelte';
 
 	let projectName = '';
 	let parameters = createDefaultParameters();

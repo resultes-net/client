@@ -1,5 +1,0 @@
-import { ScaledValueLiteralAbsoluteKgPerHRelativeToCollectorAreaKgPerHM2 } from '$lib/openapi/generated/model/scaledValueLiteralAbsoluteKgPerHRelativeToCollectorAreaKgPerHM2';
-import { ScaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh } from '$lib/openapi/generated/model/scaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh';
-
-export const AreaScalingEnum = ScaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh.ScalingEnum;
-export const MassFlowScalingEnum = ScaledValueLiteralAbsoluteKgPerHRelativeToCollectorAreaKgPerHM2.ScalingEnum;

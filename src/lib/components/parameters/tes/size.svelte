@@ -4,17 +4,19 @@
 
 	import { t } from '$lib/i18n/translations';
 
-	import { ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWh } from '$lib/openapi/generated/model/scaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWh';
+	import {
+		ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2 as Size,
+		type ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2 as SizeType
+	} from '$lib/openapi/generated/model/scaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2';
 
-	import { popupSizeApplyReferenceWidthIncludingBorder } from '../common';
-	import type { OnAreParametersValidChanged } from '../onAreParametersValidChanged';
+	import { popupSizeApplyReferenceWidthIncludingBorder } from '$lib/components/parameters/common';
+	import type { OnAreParametersValidChanged } from '$lib/components/parameters/onAreParametersValidChanged';
 
-	export let parameters: ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWh;
+	export let parameters: SizeType = { scaling: 'relative_to_collector_area_m3_per_m2', value: 2 };
+
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 
-	function throwUnknownSizeTypeError(
-		scaling: ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWh.ScalingEnum
-	): never {
+	function throwUnknownSizeTypeError(scaling: Size.ScalingEnum): never {
 		throw new Error(`Unknown scaling: ${scaling}.`);
 	}
 
@@ -42,17 +44,23 @@
 		<ListBoxItem
 			bind:group={parameters.scaling}
 			name="absolute"
-			value={ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWh.ScalingEnum.AbsoluteM3}
+			value={Size.ScalingEnum.AbsoluteM3}
 		>
 			{$t('units.absolute')} [m<sup>3</sup>]
 		</ListBoxItem>
 		<ListBoxItem
 			bind:group={parameters.scaling}
 			name="relative"
-			value={ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWh.ScalingEnum
-				.RelativeToDemandM3PerMwh}
+			value={Size.ScalingEnum.RelativeToDemandM3PerMwh}
 		>
 			{$t('units.relativeToDemand')} [m<sup>3</sup>MWh<sup>-1</sup>]
+		</ListBoxItem>
+		<ListBoxItem
+			bind:group={parameters.scaling}
+			name="relative"
+			value={Size.ScalingEnum.RelativeToCollectorAreaM3PerM2}
+		>
+			{$t('units.relativeToCollectorArea')} [m<sup>3</sup>m<sup>-2</sup>]
 		</ListBoxItem>
 	</ListBox>
 </div>
@@ -74,8 +82,12 @@
 			<span>
 				{#if parameters.scaling === 'absolute_m3'}
 					{$t('units.absolute')} [m<sup>3</sup>]
-				{:else}
+				{:else if parameters.scaling === 'relative_to_demand_m3_per_MWh'}
 					{$t('units.relativeToDemand')} [m<sup>3</sup>MWh<sup>-1</sup>]
+				{:else if parameters.scaling === 'relative_to_collector_area_m3_per_m2'}
+					{$t('units.relativeToCollectorArea')} [m<sup>3</sup>m<sup>-2</sup>]
+				{:else}
+					ERROR: Uknown scalilng
 				{/if}
 			</span>
 			<ChevronDown class="text-surface-400-500-token" size="20" />

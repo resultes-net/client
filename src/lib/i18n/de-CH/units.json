@@ -1,6 +1,5 @@
 {
     "absolute": "absolut",
     "relativeToDemand": "relativ zu Vebrauch",
-    "heightRelativeToDemand": "Höhe relativ zu Vebrauch",
-    "floorAreaRelativeToDemand": "Grundfläche relativ zu Vebrauch"
+    "relativeToCollectorArea": "relativ zu Kollektorfläche"
 }
