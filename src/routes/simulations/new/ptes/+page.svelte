@@ -110,8 +110,7 @@
 				<div class="flex pt-8">
 					<h5 class="h5 self-center">{$t('common.parameters')}</h5>
 					<select class="select w-auto ml-auto" bind:value={projectPhase}>
-						<option value="" disabled selected>{$t('common.projectPhase')}</option>
-						<option value="preDesign">{$t('common.preDesignPhase')}</option>
+						<option value="pre-design">{$t('common.preDesignPhase')}</option>
 						<option value="design">{$t('common.designPhase')}</option>
 					</select>
 				</div>
