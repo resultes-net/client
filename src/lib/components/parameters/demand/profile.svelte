@@ -80,10 +80,10 @@
 		};
 	}
 
-	let plotElement: HTMLElement | null = null;
-	$: if (plotElement) {
+	let hourlyDemandElement: HTMLElement | null = null;
+	$: if (hourlyDemandElement) {
 		Plotly.react(
-			plotElement,
+			hourlyDemandElement,
 			[
 				{
 					x: stats.dates,
@@ -95,7 +95,28 @@
 					yhoverformat: '.2f'
 				}
 			],
-			{ xaxis: { title: { text: 'Time ' } }, yaxis: { title: { text: 'Demand [MW]' } } }
+			{ xaxis: { title: { text: 'Time' } }, yaxis: { title: { text: 'Demand [MW]' } } }
+		);
+	}
+
+	let loadDurationCurveElement: HTMLElement | null = null;
+	$: if (loadDurationCurveElement) {
+		const sortedHourlyDemandMW = stats.hourlyDemandMW.toSorted((x, y) => y - x);
+		const hours = sortedHourlyDemandMW.map((_, i) => i + 1);
+
+		Plotly.react(
+			loadDurationCurveElement,
+			[
+				{
+					x: hours,
+					y: sortedHourlyDemandMW,
+					type: 'scatter',
+					mode: 'markers',
+					hovertemplate: '%{x} h: %{y} MW<extra></extra>',
+					yhoverformat: '.2f'
+				}
+			],
+			{ xaxis: { title: { text: 'Hours' } }, yaxis: { title: { text: 'Demand [MW]' } } }
 		);
 	}
 </script>
@@ -148,5 +169,8 @@
 		/>
 	</div>
 
-	<div class="w-[1000px] mt-10" bind:this={plotElement} />
+	<h5 class="h5 mt-10">{$t('common.HourlyDemand')}</h5>
+	<div class="w-[1000px] mt-1" bind:this={hourlyDemandElement} />
+	<h5 class="h5 mt-5">{$t('common.LoadDurationCurve')}</h5>
+	<div class="w-[1000px] mt-1" bind:this={loadDurationCurveElement} />
 </div>

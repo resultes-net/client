@@ -54,6 +54,8 @@
     "dtHeatPumpBoiler": "ΔT heat pump-boiler",
     "dtStorageMaxHeatPump": "ΔT max. storage temperature-heat pump",
     "dtCollectorStorageMax": "ΔT collector-max. storage temperature",
-    "Restart": "Restart"
+    "Restart": "Restart",
+    "HourlyDemand": "Hourly demand",
+    "LoadDurationCurve": "Load duration curve"
 }
 
