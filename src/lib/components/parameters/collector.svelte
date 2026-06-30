@@ -102,7 +102,7 @@
 				{#if parameters.area.scaling === 'absolute_m2'}
 					{$t('units.absolute')} [m<sup>2</sup>]
 				{:else if parameters.area.scaling === 'relative_to_demand_m2_per_MWh'}
-					{$t('units.relativeToCollectorArea')} [kg h<sup>-1</sup>m<sup>-2</sup>]
+					{$t('units.relativeToDemand')} [m<sup>2</sup>GWh<sup>-1</sup>]
 				{:else}
 					ERROR: unknown scaling factor: {parameters.area.scaling}
 				{/if}
