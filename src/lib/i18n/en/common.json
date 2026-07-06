@@ -56,6 +56,13 @@
     "dtCollectorStorageMax": "ΔT collector-max. storage temperature",
     "Restart": "Restart",
     "HourlyDemand": "Hourly demand",
-    "LoadDurationCurve": "Load duration curve"
+    "LoadDurationCurve": "Load duration curve",
+    "Location": "Location",
+    "Berlin": "Berlin",
+    "Brussels": "Brussels",
+    "Copenhagen": "Copenhagen",
+    "Madrid": "Madrid",
+    "Zurich": "Zurich",
+    "Control": "Control"
 }
 

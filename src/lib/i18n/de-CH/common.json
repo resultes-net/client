@@ -56,5 +56,12 @@
     "dtCollectorStorageMax": "ΔT Kollektor-max. Speichertemperatur",
     "Restart": "Neu starten",
     "HourlyDemand": "Stündlicher Wärmebedarf",
-    "LoadDurationCurve": "Lastdauerlinie"
+    "LoadDurationCurve": "Lastdauerlinie",
+    "Location": "Standort",
+    "Berlin": "Berlin",
+    "Brussels": "Brüssel",
+    "Copenhagen": "Kopenhagen",
+    "Madrid": "Madrid",
+    "Zurich": "Zürich",
+    "Control": "Regelung"
 }

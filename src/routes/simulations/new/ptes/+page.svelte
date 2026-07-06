@@ -4,7 +4,7 @@
 	import { goto, pushState } from '$app/navigation';
 	import { page } from '$app/stores';
 
-	import type { CreateSimulation } from 'src/lib/openapi/generated/model/createSimulation';
+	import { Location } from 'src/lib/openapi/generated/model/location';
 
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
 	import { t } from '$lib/i18n/translations';
@@ -18,26 +18,29 @@
 
 	import Collector from 'src/lib/components/parameters/collector.svelte';
 	import Demand from 'src/lib/components/parameters/demand.svelte';
-	import Tes from 'src/lib/components/parameters/tes.svelte';
 	import Profile from 'src/lib/components/parameters/demand/profile.svelte';
+	import Tes from 'src/lib/components/parameters/tes.svelte';
 	import SystemDescription from './systemDescription.svelte';
-	import Temperatures from './temperatures.svelte';
 
-	let projectName = '';
-	let parameters = createDefaultParameters();
+	const parameters = createDefaultParameters();
+	const simulation = {
+		name: '',
+		location: Location.Zurich,
+		parameters: { values: parameters }
+	};
 
-	type ActiveParamtersTab = 'collector' | 'storage' | 'demand' | 'temperatures';
+	type ActiveParamtersTab = 'collector' | 'storage' | 'demand' | 'control';
 	let activeParametersTab: ActiveParamtersTab = 'collector';
 	let projectPhase: Phase = 'pre-design';
 
-	let areParametersValid = {
+	const areParametersValid = {
 		collector: true,
 		demand: true,
 		storage: true,
-		temperatures: true,
+		control: true,
 
 		all(): boolean {
-			return this.collector && this.demand && this.storage && this.temperatures;
+			return this.collector && this.demand && this.storage && this.control;
 		}
 	};
 	let areAllParametersValid;
@@ -63,14 +66,9 @@
 
 		const bearerToken = auth.getAccessToken();
 
-		const createSimulation: CreateSimulation = {
-			name: projectName,
-			parameters: { values: parameters }
-		};
-
 		await getJson({
 			endPoint: '/simulations',
-			body: JSON.stringify(createSimulation),
+			body: JSON.stringify(simulation),
 			bearerToken
 		});
 
@@ -103,8 +101,19 @@
 						id="project-name"
 						title={$t('common.projectName')}
 						type="text"
-						bind:value={projectName}
+						bind:value={simulation.name}
 					/>
+				</div>
+
+				<div class="grid grid-cols-[--input-grid-cols] items-center">
+					<label for="location">{$t('common.Location')}</label>
+					<select class="select" bind:value={simulation.location}>
+						<option value="Berlin">{$t('common.Berlin')}</option>
+						<option value="Brussels">{$t('common.Brussels')}</option>
+						<option value="Copenhagen">{$t('common.Copenhagen')}</option>
+						<option value="Madrid">{$t('common.Madrid')}</option>
+						<option value="Zurich">{$t('common.Zurich')}</option>
+					</select>
 				</div>
 
 				<div class="flex pt-8">
@@ -137,12 +146,6 @@
 								config={{ shallWarn: !areParametersValid.demand, errorMessage: null }}
 							/>
 						</Tab>
-						<Tab bind:group={activeParametersTab} name="temperatures" value="temperatures">
-							<TextWithWarning
-								text={$t('common.temperatures')}
-								config={{ shallWarn: !areParametersValid.temperatures, errorMessage: null }}
-							/>
-						</Tab>
 
 						<svelte:fragment slot="panel">
 							<div class="ltr:ml-[1%] rtl:mr-[1%]">
@@ -164,8 +167,8 @@
 										{onShowProfileDetails}
 										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'demand')}
 									/>
-								{:else if activeParametersTab === 'temperatures'}
-									<Temperatures bind:temperatures={parameters.temperatures} />
+								{:else}
+									ERROR: Unknown tab `{activeParametersTab}`.
 								{/if}
 							</div>
 						</svelte:fragment>
