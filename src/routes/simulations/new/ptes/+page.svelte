@@ -20,8 +20,10 @@
 	import Demand from 'src/lib/components/parameters/demand.svelte';
 	import Profile from 'src/lib/components/parameters/demand/profile.svelte';
 	import Tes from 'src/lib/components/parameters/tes.svelte';
+	import Control from './control.svelte';
 	import SystemDescription from './systemDescription.svelte';
 
+	
 	const parameters = createDefaultParameters();
 	const simulation = {
 		name: '',
@@ -29,7 +31,7 @@
 		parameters: { values: parameters }
 	};
 
-	type ActiveParamtersTab = 'demand' | 'collector' | 'storage';
+	type ActiveParamtersTab = 'demand' | 'collector' | 'storage' | 'control';
 	let activeParametersTab: ActiveParamtersTab = 'demand';
 	let projectPhase: Phase = 'pre-design';
 
@@ -39,9 +41,10 @@
 		demand: true,
 		collector: true,
 		storage: true,
+		control: true,
 
 		all(): boolean {
-			return this.demand && this.collector && this.storage;
+			return this.demand && this.collector && this.storage && this.control;
 		}
 	};
 	let areAllParametersValid: boolean;
@@ -159,6 +162,12 @@
 								config={{ shallWarn: !areParametersValid.demand, errorMessage: null }}
 							/>
 						</Tab>
+						<Tab bind:group={activeParametersTab} name="control" value="control">
+							<TextWithWarning
+								text={$t('common.Control')}
+								config={{ shallWarn: !areParametersValid.control, errorMessage: null }}
+							/>
+						</Tab>
 
 						<svelte:fragment slot="panel">
 							<div class="ltr:ml-[1%] rtl:mr-[1%]">
@@ -183,6 +192,11 @@
 										{yearlyHeatDemandGWh}
 										{collectorFieldAreaM2}
 										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'storage')}
+									/>
+								{:else if activeParametersTab === 'control'}
+									<Control
+										control={parameters.control}
+										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'control')}
 									/>
 								{:else}
 									ERROR: Unknown tab `{activeParametersTab}`.

@@ -27,8 +27,8 @@ export function createDefaultParameters(): PtesParametersInput {
         },
         storage: {
             volume: {
-                scaling: "relative_to_demand_m3_per_MWh",
-                value: 2.0
+                scaling: "relative_to_collector_area_m3_per_m2",
+                value: 1000.0
             },
             ports_relative_heights_1: {
                 top: 0.95,
@@ -36,13 +36,10 @@ export function createDefaultParameters(): PtesParametersInput {
                 bottom: 0.05,
             }
         },
-        temperatures: {
-            demand_setpoint_degC: 80,
-            boiler_output_setpoint_degC: 80,
-            heat_pump_output_setpoint_degC: 80,
-            storage_maximum_degC: 85,
-            collector_output_setpoint_degC: 90
-
+        control: {
+            demand_temperature_setpoint_degC: 80,
+            demand_delta_T_degC: 30,
+            storage_temperature_maximum_degC: 85,
         }
     };
 
