@@ -14,7 +14,41 @@
 
 	export let parameters: SizeType = { scaling: 'relative_to_collector_area_m3_per_m2', value: 2 };
 
+	export let yearlyHeatDemandGWh: number;
+	export let collectorFieldAreaM2: number;
+
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;
+
+	let newScaling = parameters.scaling;
+	$: {
+		const oldScaling = parameters.scaling;
+
+		const yearlyHeatDemandMWh = yearlyHeatDemandGWh * 1000;
+
+		// new -> old
+		const scalingFactors: Record<Size.ScalingEnum, Record<Size.ScalingEnum, number>> = {
+			absolute_m3: {
+				absolute_m3: 1.0,
+				relative_to_collector_area_m3_per_m2: collectorFieldAreaM2,
+				relative_to_demand_m3_per_MWh: yearlyHeatDemandMWh
+			},
+			relative_to_collector_area_m3_per_m2: {
+				absolute_m3: 1.0 / collectorFieldAreaM2,
+				relative_to_collector_area_m3_per_m2: 1.0,
+				relative_to_demand_m3_per_MWh: yearlyHeatDemandMWh / collectorFieldAreaM2
+			},
+			relative_to_demand_m3_per_MWh: {
+				absolute_m3: 1.0 / yearlyHeatDemandMWh,
+				relative_to_collector_area_m3_per_m2: collectorFieldAreaM2 / yearlyHeatDemandMWh,
+				relative_to_demand_m3_per_MWh: 1.0
+			}
+		};
+
+		const scalingFactor = scalingFactors[newScaling][oldScaling];
+
+		parameters.value = Math.round(parameters.value * scalingFactor * 100) / 100;
+		parameters.scaling = newScaling;
+	}
 
 	function throwUnknownSizeTypeError(scaling: Size.ScalingEnum): never {
 		throw new Error(`Unknown scaling: ${scaling}.`);
@@ -41,22 +75,18 @@
 		active="variant-filled-primary pr-[44px]"
 		hover="hover:variant-soft-primary pr-[44px]"
 	>
-		<ListBoxItem
-			bind:group={parameters.scaling}
-			name="absolute"
-			value={Size.ScalingEnum.AbsoluteM3}
-		>
+		<ListBoxItem bind:group={newScaling} name="absolute" value={Size.ScalingEnum.AbsoluteM3}>
 			{$t('units.absolute')} [m<sup>3</sup>]
 		</ListBoxItem>
 		<ListBoxItem
-			bind:group={parameters.scaling}
+			bind:group={newScaling}
 			name="relative"
 			value={Size.ScalingEnum.RelativeToDemandM3PerMwh}
 		>
 			{$t('units.relativeToDemand')} [m<sup>3</sup>MWh<sup>-1</sup>]
 		</ListBoxItem>
 		<ListBoxItem
-			bind:group={parameters.scaling}
+			bind:group={newScaling}
 			name="relative"
 			value={Size.ScalingEnum.RelativeToCollectorAreaM3PerM2}
 		>
@@ -73,6 +103,7 @@
 			id="volume"
 			title={$t('common.volume')}
 			type="number"
+			min="0"
 			bind:value={parameters.value}
 		/>
 		<button

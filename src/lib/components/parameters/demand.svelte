@@ -12,6 +12,8 @@
 
 	export let parameters: Demand;
 	export let onShowProfileDetails;
+	export let yearlyHeatDemandGWh: number;
+	
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 	const profileInfoHoverPopupSettings: PopupSettings = {
 		event: 'hover',
@@ -63,9 +65,8 @@
 		parameters = demand;
 	}
 
-	let unscaledYearlyHeatDemandGwh: number;
-	$: unscaledYearlyHeatDemandGwh =
-		parameters.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000;
+	$: yearlyHeatDemandGWh =
+		parameters.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000 * parameters.scaling_factor;
 </script>
 
 <div data-popup="profileInfoHoverPopup">
@@ -137,7 +138,7 @@
 			id="yearly-demand"
 			title={$t('common.yearlyHeatDemand')}
 			type="number"
-			value={(parameters.scaling_factor * unscaledYearlyHeatDemandGwh).toFixed(1)}
+			value={yearlyHeatDemandGWh.toFixed(1)}
 			readonly
 		/>
 		<div><span class="flex flex-grow justify-center">GWh</span></div>

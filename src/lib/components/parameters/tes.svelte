@@ -8,10 +8,18 @@
 
 	export let projectPhase: Phase;
 	export let parameters: PtesStorage;
+	export let yearlyHeatDemandGWh: number;
+	export let collectorFieldAreaM2: number;
+
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 </script>
 
-<Size parameters={parameters.volume} {onAreParametersValidChanged} />
+<Size
+	parameters={parameters.volume}
+	{yearlyHeatDemandGWh}
+	{collectorFieldAreaM2}
+	{onAreParametersValidChanged}
+/>
 {#if projectPhase == 'design'}
 	<Ports parameters={parameters.ports_relative_heights_1} {onAreParametersValidChanged} />
 {/if}

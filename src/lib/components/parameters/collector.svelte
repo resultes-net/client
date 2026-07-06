@@ -6,6 +6,7 @@
 
 	import type { CollectorField } from '$lib/openapi/generated/model/collectorField';
 
+	import { ScaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh as Area } from 'src/lib/openapi/generated/model/scaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh';
 	import { popupSizeApplyReferenceWidthIncludingBorder } from './common';
 	import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
 	import type { Phase } from './phase';
@@ -13,7 +14,31 @@
 
 	export let projectPhase: Phase;
 	export let parameters: CollectorField;
+	export let yearlyHeatDemandGWh: number;
+
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;
+
+	let targetScaling: Area.ScalingEnum = parameters.area.scaling;
+
+	$: {
+		const yearlyHeatDemandMWh = yearlyHeatDemandGWh * 1000;
+		// new -> old
+		const conversionFactors: Record<Area.ScalingEnum, Record<Area.ScalingEnum, number>> = {
+			absolute_m2: {
+				absolute_m2: 1.0,
+				relative_to_demand_m2_per_MWh: yearlyHeatDemandMWh
+			},
+			relative_to_demand_m2_per_MWh: {
+				absolute_m2: 1.0 / yearlyHeatDemandMWh,
+				relative_to_demand_m2_per_MWh: 1.0
+			}
+		};
+
+		const conversionFactor = conversionFactors[targetScaling][parameters.area.scaling];
+
+		parameters.area.value = Math.round(parameters.area.value * conversionFactor * 100) / 100;
+		parameters.area.scaling = targetScaling;
+	}
 
 	const areaSizeScalingPopupSettings: PopupSettings = createPopupSettings(
 		'area-size-scaling-combobox'
@@ -46,13 +71,11 @@
 		active="variant-filled-primary pr-[44px]"
 		hover="hover:variant-soft-primary pr-[44px]"
 	>
-		<ListBoxItem
-			bind:group={parameters.area.scaling}
-			name="scaling"
-			value={AreaScalingEnum.AbsoluteM2}>{$t('units.absolute')} [m<sup>2</sup>]</ListBoxItem
+		<ListBoxItem bind:group={targetScaling} name="scaling" value={AreaScalingEnum.AbsoluteM2}
+			>{$t('units.absolute')} [m<sup>2</sup>]</ListBoxItem
 		>
 		<ListBoxItem
-			bind:group={parameters.area.scaling}
+			bind:group={targetScaling}
 			name="scaling"
 			value={AreaScalingEnum.RelativeToDemandM2PerMwh}
 			>{$t('units.relativeToDemand')} [m<sup>2</sup>GWh<sup>-1</sup>]</ListBoxItem

@@ -29,22 +29,35 @@
 		parameters: { values: parameters }
 	};
 
-	type ActiveParamtersTab = 'collector' | 'storage' | 'demand' | 'control';
-	let activeParametersTab: ActiveParamtersTab = 'collector';
+	type ActiveParamtersTab = 'demand' | 'collector' | 'storage';
+	let activeParametersTab: ActiveParamtersTab = 'demand';
 	let projectPhase: Phase = 'pre-design';
 
+	let yearlyHeatDemandGWh: number;
+
 	const areParametersValid = {
-		collector: true,
 		demand: true,
+		collector: true,
 		storage: true,
-		control: true,
 
 		all(): boolean {
-			return this.collector && this.demand && this.storage && this.control;
+			return this.demand && this.collector && this.storage;
 		}
 	};
-	let areAllParametersValid;
+	let areAllParametersValid: boolean;
 	$: areAllParametersValid = areParametersValid.all();
+
+	let collectorFieldAreaM2: number;
+	$: {
+		const area = parameters.collector_field.area;
+		if (area.scaling === 'absolute_m2') {
+			collectorFieldAreaM2 = area.value;
+		} else if (area.scaling === 'relative_to_demand_m2_per_MWh') {
+			collectorFieldAreaM2 = area.value * yearlyHeatDemandGWh;
+		} else {
+			throw new Error(`Unknown area scaling: '${area.scaling}'.`);
+		}
+	}
 
 	function onAreParametersValidChanged(
 		areValid: boolean,
@@ -128,6 +141,12 @@
 
 				<div class="flex flex-col">
 					<TabGroup>
+						<Tab bind:group={activeParametersTab} name="demand" value="demand">
+							<TextWithWarning
+								text={$t('common.demand')}
+								config={{ shallWarn: !areParametersValid.demand, errorMessage: null }}
+							/>
+						</Tab>
 						<Tab bind:group={activeParametersTab} name="collector" value="collector">
 							<TextWithWarning
 								text={$t('common.collector')}
@@ -140,32 +159,30 @@
 								config={{ shallWarn: !areParametersValid.demand, errorMessage: null }}
 							/>
 						</Tab>
-						<Tab bind:group={activeParametersTab} name="demand" value="demand">
-							<TextWithWarning
-								text={$t('common.demand')}
-								config={{ shallWarn: !areParametersValid.demand, errorMessage: null }}
-							/>
-						</Tab>
 
 						<svelte:fragment slot="panel">
 							<div class="ltr:ml-[1%] rtl:mr-[1%]">
-								{#if activeParametersTab === 'collector'}
+								{#if activeParametersTab === 'demand'}
+									<Demand
+										bind:parameters={parameters.demand}
+										{onShowProfileDetails}
+										bind:yearlyHeatDemandGWh
+										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'demand')}
+									/>
+								{:else if activeParametersTab === 'collector'}
 									<Collector
 										{projectPhase}
-										parameters={parameters.collector_field}
+										bind:parameters={parameters.collector_field}
+										{yearlyHeatDemandGWh}
 										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'collector')}
 									/>
 								{:else if activeParametersTab === 'storage'}
 									<Tes
 										parameters={parameters.storage}
 										{projectPhase}
+										{yearlyHeatDemandGWh}
+										{collectorFieldAreaM2}
 										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'storage')}
-									/>
-								{:else if activeParametersTab === 'demand'}
-									<Demand
-										bind:parameters={parameters.demand}
-										{onShowProfileDetails}
-										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'demand')}
 									/>
 								{:else}
 									ERROR: Unknown tab `{activeParametersTab}`.
@@ -175,9 +192,9 @@
 					</TabGroup>
 				</div>
 				<div class="flex flex-col mt-2 gap-y-1 ml-auto">
-					<button type="button" class="btn variant-filled-primary"
-						>{$t('common.downloadPytrnsysProject')}</button
-					>
+					<button type="button" class="btn variant-filled-primary">
+						{$t('common.downloadPytrnsysProject')}
+					</button>
 					<button
 						type="button"
 						class="btn variant-filled-primary [&>*]:pointer-events-none"
