@@ -12,7 +12,7 @@
 	import { popupSizeApplyReferenceWidthIncludingBorder } from '$lib/components/parameters/common';
 	import type { OnAreParametersValidChanged } from '$lib/components/parameters/onAreParametersValidChanged';
 
-	export let parameters: SizeType = { scaling: 'relative_to_collector_area_m3_per_m2', value: 2 };
+	export let parameters: SizeType;
 
 	export let yearlyHeatDemandGWh: number;
 	export let collectorFieldAreaM2: number;

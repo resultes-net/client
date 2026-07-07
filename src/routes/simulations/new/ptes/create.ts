@@ -28,7 +28,7 @@ export function createDefaultParameters(): PtesParametersInput {
         storage: {
             volume: {
                 scaling: "relative_to_collector_area_m3_per_m2",
-                value: 1000.0
+                value: 1.0
             },
             ports_relative_heights_1: {
                 top: 0.95,
