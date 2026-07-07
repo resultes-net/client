@@ -50,10 +50,6 @@
 		parameters.scaling = newScaling;
 	}
 
-	function throwUnknownSizeTypeError(scaling: Size.ScalingEnum): never {
-		throw new Error(`Unknown scaling: ${scaling}.`);
-	}
-
 	const sizePopupSettings: PopupSettings = {
 		event: 'click',
 		target: 'size-combobox',
@@ -80,14 +76,14 @@
 		</ListBoxItem>
 		<ListBoxItem
 			bind:group={newScaling}
-			name="relative"
+			name="relativeToDemand"
 			value={Size.ScalingEnum.RelativeToDemandM3PerMwh}
 		>
 			{$t('units.relativeToDemand')} [m<sup>3</sup>MWh<sup>-1</sup>]
 		</ListBoxItem>
 		<ListBoxItem
 			bind:group={newScaling}
-			name="relative"
+			name="relativeToCollectorArea"
 			value={Size.ScalingEnum.RelativeToCollectorAreaM3PerM2}
 		>
 			{$t('units.relativeToCollectorArea')} [m<sup>3</sup>m<sup>-2</sup>]

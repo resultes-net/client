@@ -56,7 +56,8 @@
 		if (area.scaling === 'absolute_m2') {
 			collectorFieldAreaM2 = area.value;
 		} else if (area.scaling === 'relative_to_demand_m2_per_MWh') {
-			collectorFieldAreaM2 = area.value * yearlyHeatDemandGWh;
+			const yearlyHeatDemandMWh = yearlyHeatDemandGWh * 1000;
+			collectorFieldAreaM2 = area.value * yearlyHeatDemandMWh;
 		} else {
 			throw new Error(`Unknown area scaling: '${area.scaling}'.`);
 		}
