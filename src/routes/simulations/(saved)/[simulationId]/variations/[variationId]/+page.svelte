@@ -217,7 +217,7 @@
 										>
 									</td>
 								{:else if parameters.values.storage.volume.scaling == 'relative_to_collector_area_m3_per_m2'}
-									<td>m<sup>3</sup>MWh<sup>-1</sup></td>
+									<td>m<sup>3</sup>m<sup>-2</sup></td>
 									<td
 										>{(parameters.values.storage.volume.value * collectorFieldAreaM2).toFixed(0)} m<sup
 											>3</sup
