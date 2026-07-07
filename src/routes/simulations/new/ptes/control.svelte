@@ -75,10 +75,3 @@
 		</div>
 	</div>
 </div>
-
-<style>
-	* {
-		--input-grid-cols: 66% 33%;
-		--input-unit-grid-cols: 66% 33%;
-	}
-</style>

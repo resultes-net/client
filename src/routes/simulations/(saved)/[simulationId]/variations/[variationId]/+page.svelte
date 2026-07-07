@@ -54,8 +54,17 @@
 
 	const demand = parameters.values.demand;
 
-	const yearlyHeatDemandGWh =
-		demand.hourly_heat_demand_MW.reduce((s, p) => s + demand.scaling_factor * p, 0) / 1000;
+	const yearlyHeatDemandMWh = demand.hourly_heat_demand_MW.reduce(
+		(s, p) => s + demand.scaling_factor * p,
+		0
+	);
+
+	const yearlyHeatDemandGWh = yearlyHeatDemandMWh / 1000;
+
+	const collectorFieldArea = parameters.values.collector_field.area;
+	const collectorFieldAreaScalingFactor =
+		collectorFieldArea.scaling === 'relative_to_demand_m2_per_MWh' ? yearlyHeatDemandMWh : 1.0;
+	const collectorFieldAreaM2 = collectorFieldArea.value * collectorFieldAreaScalingFactor;
 
 	$: {
 		if (data.shallDownload) {
@@ -168,18 +177,29 @@
 									m<sup>2</sup>MWh<sup>-1</sup>
 								</td>
 								<td
-									>{(
-										parameters.values.collector_field.area.value *
-										yearlyHeatDemandGWh *
-										1000
-									).toFixed(0)} m<sup>2</sup>
+									>{collectorFieldAreaM2.toFixed(0)}
+									m<sup>2</sup>
 								</td>
+							{:else}
+								ERROR: Unknown area scaling: `{parameters.values.collector_field.area.scaling}`.
 							{/if}
 						</tr>
 						{#if parameters.values.type === 'ptes'}
 							<tr>
-								<td>{$t('common.collectorOutputSetpointTemperature')}</td>
-								<td>{parameters.values.temperatures.collector_output_setpoint_degC}</td>
+								<td>{$t('common.demandSetpointTemperature')}</td>
+								<td>{parameters.values.control.demand_temperature_setpoint_degC}</td>
+								<td>°C</td>
+								<td />
+							</tr>
+							<tr>
+								<td>{$t('common.DemandDeltaT')}</td>
+								<td>{parameters.values.control.demand_delta_T_degC}</td>
+								<td>°C</td>
+								<td />
+							</tr>
+							<tr>
+								<td>{$t('common.maximumStorageTemperature')}</td>
+								<td>{parameters.values.control.storage_temperature_maximum_degC}</td>
 								<td>°C</td>
 								<td />
 							</tr>
@@ -192,9 +212,16 @@
 								{:else if parameters.values.storage.volume.scaling == 'relative_to_demand_m3_per_MWh'}
 									<td>m<sup>3</sup>MWh<sup>-1</sup></td>
 									<td
-										>{(parameters.values.storage.volume.value * yearlyHeatDemandGWh * 1000).toFixed(
-											0
-										)} m<sup>3</sup>
+										>{(parameters.values.storage.volume.value * yearlyHeatDemandMWh).toFixed(0)} m<sup
+											>3</sup
+										>
+									</td>
+								{:else if parameters.values.storage.volume.scaling == 'relative_to_collector_area_m3_per_m2'}
+									<td>m<sup>3</sup>MWh<sup>-1</sup></td>
+									<td
+										>{(parameters.values.storage.volume.value * collectorFieldAreaM2).toFixed(0)} m<sup
+											>3</sup
+										>
 									</td>
 								{/if}
 							</tr>
