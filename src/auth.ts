@@ -3,6 +3,10 @@ import { readonly, writable } from "svelte/store";
 
 import type { Token } from "./lib/openapi/generated/model/token";
 
+interface LocalToken extends Token {
+    username: string,
+}
+
 const _KEY = 'token';
 
 const _writable = writable(getIsAuthenticated());
@@ -35,17 +39,17 @@ function getIsTokenValid(): boolean {
     return isValid;
 }
 
-function getTokenOrNull(): Token | null {
+function getTokenOrNull(): LocalToken | null {
     const jsonOrNull = localStorage.getItem(_KEY);
     if (jsonOrNull === null) {
         return null;
     }
 
-    const token: Token = JSON.parse(jsonOrNull)
+    const token: LocalToken = JSON.parse(jsonOrNull)
     return token
 }
 
-function getToken(): Token {
+function getToken(): LocalToken {
     const tokenOrNull = getTokenOrNull();
 
     if (tokenOrNull === null) {
@@ -55,15 +59,21 @@ function getToken(): Token {
     return tokenOrNull;
 }
 
-export function setToken(token: Token): void {
-    const json = JSON.stringify(token);
+export function setToken(username: string, token: Token): void {
+    const localToken: LocalToken = { username, ...token };
+    const json = JSON.stringify(localToken);
     localStorage.setItem(_KEY, json);
     _writable.set(true);
 }
 
 export function getAccessToken(): string {
-    const token = getToken()
+    const token = getToken();
     return token.access_token;
+}
+
+export function getUserName(): string {
+    const token = getToken();
+    return token.username
 }
 
 export function unsetToken(): void {

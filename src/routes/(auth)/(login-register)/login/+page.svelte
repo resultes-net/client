@@ -43,7 +43,7 @@
 
 			assert(token.token_type === 'bearer');
 
-			auth.setToken(token);
+			auth.setToken(username, token);
 
 			goto('/');
 		} catch (error) {

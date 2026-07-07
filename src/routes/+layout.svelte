@@ -30,9 +30,9 @@
 		placement: 'bottom'
 	};
 
-	let loggedIn = false;
+	let userName: string | null = null;
 	auth.isAuthenticated.subscribe((value) => {
-		loggedIn = value;
+		userName = value ? auth.getUserName() : null;
 	});
 
 	function onLogout(): void {
@@ -49,21 +49,27 @@
 <Modal />
 
 <div data-popup="user-button-drop-down">
-	<nav class="list-nav bg-surface-50-900-token pt-2">
+	<div class="bg-surface-50-900-token pt-1">
 		<div class="arrow bg-surface-50-900-token" />
-		<ul>
-			<li>
-				<a href="/change-password">
-					<span class="flex-auto">{$t('auth.changePassword')}</span>
-				</a>
-			</li>
-			<li>
-				<button class="btn w-full" on:click={onLogout}>
-					<span class="flex-auto text-start">{$t('auth.logout')}</span>
-				</button>
-			</li>
-		</ul>
-	</nav>
+		<div class="ml-1">
+			<div class="mb-1">{$t('common.Hi')}, {userName}!</div>
+			<hr />
+		</div>
+		<nav class="list-nav">
+			<ul>
+				<li>
+					<a href="/change-password">
+						<span class="flex-auto">{$t('auth.changePassword')}</span>
+					</a>
+				</li>
+				<li>
+					<button class="btn w-full" on:click={onLogout}>
+						<span class="flex-auto text-start">{$t('auth.logout')}</span>
+					</button>
+				</li>
+			</ul>
+		</nav>
+	</div>
 </div>
 
 <div class="flex flex-col">
@@ -78,11 +84,11 @@
 						{/each}
 					</select>
 					<LightSwitch />
-					{#if loggedIn}
+					{#if userName === null}
+						<button class="btn-icon"><CircleUserRound /></button>
+					{:else}
 						<button class="btn-icon" use:popup={userButtonPopupSettings}><CircleUserRound /></button
 						>
-					{:else}
-						<button class="btn-icon"><CircleUserRound /></button>
 					{/if}
 				</div>
 			</svelte:fragment>
