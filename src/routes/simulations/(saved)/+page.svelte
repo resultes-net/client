@@ -9,6 +9,7 @@
 
 	import { getJson } from 'src/ajax';
 	import * as auth from 'src/auth';
+	import { toLocalDateTimeIgnoringTodayDate } from 'src/lib/utils';
 
 	import { getBreadCrumbsStore } from './breadCrumbs';
 
@@ -98,26 +99,6 @@
 
 	function toMilliseconds(minutes: number): number {
 		return minutes * 60 * 1000;
-	}
-
-	function toLocalDateTimeIgnoringTodayDate(iso_date_time: string): string {
-		const date = new Date(iso_date_time);
-
-		const now = new Date();
-
-		if (areSameDates(date, now)) {
-			return date.toLocaleTimeString();
-		}
-
-		return date.toLocaleString();
-	}
-
-	function areSameDates(date1: Date, date2: Date): boolean {
-		return (
-			date1.getUTCFullYear() == date2.getUTCFullYear() &&
-			date1.getUTCMonth() == date2.getUTCMonth() &&
-			date1.getUTCDay() == date2.getUTCDay()
-		);
 	}
 
 	function formatEstimatedDoneTime(estimatedMinutesRemaining: number): string {

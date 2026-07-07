@@ -11,6 +11,7 @@
 	import type { Simulation } from 'src/lib/openapi/generated/model/simulation';
 	import { SimulationState } from 'src/lib/openapi/generated/model/simulationState';
 	import type { Variation } from 'src/lib/openapi/generated/model/variation';
+	import { toLocalDateTimeIgnoringTodayDate } from 'src/lib/utils';
 	import { getBreadCrumbsStore } from '../breadCrumbs';
 
 	export let data: PageData;
@@ -103,7 +104,7 @@
 							{variation.id}
 						</a>
 					</td>
-					<td>{variation.created_on}</td>
+					<td>{toLocalDateTimeIgnoringTodayDate(variation.created_on)}</td>
 					<td class="flex flex-row">
 						{#if variation.state !== 'done' && variation.state !== 'error'}
 							<LoaderCircle class="animate-spin mr-2" /> {variation.state}
