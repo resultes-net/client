@@ -16,6 +16,7 @@
 	import { locale, locales, t } from '$lib/i18n/translations';
 
 	import * as auth from 'src/auth';
+	import { isAuthenticated } from 'src/auth';
 
 	import { goto } from '$app/navigation';
 	import '../app.postcss';
@@ -30,10 +31,8 @@
 		placement: 'bottom'
 	};
 
-	let userName: string | null = null;
-	auth.isAuthenticated.subscribe((value) => {
-		userName = value ? auth.getUserName() : null;
-	});
+	let userName: string | null;
+	$: userName = $isAuthenticated ? auth.getUserName() : null;
 
 	function onLogout(): void {
 		auth.unsetToken();
