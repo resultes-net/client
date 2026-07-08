@@ -13,7 +13,7 @@
 
 	import { EllipsisVertical } from 'lucide-svelte';
 
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { page } from '$app/stores';
 
 	import { t } from '$lib/i18n/translations';
@@ -26,6 +26,7 @@
 	export let data;
 
 	const parameters = data.parameters;
+	const variation = data.variation;
 	const kpis = data.kpis;
 
 	let displayResults = data.displayResults;
@@ -33,7 +34,7 @@
 	const modalStore = getModalStore();
 
 	const simulationId = $page.params.simulationId as string;
-	const variationId = $page.params.variationId as string;
+	const variationId = variation.id;
 
 	const variationMenuPopupSettings: PopupSettings = {
 		event: 'click',
@@ -97,6 +98,14 @@
 		};
 		modalStore.trigger(modal);
 	}
+
+	onMount(() => {
+		const interval = setInterval(() => {
+			invalidate(`app:variation:${variationId}`);
+		}, 5000);
+
+		return () => clearInterval(interval);
+	});
 
 	onMount(async () => {
 		if (displayResults === null) {
@@ -249,59 +258,61 @@
 				</table>
 			</div>
 
-			<h5 class="h5 mt-6">{$t('common.KPIs')}</h5>
-			{#if kpis}
-				<div class="table-container">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>Description</th>
-								<th>Value</th>
-								<th>Unit</th>
-								<th>Notes</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>{$t('common.TesYearlyCharge')}</td>
-								<td>{(kpis.pitStoreQCharge_Tot / 1000 / 1000).toFixed(2)}</td>
-								<td>GWh</td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.TesYearlyDischarge')}</td>
-								<td>{(kpis.pitStoreQDisharge_Tot / 1000 / 1000).toFixed(2)}</td>
-								<td>GWh</td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.TesRoundTripEfficiency')}</td>
-								<td>{kpis.pitStoreEff.toFixed(2)}</td>
-								<td>-</td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.TesYearlyNetHeatGain')}</td>
-								<td>{(kpis.pitStoreQAccum_kW_Tot / 1000 / 1000).toFixed(2)}</td>
-								<td>GWh</td>
-								<td />
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			{:else}
-				<span>{$t('common.KPIsNotAvailable')}</span>
-			{/if}
-
-			{#if displayResults}
-				{#each displayResults as displayResult}
-					<div class="mt-6">
-						<h5 class="h5" id={displayResult.id}>{displayResult.title}</h5>
-						{#if displayResult.url}
-							<img src={displayResult.url} alt={displayResult.title} />
-						{/if}
+			{#if variation.state === 'done'}
+				<h5 class="h5 mt-6">{$t('common.KPIs')}</h5>
+				{#if kpis}
+					<div class="table-container">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>Description</th>
+									<th>Value</th>
+									<th>Unit</th>
+									<th>Notes</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>{$t('common.TesYearlyCharge')}</td>
+									<td>{(kpis.pitStoreQCharge_Tot / 1000 / 1000).toFixed(2)}</td>
+									<td>GWh</td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.TesYearlyDischarge')}</td>
+									<td>{(kpis.pitStoreQDisharge_Tot / 1000 / 1000).toFixed(2)}</td>
+									<td>GWh</td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.TesRoundTripEfficiency')}</td>
+									<td>{kpis.pitStoreEff.toFixed(2)}</td>
+									<td>-</td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.TesYearlyNetHeatGain')}</td>
+									<td>{(kpis.pitStoreQAccum_kW_Tot / 1000 / 1000).toFixed(2)}</td>
+									<td>GWh</td>
+									<td />
+								</tr>
+							</tbody>
+						</table>
 					</div>
-				{/each}
+				{:else}
+					<span>{$t('common.KPIsNotAvailable')}</span>
+				{/if}
+
+				{#if displayResults}
+					{#each displayResults as displayResult}
+						<div class="mt-6">
+							<h5 class="h5" id={displayResult.id}>{displayResult.title}</h5>
+							{#if displayResult.url}
+								<img src={displayResult.url} alt={displayResult.title} />
+							{/if}
+						</div>
+					{/each}
+				{/if}
 			{/if}
 		</div>
 	</div>

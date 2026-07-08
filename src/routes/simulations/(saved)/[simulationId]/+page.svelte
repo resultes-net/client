@@ -68,11 +68,9 @@
 	<div class="bg-secondary-50-900-token list-nav w-52 pt-2">
 		<div class="bg-secondary-50-900-token arrow" />
 		<ul>
-			{#if simulation.state === 'error'}
-				<li>
-					<button class="btn w-full" on:click={onRestartSimulation}>{$t('common.Restart')}</button>
-				</li>
-			{/if}
+			<li>
+				<button class="btn w-full" on:click={onRestartSimulation}>{$t('common.Restart')}</button>
+			</li>
 		</ul>
 	</div>
 </div>
@@ -82,7 +80,11 @@
 		<h2 class="h2">
 			Simulation {simulation.id}
 		</h2>
-		<div class="self-center" use:popup={simulationMenuPopupSettings}><EllipsisVertical /></div>
+		{#if simulation.state === 'error'}
+			<div class="self-center" use:popup={simulationMenuPopupSettings}><EllipsisVertical /></div>
+		{:else}
+			<div class="self-center"><EllipsisVertical /></div>
+		{/if}
 		{#if simulation.state !== 'done' && simulation.state !== 'error'}
 			<LoaderCircle class="animate-spin ml-2" />
 		{/if}
