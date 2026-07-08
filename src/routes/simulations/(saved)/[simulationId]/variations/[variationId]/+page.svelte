@@ -26,6 +26,8 @@
 	export let data;
 
 	const parameters = data.parameters;
+	const kpis = data.kpis;
+
 	let displayResults = data.displayResults;
 
 	const modalStore = getModalStore();
@@ -146,7 +148,6 @@
 		</div>
 		<div class="mt-8" use:tocCrawler={{ mode: 'generate' }}>
 			<h5 class="h5">Parameters</h5>
-
 			<div class="table-container">
 				<table class="table table-hover">
 					<thead>
@@ -247,6 +248,50 @@
 					</tbody>
 				</table>
 			</div>
+
+			<h5 class="h5 mt-6">{$t('common.KPIs')}</h5>
+			{#if kpis}
+				<div class="table-container">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Description</th>
+								<th>Value</th>
+								<th>Unit</th>
+								<th>Notes</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>{$t('common.TesYearlyCharge')}</td>
+								<td>{(kpis.pitStoreQCharge_Tot / 1000 / 1000).toFixed(2)}</td>
+								<td>GWh</td>
+								<td />
+							</tr>
+							<tr>
+								<td>{$t('common.TesYearlyDischarge')}</td>
+								<td>{(kpis.pitStoreQDisharge_Tot / 1000 / 1000).toFixed(2)}</td>
+								<td>GWh</td>
+								<td />
+							</tr>
+							<tr>
+								<td>{$t('common.TesRoundTripEfficiency')}</td>
+								<td>{kpis.pitStoreEff.toFixed(2)}</td>
+								<td>-</td>
+								<td />
+							</tr>
+							<tr>
+								<td>{$t('common.TesYearlyNetHeatGain')}</td>
+								<td>{(kpis.pitStoreQAccum_kW_Tot / 1000 / 1000).toFixed(2)}</td>
+								<td>GWh</td>
+								<td />
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			{:else}
+				<span>{$t('common.KPIsNotAvailable')}</span>
+			{/if}
 
 			{#if displayResults}
 				{#each displayResults as displayResult}

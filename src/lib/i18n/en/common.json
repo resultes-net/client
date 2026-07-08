@@ -57,6 +57,12 @@
     "Zurich": "Zurich",
     "Control": "Control",
     "Hi": "Hi",
-    "GoBack": "Go back"
+    "GoBack": "Go back",
+    "KPIs": "Key Performance Indicators",
+    "KPIsNotAvailable": "KPIs not available",
+    "TesYearlyCharge": "Yearly gross charge into storage",
+    "TesYearlyDischarge": "Yearly gross discharge out of storage",
+    "TesRoundTripEfficiency": "Yearly round-trip efficiency of storage",
+    "TesYearlyNetHeatGain": "Yearly net heat gain of storage"
 }
 

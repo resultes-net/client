@@ -57,5 +57,11 @@
     "Zurich": "Zürich",
     "Control": "Regelung",
     "Hi": "Hallo",
-    "GoBack": "Zurück"
+    "GoBack": "Zurück",
+    "KPIs": "Key-Performance-Indicators",
+    "KPIsNotAvailable": "KPIs nicht verfügbar",
+    "TesYearlyCharge": "Jährlicher Bruttowärmeeintrag in Speicher",
+    "TesYearlyDischarge": "Jährlicher Bruttowärmeaustrag aus Speicher",
+    "TesRoundTripEfficiency": "Round-Trip-Wirkungsgrad des Speichers übers Jahr",
+    "TesYearlyNetHeatGain": "Jährlicher Netto-Wärmeeintrag in Speicher"
 }
