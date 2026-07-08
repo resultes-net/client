@@ -50,7 +50,7 @@
 			<input
 				class="input"
 				id="demand-delta-t"
-				title={$t('common.demandDeltaT')}
+				title={$t('common.DemandDeltaT')}
 				type="number"
 				bind:value={control.demand_delta_T_degC}
 				min={MIN_TEMPERATURE_DEGC}
