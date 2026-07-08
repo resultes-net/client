@@ -169,8 +169,8 @@
 		/>
 	</div>
 
-	<h5 class="h5 mt-10">{$t('common.HourlyDemand')}</h5>
+	<h6 class="h6 mt-7">{$t('common.HourlyDemand')}</h6>
 	<div class="w-[1000px] mt-1" bind:this={hourlyDemandElement} />
-	<h5 class="h5 mt-5">{$t('common.LoadDurationCurve')}</h5>
+	<h6 class="h6 mt-7">{$t('common.LoadDurationCurve')}</h6>
 	<div class="w-[1000px] mt-1" bind:this={loadDurationCurveElement} />
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ArrowBigLeft, ChevronRight } from 'lucide-svelte';
+	import { ChevronRight, House } from 'lucide-svelte';
 
 	import { page } from '$app/stores';
 
@@ -25,11 +25,11 @@
 		<ul>
 			<li>
 				<a href="/" class="justify-center">
-					<span class="badge"><ArrowBigLeft /></span>
+					<span class="badge"><House /></span>
 				</a>
 			</li>
 			<li>
-				<a href="ttes" class="{classesActive('ttes')}">
+				<a href="ttes" class={classesActive('ttes')}>
 					<span class="badge"><ChevronRight /></span>
 					<span>TTES</span>
 				</a>

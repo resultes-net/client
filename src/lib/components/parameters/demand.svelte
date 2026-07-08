@@ -100,7 +100,7 @@
 					on:change={onDemandProfileChanged}
 				/>
 			</label>
-			<button class="btn" on:click={onShowProfileDetails}>{parameters.name}...</button>
+			<button class="anchor" on:click={onShowProfileDetails}>{parameters.name}</button>
 			<button
 				class="btn variant-filled-primary [&>*]:pointer-events-none"
 				use:popup={profileInfoHoverPopupSettings}

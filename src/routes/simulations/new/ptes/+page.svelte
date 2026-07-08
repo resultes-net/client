@@ -23,7 +23,6 @@
 	import Control from './control.svelte';
 	import SystemDescription from './systemDescription.svelte';
 
-	
 	const parameters = createDefaultParameters();
 	const simulation = {
 		name: '',
@@ -97,13 +96,14 @@
 	}
 </script>
 
-<div class="flex gap-[2%] ltr:mr-[2%] rtl:ml-[2%]">
-	{#if $page.state.isShowProfileDetails}
-		<div class="flex flex-col gap-4">
-			<h5 class="h5">Demand profile properties</h5>
-			<Profile bind:demand={parameters.demand} />
-		</div>
-	{:else}
+{#if $page.state?.isShowProfileDetails}
+	<div class="flex flex-col gap-4">
+		<button on:click={() => history.back()} class="anchor mr-auto text-sm">← {$t('common.GoBack')}</button>
+		<h5 class="h5">Demand profile properties</h5>
+		<Profile bind:demand={parameters.demand} />
+	</div>
+{:else}
+	<div class="flex flex-row gap-[2%] ltr:mr-[2%] rtl:ml-[2%]">
 		<!-- Parameters input section -->
 		<div class="basis-1/2">
 			<div class="flex flex-col gap-4">
@@ -222,8 +222,8 @@
 			</div>
 		</div>
 		<SystemDescription />
-	{/if}
-</div>
+	</div>
+{/if}
 
 <div data-popup="submitButtonDisabledMessagePopup">
 	<div hidden={areAllParametersValid} class="card p-4 variant-filled-warning z-50">
