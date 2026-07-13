@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	import {
 		type ModalComponent,
@@ -13,7 +13,7 @@
 
 	import { EllipsisVertical } from 'lucide-svelte';
 
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { page } from '$app/stores';
 
 	import { t } from '$lib/i18n/translations';
@@ -21,22 +21,20 @@
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
 
 	import DownladAllResults from './downloadAllResults.svelte';
-	import { downloadResults } from './results';
+	import { loadMoreResults } from './results';
 
 	export let data;
 
-	const simulationId = $page.params.simulationId as string;
-
 	const parameters = data.parameters;
-	let variationResults = data.variationResults;
-	$: variation = variationResults.variation;
-	$: kpis = variationResults.results.kpis;
-	$: displayResults = variationResults.results.displayResults;
+	const variation = data.variation;
+	const kpis = data.kpis;
 
-	$: lastUpdatedOn = new Date(Date.parse(variation.state_changed_on));
-	$: variationId = variation.id;
+	let displayResults = data.displayResults;
 
 	const modalStore = getModalStore();
+
+	const simulationId = $page.params.simulationId as string;
+	const variationId = variation.id;
 
 	const variationMenuPopupSettings: PopupSettings = {
 		event: 'click',
@@ -101,52 +99,35 @@
 		modalStore.trigger(modal);
 	}
 
-	let shallPollForUpdates = true;
-	async function pollUpdates() {
-		if (!shallPollForUpdates) {
-			return;
-		}
-
-		const newVariationResults = await downloadResults({
-			variationId,
-			displayResults,
-			lastUpdatedOn,
-			nDisplayResultsToDownload: null,
-			fetchFunction: fetch
-		});
-
-		if (newVariationResults === 'display-results-loaded') {
-			displayResults = displayResults;
-
-			// DONE - don't reset timeout
-			return;
-		} else if (newVariationResults === 'unchanged') {
-			// nothing to do
-		} else {
-			variationResults = newVariationResults;
-		}
-
-		setTimeout(pollUpdates, 5000);
-	}
-
 	onMount(() => {
-		pollUpdates();
+		const interval = setInterval(() => {
+			invalidate(`app:variation:${variationId}`);
+		}, 5000);
 
-		return () => {
-			shallPollForUpdates = false;
+		return () => clearInterval(interval);
+	});
 
-			if (displayResults === null) {
-				return;
+	onMount(async () => {
+		if (displayResults === null) {
+			return;
+		}
+
+		await loadMoreResults({ displayResults, variationId, nResultsToLoad: null });
+		displayResults = displayResults;
+	});
+
+	onDestroy(() => {
+		if (displayResults === null) {
+			return;
+		}
+
+		for (const displayResult of displayResults) {
+			const url = displayResult.url;
+
+			if (url) {
+				URL.revokeObjectURL(url);
 			}
-
-			for (const displayResult of displayResults) {
-				const url = displayResult.url;
-
-				if (url) {
-					URL.revokeObjectURL(url);
-				}
-			}
-		};
+		}
 	});
 </script>
 
