@@ -30,8 +30,8 @@
 	const parameters = data.parameters;
 	let variationResults = data.variationResults;
 	$: variation = variationResults.variation;
-	$: kpis = variationResults.results?.kpis ?? null;
-	$: displayResults = variationResults.results?.displayResults ?? null;
+	$: kpis = variationResults.results.kpis;
+	$: displayResults = variationResults.results.displayResults;
 
 	$: lastUpdatedOn = new Date(Date.parse(variation.state_changed_on));
 	$: variationId = variation.id;
