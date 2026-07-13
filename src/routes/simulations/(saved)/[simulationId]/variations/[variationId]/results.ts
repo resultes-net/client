@@ -13,7 +13,7 @@ export interface KPIS {
 
 export interface VariationResults {
     variation: Variation,
-    results: Results,
+    results: Results | null,
 }
 
 export interface Results {
@@ -40,13 +40,13 @@ export async function downloadResults(
     const variationStateChangedOn = new Date(Date.parse(variation.state_changed_on));
 
     if (lastUpdatedOn === null || variationStateChangedOn > lastUpdatedOn) {
-        let kpis: null | KPIS = null;
-        const newDisplayResults = ds.createDisplayResults();
-        if (variation.state === 'done') {
-            kpis = await getKPIs(variationId, fetch);
-            await ds.loadMoreResults({ displayResults: newDisplayResults, variationId, nResultsToLoad: nDisplayResultsToDownload });
+        if (variation.state !== 'done') {
+            return { variation, results: null };
         }
 
+        const kpis = await getKPIs(variationId, fetch);
+        const newDisplayResults = ds.createDisplayResults();
+        await ds.loadMoreResults({ displayResults: newDisplayResults, variationId, nResultsToLoad: nDisplayResultsToDownload });
         return { variation, results: { kpis, displayResults: newDisplayResults } };
     }
 
