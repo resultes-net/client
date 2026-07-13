@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 
 	import {
 		type ModalComponent,
@@ -13,7 +13,7 @@
 
 	import { EllipsisVertical } from 'lucide-svelte';
 
-	import { goto, invalidate } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
 	import { t } from '$lib/i18n/translations';
@@ -21,20 +21,22 @@
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
 
 	import DownladAllResults from './downloadAllResults.svelte';
-	import { loadMoreResults } from './results';
+	import { downloadResults } from './results';
 
 	export let data;
 
-	const parameters = data.parameters;
-	const variation = data.variation;
-	const kpis = data.kpis;
+	const simulationId = $page.params.simulationId as string;
 
-	let displayResults = data.displayResults;
+	const parameters = data.parameters;
+	let variationResults = data.variationResults;
+	$: variation = variationResults.variation;
+	$: kpis = variationResults.results.kpis;
+	$: displayResults = variationResults.results.displayResults;
+
+	$: lastUpdatedOn = new Date(Date.parse(variation.state_changed_on));
+	$: variationId = variation.id;
 
 	const modalStore = getModalStore();
-
-	const simulationId = $page.params.simulationId as string;
-	const variationId = variation.id;
 
 	const variationMenuPopupSettings: PopupSettings = {
 		event: 'click',
@@ -99,35 +101,52 @@
 		modalStore.trigger(modal);
 	}
 
+	let shallPollForUpdates = true;
+	async function pollUpdates() {
+		if (!shallPollForUpdates) {
+			return;
+		}
+
+		const newVariationResults = await downloadResults({
+			variationId,
+			displayResults,
+			lastUpdatedOn,
+			nDisplayResultsToDownload: null,
+			fetchFunction: fetch
+		});
+
+		if (newVariationResults === 'display-results-loaded') {
+			displayResults = displayResults;
+
+			// DONE - don't reset timeout
+			return;
+		} else if (newVariationResults === 'unchanged') {
+			// nothing to do
+		} else {
+			variationResults = newVariationResults;
+		}
+
+		setTimeout(pollUpdates, 5000);
+	}
+
 	onMount(() => {
-		const interval = setInterval(() => {
-			invalidate(`app:variation:${variationId}`);
-		}, 5000);
+		pollUpdates();
 
-		return () => clearInterval(interval);
-	});
+		return () => {
+			shallPollForUpdates = false;
 
-	onMount(async () => {
-		if (displayResults === null) {
-			return;
-		}
-
-		await loadMoreResults({ displayResults, variationId, nResultsToLoad: null });
-		displayResults = displayResults;
-	});
-
-	onDestroy(() => {
-		if (displayResults === null) {
-			return;
-		}
-
-		for (const displayResult of displayResults) {
-			const url = displayResult.url;
-
-			if (url) {
-				URL.revokeObjectURL(url);
+			if (displayResults === null) {
+				return;
 			}
-		}
+
+			for (const displayResult of displayResults) {
+				const url = displayResult.url;
+
+				if (url) {
+					URL.revokeObjectURL(url);
+				}
+			}
+		};
 	});
 </script>
 
