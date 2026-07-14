@@ -11,7 +11,7 @@
 		tocCrawler
 	} from '@skeletonlabs/skeleton';
 
-	import { EllipsisVertical } from 'lucide-svelte';
+	import { EllipsisVertical, LoaderCircle } from 'lucide-svelte';
 
 	import { goto, invalidate } from '$app/navigation';
 	import { page } from '$app/stores';
@@ -20,21 +20,55 @@
 
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
 
+	import type { PageData } from './$types.js';
+	import { loadMoreResults } from './displayResults';
 	import DownladAllResults from './downloadAllResults.svelte';
-	import { loadMoreResults } from './results';
 
 	export let data;
 
 	const parameters = data.parameters;
-	const variation = data.variation;
-	const kpis = data.kpis;
 
+	$: variation = data.variation;
+	$: variationId = variation.id;
+	$: kpis = data.kpis;
 	let displayResults = data.displayResults;
+
+	$: loadAllDisplayResults(data);
+
+	// `displayResults` is assigned a non-null value at most once (see
+	// `invalidateVariationLoop`: polling stops once the variation is `done`/`error`,
+	// and `load` only returns display results in the `done` state). That invariant is
+	// why we can create each object URL unconditionally here without leaking a
+	// previously-created one on a re-run.
+	$: if (displayResults !== null) {
+		for (const r of displayResults) {
+			if (r.data === null) {
+				continue;
+			}
+
+			const myData = r.data;
+
+			myData.url = URL.createObjectURL(myData.blob);
+		}
+	}
+
+	async function loadAllDisplayResults(myData: PageData) {
+		if (myData.displayResults === null) {
+			return;
+		}
+
+		await loadMoreResults({
+			displayResults: myData.displayResults,
+			variationId,
+			nResultsToLoad: null
+		});
+
+		displayResults = myData.displayResults;
+	}
 
 	const modalStore = getModalStore();
 
 	const simulationId = $page.params.simulationId as string;
-	const variationId = variation.id;
 
 	const variationMenuPopupSettings: PopupSettings = {
 		event: 'click',
@@ -44,7 +78,7 @@
 
 	const breadCrumbs = getBreadCrumbsStore();
 
-	breadCrumbs.set([
+	$: breadCrumbs.set([
 		{ href: '/', text: 'Home' },
 		{ href: '/simulations', text: 'Simulations' },
 		{ href: `/simulations/${simulationId}`, text: simulationId },
@@ -99,32 +133,32 @@
 		modalStore.trigger(modal);
 	}
 
-	onMount(() => {
-		const interval = setInterval(() => {
-			invalidate(`app:variation:${variationId}`);
-		}, 5000);
-
-		return () => clearInterval(interval);
-	});
-
-	onMount(async () => {
-		if (displayResults === null) {
+	let isDestroyed = false;
+	function invalidateVariationLoop() {
+		if (isDestroyed || variation.state === 'done' || variation.state === 'error') {
 			return;
 		}
 
-		await loadMoreResults({ displayResults, variationId, nResultsToLoad: null });
-		displayResults = displayResults;
+		invalidate(`resultes:variation:${variationId}`);
+
+		setTimeout(invalidateVariationLoop, 5000);
+	}
+
+	onMount(() => {
+		invalidateVariationLoop();
 	});
 
 	onDestroy(() => {
+		isDestroyed = true;
+
 		if (displayResults === null) {
 			return;
 		}
 
 		for (const displayResult of displayResults) {
-			const url = displayResult.url;
+			const url = displayResult.data?.url ?? null;
 
-			if (url) {
+			if (url !== null) {
 				URL.revokeObjectURL(url);
 			}
 		}
@@ -153,9 +187,17 @@
 	<div class="ml-6 flex flex-col">
 		<div class="flex flex-row">
 			<h2 class="h2">Variation {variationId}</h2>
-			<div class="self-center" use:popup={variationMenuPopupSettings}><EllipsisVertical /></div>
+			{#if variation.state !== 'done' && variation.state !== 'error'}
+				<div class="self-center"><EllipsisVertical /></div>
+				<LoaderCircle class="self-center animate-spin ml-1" />
+			{:else}
+				<div class="self-center" use:popup={variationMenuPopupSettings}><EllipsisVertical /></div>
+			{/if}
 		</div>
-		<div class="mt-8" use:tocCrawler={{ mode: 'generate' }}>
+		<div
+			class="mt-8"
+			use:tocCrawler={{ mode: 'generate', key: [variation.state, kpis, displayResults] }}
+		>
 			<h5 class="h5">Parameters</h5>
 			<div class="table-container">
 				<table class="table table-hover">
@@ -307,8 +349,8 @@
 					{#each displayResults as displayResult}
 						<div class="mt-6">
 							<h5 class="h5" id={displayResult.id}>{displayResult.title}</h5>
-							{#if displayResult.url}
-								<img src={displayResult.url} alt={displayResult.title} />
+							{#if displayResult.data?.url}
+								<img src={displayResult.data.url} alt={displayResult.title} />
 							{/if}
 						</div>
 					{/each}

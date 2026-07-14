@@ -4,7 +4,7 @@ import { getAccessToken } from 'src/auth';
 import { tryGetJson } from 'src/authAjax';
 import { type Variation } from 'src/lib/openapi/generated/model/variation';
 import { assert } from 'src/lib/utils';
-import { createDisplayResults, loadMoreResults } from './results';
+import { createDisplayResults, loadMoreResults } from './displayResults';
 
 export interface Outputs {
     pitStoreQCharge_Tot: number,
@@ -21,7 +21,7 @@ export const load: PageLoad = async ({ params, parent, url, fetch, depends }) =>
     const parameters = simulation.parameters;
 
     const variationId = params.variationId;
-    depends(`app:variation:${variationId}`);
+    depends(`resultes:variation:${variationId}`);
 
     const endPoint = `/variations/${variationId}`;
     const bearerToken = getAccessToken();
@@ -33,10 +33,12 @@ export const load: PageLoad = async ({ params, parent, url, fetch, depends }) =>
     let displayResults = null;
     if (variation.state === 'done') {
         kpis = await getKPIs(variationId, fetch);
-
-
         displayResults = createDisplayResults();
-        await loadMoreResults({ displayResults, variationId, nResultsToLoad: 3 });
+
+        [kpis,] = await Promise.all([
+            getKPIs(variationId, fetch),
+            loadMoreResults({ displayResults, variationId, nResultsToLoad: 3 })
+        ]);
     }
 
     const shallDownload = url.searchParams.get("download") === '';
