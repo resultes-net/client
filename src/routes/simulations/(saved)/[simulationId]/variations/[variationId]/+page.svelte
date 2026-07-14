@@ -2,13 +2,13 @@
 	import { onDestroy, onMount } from 'svelte';
 
 	import {
-		type ModalComponent,
-		type ModalSettings,
-		type PopupSettings,
 		TableOfContents,
 		getModalStore,
 		popup,
-		tocCrawler
+		tocCrawler,
+		type ModalComponent,
+		type ModalSettings,
+		type PopupSettings
 	} from '@skeletonlabs/skeleton';
 
 	import { EllipsisVertical, LoaderCircle } from 'lucide-svelte';
@@ -31,18 +31,12 @@
 	$: variation = data.variation;
 	$: variationId = variation.id;
 	$: kpis = data.kpis;
+
 	let displayResults = data.displayResults;
 
-	$: loadAllDisplayResults(data);
-
-	// `displayResults` is assigned a non-null value at most once (see
-	// `invalidateVariationLoop`: polling stops once the variation is `done`/`error`,
-	// and `load` only returns display results in the `done` state). That invariant is
-	// why we can create each object URL unconditionally here without leaking a
-	// previously-created one on a re-run.
 	$: if (displayResults !== null) {
 		for (const r of displayResults) {
-			if (r.data === null) {
+			if (r.data === null || r.data.url !== null) {
 				continue;
 			}
 
@@ -51,6 +45,8 @@
 			myData.url = URL.createObjectURL(myData.blob);
 		}
 	}
+
+	$: loadAllDisplayResults(data);
 
 	async function loadAllDisplayResults(myData: PageData) {
 		if (myData.displayResults === null) {

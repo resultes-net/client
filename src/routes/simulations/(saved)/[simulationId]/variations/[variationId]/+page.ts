@@ -3,7 +3,6 @@ import type { PageLoad } from './$types';
 import { getAccessToken } from 'src/auth';
 import { tryGetJson } from 'src/authAjax';
 import { type Variation } from 'src/lib/openapi/generated/model/variation';
-import { assert } from 'src/lib/utils';
 import { createDisplayResults, loadMoreResults } from './displayResults';
 
 export interface Outputs {
@@ -14,20 +13,13 @@ export interface Outputs {
 }
 
 
-export const load: PageLoad = async ({ params, parent, url, fetch, depends }) => {
-    const data = await parent();
-
-    const simulation = data.simulation;
-    const parameters = simulation.parameters;
-
+export const load = async ({ params, parent, url, fetch, depends }) => {
     const variationId = params.variationId;
     depends(`resultes:variation:${variationId}`);
 
     const endPoint = `/variations/${variationId}`;
     const bearerToken = getAccessToken();
     const variation = await tryGetJson<Variation>({ endPoint, httpVerb: 'GET', bearerToken, fetchFunction: fetch });
-
-    assert(variation !== null, 'Variation cannot be null here.');
 
     let kpis = null;
     let displayResults = null;
@@ -42,6 +34,10 @@ export const load: PageLoad = async ({ params, parent, url, fetch, depends }) =>
     }
 
     const shallDownload = url.searchParams.get("download") === '';
+
+    const { simulation } = await parent();
+
+    const parameters = simulation.parameters;
 
     return { parameters, variation, kpis, displayResults, shallDownload }
 }

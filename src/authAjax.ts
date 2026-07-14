@@ -1,5 +1,5 @@
-import { goto } from "$app/navigation";
-import { FetchError, getJson, UnauthorizedError } from "./ajax";
+import { redirect } from "@sveltejs/kit";
+import { getJson, UnauthorizedError } from "./ajax";
 
 export async function tryGetJson<O>(
     args: {
@@ -11,15 +11,12 @@ export async function tryGetJson<O>(
         baseUri?: string,
         fetchFunction?: (...args: any[]) => Promise<Response>
     }
-): Promise<O | null> {
+): Promise<O> {
     try {
         return await getJson<O>(args);
     } catch (exception) {
-        if (exception instanceof FetchError) {
-            if (exception instanceof UnauthorizedError) {
-                goto('/login');
-            }
-            return null;
+        if (exception instanceof UnauthorizedError) {
+            redirect(307, '/login');
         }
         throw exception;
     }

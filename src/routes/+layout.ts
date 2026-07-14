@@ -4,15 +4,8 @@ import type { LayoutLoad } from './$types';
 
 import { addTranslations, setLocale, setRoute } from '$lib/i18n/translations.js';
 
-
-import { browser } from '$app/environment';
-import { goto } from '$app/navigation';
-
-
+import { redirect } from '@sveltejs/kit';
 import * as auth from '../auth';
-
-
-export const ssr = false;
 
 
 export const load: LayoutLoad = async ({ data, url: { pathname } }) => {
@@ -23,22 +16,20 @@ export const load: LayoutLoad = async ({ data, url: { pathname } }) => {
     await setRoute(localeRoute);
     await setLocale(locale);
 
-    if (browser) {
-        checkLoggedInAndGotoIfNeeded(pathname);
-    }
+    checkLoggedInAndRedirectIfNeeded(pathname);
 
     return {};
 };
 
-function checkLoggedInAndGotoIfNeeded(pathname: string) {
+function checkLoggedInAndRedirectIfNeeded(pathname: string) {
     const isTryingToLogIn = pathname === '/login' || pathname === '/register';
     const isLoggedIn = auth.getIsAuthenticated();
 
     if (isLoggedIn && isTryingToLogIn) {
-        goto("/");
+        redirect(307, "/");
     }
 
     if (!isLoggedIn && !isTryingToLogIn) {
-        goto("/login");
+        redirect(307, "/login");
     }
 }
