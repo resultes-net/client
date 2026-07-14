@@ -12,6 +12,7 @@
 	import { SimulationState } from 'src/lib/openapi/generated/model/simulationState';
 	import type { Variation } from 'src/lib/openapi/generated/model/variation';
 	import { toLocalDateTimeIgnoringTodayDate } from 'src/lib/utils';
+	import { onMount } from 'svelte';
 	import { getBreadCrumbsStore } from '../breadCrumbs';
 
 	export let data: PageData;
@@ -62,6 +63,25 @@
 
 		invalidate(`resultes:simulation:${simulation.id}`);
 	}
+
+	let shallPollSimulationUntilDone = true;
+	async function pollSimulationUntilDone() {
+		if (!shallPollSimulationUntilDone || simulation.state === 'done') {
+			return;
+		}
+
+		invalidate(`resultes:simulation:${simulation.id}`);
+
+		setTimeout(pollSimulationUntilDone, 5000);
+	}
+
+	onMount(() => {
+		pollSimulationUntilDone();
+
+		return () => {
+			shallPollSimulationUntilDone = false;
+		};
+	});
 </script>
 
 <div data-popup="simulation-menu-drop-down">
@@ -86,7 +106,7 @@
 			<div class="self-center"><EllipsisVertical /></div>
 		{/if}
 		{#if simulation.state !== 'done' && simulation.state !== 'error'}
-			<LoaderCircle class="animate-spin ml-2" />
+			<LoaderCircle class="self-center animate-spin ml-1" />
 		{/if}
 	</div>
 	<h3 class="h3 mt-4">Variations</h3>
