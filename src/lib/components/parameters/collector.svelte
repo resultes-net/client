@@ -1,12 +1,18 @@
 <script lang="ts">
+	import { page } from '$app/stores';
+
 	import { ListBox, ListBoxItem, popup, type PopupSettings } from '@skeletonlabs/skeleton';
-	import { ChevronDown } from 'lucide-svelte';
+	import { ChevronDown, Folder, Info } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
 
 	import type { CollectorField } from '$lib/openapi/generated/model/collectorField';
 
+	import { pushState } from '$app/navigation';
+	import { createDefaultIam } from 'src/lib/createDefaultIam';
+	import type { IAM } from 'src/lib/openapi/generated/model/iAM';
 	import { ScaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh as Area } from 'src/lib/openapi/generated/model/scaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh';
+	import { assert } from 'src/lib/utils';
 	import { popupSizeApplyReferenceWidthIncludingBorder } from './common';
 	import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
 	import type { Phase } from './phase';
@@ -62,188 +68,338 @@
 			}
 		};
 	}
+
+	const iamHoverPopupSettings: PopupSettings = {
+		event: 'hover',
+		target: 'iamInfoHoverPopup',
+		placement: 'top'
+	};
+
+	function onShowIam() {
+		pushState('', { isShowIam: true });
+	}
+
+	async function onIamChanged(e: Event): Promise<void> {
+		const inputElement = e.target as HTMLInputElement;
+
+		const file = inputElement?.files?.[0];
+
+		if (file == null) {
+			return;
+		}
+
+		const re =
+			/^(?<trans>(?:\S+[ \t]*)+)\r?\n(?<lats>(?:\S+[ \t]*)+)\r?\n(?<values>(?:\S+(?:\r?\n)*)+)$/g;
+
+		const text = await file.text();
+
+		const matches = [...text.matchAll(re)];
+
+		if (matches.length === null) {
+			throw new Error(`Failed to parse IAM file \`${file.name}\`.`);
+		}
+
+		const groups = matches[0].groups;
+
+		assert(groups !== undefined, 'Groups must exist here.');
+
+		function deserializeValues(serializedAngles: string): number[] {
+			return serializedAngles
+				.split(/\s+/)
+				.map((s) => s.trim())
+				.filter((s) => s)
+				.map(Number);
+		}
+
+		const transversalAngles = deserializeValues(groups['trans']);
+		const longitudinalAngles = deserializeValues(groups['lats']);
+		const values = deserializeValues(groups['values']);
+
+		const nExpectedValues = transversalAngles.length * longitudinalAngles.length;
+
+		if (values.length !== nExpectedValues) {
+			throw new Error(`Was expecting ${nExpectedValues} but got ${values.length}.`);
+		}
+
+		const iam: IAM = {
+			name: file.name,
+			transversal_angles_degC: transversalAngles,
+			longitudinal_angles_degC: longitudinalAngles,
+			values
+		};
+
+		parameters.iam = iam;
+	}
+
+	function serializeIam(iam: IAM): string {
+		const transversalAngles = iam.transversal_angles_degC.join(' ');
+		const longitudinalAngles = iam.longitudinal_angles_degC.join(' ');
+		const values = iam.values.join('\n');
+
+		const serializedIam = `${transversalAngles}
+${longitudinalAngles}
+${values}
+`;
+
+		return serializedIam;
+	}
+
+	function resetIam() {
+		const iam = createDefaultIam();
+		parameters.iam = iam;
+	}
 </script>
 
-<div class="z-50 bg-surface-200-700-token-token" data-popup="area-size-scaling-combobox">
-	<ListBox
-		class="bg-surface-200-700-token border-[1px] border-primary-200-700-token"
-		rounded="rounded-none"
-		active="variant-filled-primary pr-[44px]"
-		hover="hover:variant-soft-primary pr-[44px]"
-	>
-		<ListBoxItem bind:group={targetScaling} name="scaling" value={AreaScalingEnum.AbsoluteM2}
-			>{$t('units.absolute')} [m<sup>2</sup>]</ListBoxItem
-		>
-		<ListBoxItem
-			bind:group={targetScaling}
-			name="scaling"
-			value={AreaScalingEnum.RelativeToDemandM2PerMwh}
-			>{$t('units.relativeToDemand')} [m<sup>2</sup>MWh<sup>-1</sup>]</ListBoxItem
-		>
-	</ListBox>
-</div>
-
-<div class="z-50 bg-surface-200-700-token-token" data-popup="nominal-massflow-scaling-combobox">
-	<ListBox
-		class="bg-surface-200-700-token border-[1px] border-primary-200-700-token"
-		rounded="rounded-none"
-		active="variant-filled-primary pr-[44px]"
-		hover="hover:variant-soft-primary pr-[44px]"
-	>
-		<ListBoxItem
-			bind:group={parameters.nominal_massflow.scaling}
-			name="scaling"
-			value={MassFlowScalingEnum.AbsoluteKgPerH}
-		>
-			{$t('units.absolute')} [kg h<sup>-1</sup>]
-		</ListBoxItem>
-		<ListBoxItem
-			bind:group={parameters.nominal_massflow.scaling}
-			name="scaling"
-			value={MassFlowScalingEnum.RelativeToCollectorAreaKgPerHM2}
-		>
-			{$t('units.relativeToCollectorArea')} [kg h<sup>-1</sup>m<sup>-2</sup>]
-		</ListBoxItem>
-	</ListBox>
-</div>
-
-<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] m-2 p-2">
-	<label for="collector-area">{$t('common.collectorArea')}</label>
-	<div class="input-group input-group-divider grid grid-cols-[--input-button-grid-cols]">
-		<input
-			class="input"
-			id="collector-area"
-			title={$t('common.collectorArea')}
-			type="number"
-			bind:value={parameters.area.value}
-		/>
-		<button
-			class="btn justify-between self-end rounded-l-none border-l-[1px] border-surface-400-500-token"
-			use:popup={areaSizeScalingPopupSettings}
-		>
-			<span>
-				{#if parameters.area.scaling === 'absolute_m2'}
-					{$t('units.absolute')} [m<sup>2</sup>]
-				{:else if parameters.area.scaling === 'relative_to_demand_m2_per_MWh'}
-					{$t('units.relativeToDemand')} [m<sup>2</sup>MWh<sup>-1</sup>]
-				{:else}
-					ERROR: unknown scaling factor: {parameters.area.scaling}
-				{/if}
-			</span>
-			<ChevronDown class="text-surface-400-500-token" size="20" />
+{#if $page.state?.isShowIam}
+	<div class="flex flex-col gap-4">
+		<button on:click={() => history.back()} class="anchor mr-auto text-sm">
+			← {$t('common.GoBack')}
 		</button>
+		<h5 class="h5">{$t('common.IAM')} {$t('common.parameterFile')}</h5>
+		<pre class="pre">{serializeIam(parameters.iam)}</pre>
+	</div>
+{:else}
+	<div data-popup="iamInfoHoverPopup">
+		<div class="card p-4 variant-filled-secondary z-50">
+			<p class="mb-2">
+				A CSV file with one header row and one, column giving - for each hour of the year - the heat
+				demand in MW. Therefore, the file will contain 8760+1 lines like this:
+			</p>
+			<pre>10.00 	20.00 	30.00 	40.00 	50.00 	60.00 	70.00 	80.00 	90.00 	
+10.00 	20.00 	30.00 	40.00 	50.00 	60.00 	70.00 	80.00 	90.00 	
+1
+1
+0.99
+0.98
+0.95
+0.88
+0.72
+0.36
+0
+1
+1
+0.99
+0.98
+0.95
+0.88
+0.72
+0.36
+0
+0.99
+...</pre>
+			<div class="arrow variant-filled-secondary" />
+		</div>
 	</div>
 
-	<label for="collector-inclination">{$t('common.inclination')}</label>
-	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-		<input
-			class="input"
-			id="collector-inclination"
-			title={$t('common.inclination')}
-			type="number"
-		/>
-		<div><span class="flex flex-grow justify-center">°</span></div>
+	<div class="z-50 bg-surface-200-700-token-token" data-popup="area-size-scaling-combobox">
+		<ListBox
+			class="bg-surface-200-700-token border-[1px] border-primary-200-700-token"
+			rounded="rounded-none"
+			active="variant-filled-primary pr-[44px]"
+			hover="hover:variant-soft-primary pr-[44px]"
+		>
+			<ListBoxItem bind:group={targetScaling} name="scaling" value={AreaScalingEnum.AbsoluteM2}
+				>{$t('units.absolute')} [m<sup>2</sup>]</ListBoxItem
+			>
+			<ListBoxItem
+				bind:group={targetScaling}
+				name="scaling"
+				value={AreaScalingEnum.RelativeToDemandM2PerMwh}
+				>{$t('units.relativeToDemand')} [m<sup>2</sup>MWh<sup>-1</sup>]</ListBoxItem
+			>
+		</ListBox>
 	</div>
 
-	<label for="collector-orientation">{$t('common.orientation')}</label>
-	<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-		<input
-			class="input"
-			id="collector-orientation"
-			title={$t('common.orientation')}
-			type="number"
-		/>
-		<div><span class="flex flex-grow justify-center">°</span></div>
-	</div>
-</div>
-
-{#if projectPhase === 'design'}
-	<hr class="!border-t-2 mt-6 mb-4" />
-
-	<h7 class="h7">{$t('common.collectorPerformanceCoefficients')}</h7>
-	<div
-		class="m-2 border rounded-lg dark:border-surface-600 light:boder-surface-300 p-2 grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]"
-	>
-		<label for="perf-coeff-a0">{$t('common.perfCoeffA0')}</label>
-		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-			<input class="input" id="perf-coeff-a0" title={$t('common.perfCoeffA0')} type="number" />
-			<div><span class="flex flex-grow justify-center">-</span></div>
-		</div>
-
-		<label for="perf-coeff-a1">{$t('common.perfCoeffA1')}</label>
-		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-			<input class="input" id="perf-coeff-a1" title={$t('common.perfCoeffA1')} type="number" />
-			<div class="!px-0">
-				<span class="flex flex-grow justify-center"
-					>kW m<sup class="top-1">-2</sup>K<sup class="top-1">-1</sup></span
-				>
-			</div>
-		</div>
-
-		<label for="perf-coeff-a2">{$t('common.perfCoeffA2')}</label>
-		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-			<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA2')} type="number" />
-			<div class="!px-0">
-				<span class="flex flex-grow justify-center"
-					>kW m<sup class="top-1">-2</sup>K<sup class="top-1">-2</sup></span
-				>
-			</div>
-		</div>
-
-		<label for="perf-coeff-a3">{$t('common.perfCoeffA3')}</label>
-		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-			<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA3')} type="number" />
-			<div class="!px-0">
-				<span class="flex flex-grow justify-center"
-					>kJ m<sup class="top-1">-3</sup>K<sup class="top-1">-1</sup></span
-				>
-			</div>
-		</div>
-
-		<label for="perf-coeff-a4">{$t('common.perfCoeffA4')}</label>
-		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-			<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA4')} type="number" />
-			<div class="!px-0">
-				<span class="flex flex-grow justify-center">-</span>
-			</div>
-		</div>
-
-		<label for="perf-coeff-a5">{$t('common.perfCoeffA5')}</label>
-		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-			<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA5')} type="number" />
-			<div class="!px-0">
-				<span class="flex flex-grow justify-center"
-					>kJ m<sup class="top-1">-2</sup>K<sup class="top-1">-1</sup></span
-				>
-			</div>
-		</div>
+	<div class="z-50 bg-surface-200-700-token-token" data-popup="nominal-massflow-scaling-combobox">
+		<ListBox
+			class="bg-surface-200-700-token border-[1px] border-primary-200-700-token"
+			rounded="rounded-none"
+			active="variant-filled-primary pr-[44px]"
+			hover="hover:variant-soft-primary pr-[44px]"
+		>
+			<ListBoxItem
+				bind:group={parameters.nominal_massflow.scaling}
+				name="scaling"
+				value={MassFlowScalingEnum.AbsoluteKgPerH}
+			>
+				{$t('units.absolute')} [kg h<sup>-1</sup>]
+			</ListBoxItem>
+			<ListBoxItem
+				bind:group={parameters.nominal_massflow.scaling}
+				name="scaling"
+				value={MassFlowScalingEnum.RelativeToCollectorAreaKgPerHM2}
+			>
+				{$t('units.relativeToCollectorArea')} [kg h<sup>-1</sup>m<sup>-2</sup>]
+			</ListBoxItem>
+		</ListBox>
 	</div>
 
 	<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] m-2 p-2">
-		<label for="nominal-mass-flow">{$t('common.nominalMassFlowRate')}</label>
+		<label for="collector-area">{$t('common.collectorArea')}</label>
 		<div class="input-group input-group-divider grid grid-cols-[--input-button-grid-cols]">
 			<input
 				class="input"
-				id="nominal-mass-flow"
-				title={$t('common.nominalMassFlowRate')}
+				id="collector-area"
+				title={$t('common.collectorArea')}
 				type="number"
-				bind:value={parameters.nominal_massflow.value}
+				bind:value={parameters.area.value}
 			/>
 			<button
 				class="btn justify-between self-end rounded-l-none border-l-[1px] border-surface-400-500-token"
-				use:popup={nominalMassflowScalingPopupSettings}
+				use:popup={areaSizeScalingPopupSettings}
 			>
 				<span>
-					{#if parameters.nominal_massflow.scaling === 'absolute_kg_per_h'}
-						{$t('units.absolute')} [kg h<sup>-1</sup>]
-					{:else if parameters.nominal_massflow.scaling === 'relative_to_collector_area_kg_per_h_m2'}
-						{$t('units.relativeToCollectorArea')} [kg h<sup>-1</sup>m<sup>-2</sup>]
+					{#if parameters.area.scaling === 'absolute_m2'}
+						{$t('units.absolute')} [m<sup>2</sup>]
+					{:else if parameters.area.scaling === 'relative_to_demand_m2_per_MWh'}
+						{$t('units.relativeToDemand')} [m<sup>2</sup>MWh<sup>-1</sup>]
 					{:else}
-						ERROR: Unknown scaling factor: {parameters.nominal_massflow.scaling}.
+						ERROR: unknown scaling factor: {parameters.area.scaling}
 					{/if}
 				</span>
 				<ChevronDown class="text-surface-400-500-token" size="20" />
 			</button>
 		</div>
+
+		<label for="collector-inclination">{$t('common.inclination')}</label>
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+			<input
+				class="input"
+				id="collector-inclination"
+				title={$t('common.inclination')}
+				type="number"
+			/>
+			<div><span class="flex flex-grow justify-center">°</span></div>
+		</div>
+
+		<label for="collector-orientation">{$t('common.orientation')}</label>
+		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+			<input
+				class="input"
+				id="collector-orientation"
+				title={$t('common.orientation')}
+				type="number"
+			/>
+			<div><span class="flex flex-grow justify-center">°</span></div>
+		</div>
 	</div>
+
+	{#if projectPhase === 'design'}
+		<hr class="!border-t-2 mt-6 mb-4" />
+
+		<h7 class="h7">{$t('common.collectorPerformanceCoefficients')}</h7>
+		<div
+			class="m-2 border rounded-lg dark:border-surface-600 light:boder-surface-300 p-2 grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]"
+		>
+			<label for="perf-coeff-a0">{$t('common.perfCoeffA0')}</label>
+			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+				<input class="input" id="perf-coeff-a0" title={$t('common.perfCoeffA0')} type="number" />
+				<div><span class="flex flex-grow justify-center">-</span></div>
+			</div>
+
+			<label for="perf-coeff-a1">{$t('common.perfCoeffA1')}</label>
+			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+				<input class="input" id="perf-coeff-a1" title={$t('common.perfCoeffA1')} type="number" />
+				<div class="!px-0">
+					<span class="flex flex-grow justify-center"
+						>kW m<sup class="top-1">-2</sup>K<sup class="top-1">-1</sup></span
+					>
+				</div>
+			</div>
+
+			<label for="perf-coeff-a2">{$t('common.perfCoeffA2')}</label>
+			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+				<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA2')} type="number" />
+				<div class="!px-0">
+					<span class="flex flex-grow justify-center"
+						>kW m<sup class="top-1">-2</sup>K<sup class="top-1">-2</sup></span
+					>
+				</div>
+			</div>
+
+			<label for="perf-coeff-a3">{$t('common.perfCoeffA3')}</label>
+			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+				<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA3')} type="number" />
+				<div class="!px-0">
+					<span class="flex flex-grow justify-center"
+						>kJ m<sup class="top-1">-3</sup>K<sup class="top-1">-1</sup></span
+					>
+				</div>
+			</div>
+
+			<label for="perf-coeff-a4">{$t('common.perfCoeffA4')}</label>
+			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+				<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA4')} type="number" />
+				<div class="!px-0">
+					<span class="flex flex-grow justify-center">-</span>
+				</div>
+			</div>
+
+			<label for="perf-coeff-a5">{$t('common.perfCoeffA5')}</label>
+			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
+				<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA5')} type="number" />
+				<div class="!px-0">
+					<span class="flex flex-grow justify-center"
+						>kJ m<sup class="top-1">-2</sup>K<sup class="top-1">-1</sup></span
+					>
+				</div>
+			</div>
+		</div>
+
+		<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] m-2 p-2">
+			<label for="nominal-mass-flow">{$t('common.nominalMassFlowRate')}</label>
+			<div class="input-group input-group-divider grid grid-cols-[--input-button-grid-cols]">
+				<input
+					class="input"
+					id="nominal-mass-flow"
+					title={$t('common.nominalMassFlowRate')}
+					type="number"
+					bind:value={parameters.nominal_massflow.value}
+				/>
+				<button
+					class="btn justify-between self-end rounded-l-none border-l-[1px] border-surface-400-500-token"
+					use:popup={nominalMassflowScalingPopupSettings}
+				>
+					<span>
+						{#if parameters.nominal_massflow.scaling === 'absolute_kg_per_h'}
+							{$t('units.absolute')} [kg h<sup>-1</sup>]
+						{:else if parameters.nominal_massflow.scaling === 'relative_to_collector_area_kg_per_h_m2'}
+							{$t('units.relativeToCollectorArea')} [kg h<sup>-1</sup>m<sup>-2</sup>]
+						{:else}
+							ERROR: Unknown scaling factor: {parameters.nominal_massflow.scaling}.
+						{/if}
+					</span>
+					<ChevronDown class="text-surface-400-500-token" size="20" />
+				</button>
+			</div>
+
+			<div>{$t('common.IAM')}</div>
+			<div class="flex flex-col mb-2">
+				<div
+					class="input-group input-group-divider grid grid-cols-[auto_1fr_auto] items-center gap-2"
+				>
+					<label class="label">
+						<span class="btn variant-filled-primary"><Folder /></span>
+						<input
+							id="iam"
+							type="file"
+							hidden
+							aria-label={$t('common.IAM')}
+							on:change={onIamChanged}
+						/>
+					</label>
+					<button class="anchor" on:click={onShowIam}>{parameters.iam.name}</button>
+					<button
+						class="btn variant-filled-primary [&>*]:pointer-events-none"
+						use:popup={iamHoverPopupSettings}
+					>
+						<Info />
+					</button>
+				</div>
+				<button type="button" class="anchor self-end text-xs" on:click={resetIam}
+					>{$t('common.reset')}</button
+				>
+			</div>
+		</div>
+	{/if}
 {/if}

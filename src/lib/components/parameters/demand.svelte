@@ -13,8 +13,9 @@
 	export let parameters: Demand;
 	export let onShowProfileDetails;
 	export let yearlyHeatDemandGWh: number;
-	
+
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;
+	
 	const profileInfoHoverPopupSettings: PopupSettings = {
 		event: 'hover',
 		target: 'profileInfoHoverPopup',
@@ -66,15 +67,37 @@
 	}
 
 	$: yearlyHeatDemandGWh =
-		parameters.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000 * parameters.scaling_factor;
+		(parameters.hourly_heat_demand_MW.reduce((s, d) => s + d, 0) / 1000) *
+		parameters.scaling_factor;
 </script>
 
 <div data-popup="profileInfoHoverPopup">
 	<div class="card p-4 variant-filled-secondary z-50">
-		<p>
-			A CSV file giving for each with one header row and one column giving, for each hour of the
-			year, the heat demand in MW.
+		<p class="mb-2">
+			A CSV file with one header row and one column, giving - for each hour of the
+			year - the heat demand in MW. Therefore, the file will contain 8760+1 lines
+			like this:
 		</p>
+		<pre>Hourly heat demand [MW]
+2.25666336
+2.24233008
+2.30299662
+2.49666306
+3.17932872
+4.58532666
+6.12132444
+5.83399152
+5.63999178
+4.85765958
+4.35766032
+3.85666104
+3.52266156
+3.52032822
+3.35999508
+3.53332818
+3.72132792
+4.21499388
+...</pre>
 		<div class="arrow variant-filled-secondary" />
 	</div>
 </div>
@@ -86,7 +109,7 @@
 	</div>
 </div>
 
-<div class="grid grid-cols-[--input-grid-cols] gap-y-[--input-gap-y]">
+<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]">
 	<p>{$t('common.demandProfile')}</p>
 	<div class="flex flex-col mb-2">
 		<div class="input-group input-group-divider grid grid-cols-[auto_1fr_auto] items-center gap-2">

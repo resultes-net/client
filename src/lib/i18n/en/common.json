@@ -66,6 +66,7 @@
     "TesYearlyCharge": "Yearly gross charge into storage",
     "TesYearlyDischarge": "Yearly gross discharge out of storage",
     "TesRoundTripEfficiency": "Yearly round-trip efficiency of storage",
-    "TesYearlyNetHeatGain": "Yearly net heat gain of storage"
+    "TesYearlyNetHeatGain": "Yearly net heat gain of storage",
+    "IAM": "Incident Angle Modifier",
+    "parameterFile": "parameter file"
 }
-

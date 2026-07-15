@@ -1,11 +1,12 @@
 import { createDefaultDemand } from "src/lib/createDefaultDemand";
+import { createDefaultIam } from "src/lib/createDefaultIam";
 import { PtesParametersInput } from "src/lib/openapi/generated/model/ptesParametersInput";
 
 
 export function createDefaultParameters(): PtesParametersInput {
     const defaultParameters: PtesParametersInput = {
         type: "ptes",
-        time: { start: 0, stop: 3*365*24, dt_sim: 5/60 },
+        time: { start: 0, stop: 3 * 365 * 24, dt_sim: 5 / 60 },
         demand: createDefaultDemand(),
         collector_field: {
             area: {
@@ -23,6 +24,7 @@ export function createDefaultParameters(): PtesParametersInput {
                 a1_kW_per_m2_per_K: 4.16e-3,
                 a2_kW_per_m2_per_K2: 0.0089e-3
             },
+            iam: createDefaultIam(),
             type: "flat-plate",
         },
         storage: {
