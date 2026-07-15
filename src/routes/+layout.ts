@@ -4,6 +4,7 @@ import type { LayoutLoad } from './$types';
 
 import { addTranslations, setLocale, setRoute } from '$lib/i18n/translations.js';
 
+import { browser } from '$app/environment';
 import { redirect } from '@sveltejs/kit';
 import * as auth from '../auth';
 
@@ -16,14 +17,16 @@ export const load: LayoutLoad = async ({ data, url: { pathname } }) => {
     await setRoute(localeRoute);
     await setLocale(locale);
 
-    checkLoggedInAndRedirectIfNeeded(pathname);
-
+    if (browser) {
+        checkLoggedInAndRedirectIfNeeded(pathname);
+    }
+    
     return {};
 };
 
 function checkLoggedInAndRedirectIfNeeded(pathname: string) {
     const isTryingToLogIn = pathname === '/login' || pathname === '/register';
-    const isLoggedIn = auth.getIsAuthenticated();
+    const isLoggedIn = auth.getTokenOrNull() !== null;
 
     if (isLoggedIn && isTryingToLogIn) {
         redirect(307, "/");

@@ -6,7 +6,7 @@
 	import { goto, invalidate } from '$app/navigation';
 	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { getJson, UnauthorizedError } from 'src/ajax';
-	import { getAccessToken, getIsAuthenticated } from 'src/auth';
+	import * as auth from 'src/auth';
 	import { t } from 'src/lib/i18n/translations';
 	import type { Simulation } from 'src/lib/openapi/generated/model/simulation';
 	import { SimulationState } from 'src/lib/openapi/generated/model/simulationState';
@@ -43,15 +43,15 @@
 		const newState = SimulationState.WaitingForVariationsCreation;
 		const endPoint = `/simulations/${simulation.id}/state?new_state=${newState}`;
 
-		if (!getIsAuthenticated()) {
+		const token = auth.getTokenOrNull();
+
+		if (token === null) {
 			goto('/login');
 			return;
 		}
 
-		const bearerToken = getAccessToken();
-
 		try {
-			await getJson({ endPoint, httpVerb: 'PUT', bearerToken });
+			await getJson({ endPoint, httpVerb: 'PUT', bearerToken: token.token });
 		} catch (error) {
 			if (error instanceof UnauthorizedError) {
 				goto('/login');

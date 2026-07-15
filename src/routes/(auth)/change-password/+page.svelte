@@ -14,13 +14,16 @@
 	};
 
 	async function onClick(): Promise<void> {
-		// assert(user_create.full_name && ...);
+		const token = auth.getTokenOrNull();
+
+		if (token === null) {
+			goto('/login');
+			return;
+		}
 
 		const body = JSON.stringify(user_create);
 
-		const bearerToken = auth.getAccessToken();
-
-		await getJson({ endPoint: '/user', httpVerb: 'PUT', body, bearerToken });
+		await getJson({ endPoint: '/user', httpVerb: 'PUT', body, bearerToken: token.token });
 
 		goto('/');
 	}

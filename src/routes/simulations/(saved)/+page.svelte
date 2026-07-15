@@ -65,17 +65,17 @@
 	});
 
 	async function pollSimulations(): Promise<void> {
-		if (!auth.getIsAuthenticated()) {
+		const token = auth.getTokenOrNull();
+
+		if (token === null) {
 			goto('/login');
 			return;
 		}
 
-		const bearerToken = auth.getAccessToken();
-
 		simulations = await getJson({
 			endPoint: '/simulations',
 			httpVerb: 'GET',
-			bearerToken
+			bearerToken: token.token
 		});
 
 		updateTimeRemainingEstimators(simulations);

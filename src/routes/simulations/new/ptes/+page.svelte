@@ -75,17 +75,18 @@
 		placement: 'top'
 	};
 
-	async function onSubmitButtonClicked(): Promise<void> {
-		if (!auth.getIsAuthenticated()) {
-			goto('/login');
-		}
+	async function onSubmitButtonClicked() {
+		const token = auth.getTokenOrNull();
 
-		const bearerToken = auth.getAccessToken();
+		if (token === null) {
+			goto('/login');
+			return;
+		}
 
 		await getJson({
 			endPoint: '/simulations',
 			body: JSON.stringify(simulation),
-			bearerToken
+			bearerToken: token.token
 		});
 
 		goto(`/simulations`);
@@ -98,7 +99,9 @@
 
 {#if $page.state?.isShowProfileDetails}
 	<div class="flex flex-col gap-4">
-		<button on:click={() => history.back()} class="anchor mr-auto text-sm">← {$t('common.GoBack')}</button>
+		<button on:click={() => history.back()} class="anchor mr-auto text-sm"
+			>← {$t('common.GoBack')}</button
+		>
 		<h5 class="h5">Demand profile properties</h5>
 		<Profile bind:demand={parameters.demand} />
 	</div>

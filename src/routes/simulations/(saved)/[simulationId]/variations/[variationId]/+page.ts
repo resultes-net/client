@@ -1,8 +1,7 @@
-import type { PageLoad } from './$types';
 
-import { getAccessToken } from 'src/auth';
+import { redirect } from '@sveltejs/kit';
+import { FetchError, UnauthorizedError } from 'src/ajax';
 import { tryGetJson } from 'src/authAjax';
-import { type Variation } from 'src/lib/openapi/generated/model/variation';
 import { createDisplayResults, loadMoreResults } from './displayResults';
 
 export interface Outputs {
@@ -13,29 +12,29 @@ export interface Outputs {
 }
 
 
-export const load = async ({ params, parent, url, fetch, depends }) => {
-    const variationId = params.variationId;
-    depends(`resultes:variation:${variationId}`);
-
-    const endPoint = `/variations/${variationId}`;
-    const bearerToken = getAccessToken();
-    const variation = await tryGetJson<Variation>({ endPoint, httpVerb: 'GET', bearerToken, fetchFunction: fetch });
+export const load = async ({ parent, url, fetch }) => {
+    const { simulation, variation } = await parent();
 
     let kpis = null;
     let displayResults = null;
     if (variation.state === 'done') {
-        kpis = await getKPIs(variationId, fetch);
         displayResults = createDisplayResults();
 
-        [kpis,] = await Promise.all([
-            getKPIs(variationId, fetch),
-            loadMoreResults({ displayResults, variationId, nResultsToLoad: 3 })
-        ]);
+        try {
+            [kpis,] = await Promise.all([
+                getKPIs(variation.id, fetch),
+                loadMoreResults({ displayResults, variationId: variation.id, nResultsToLoad: 3 })
+            ]);
+        } catch (exception) {
+            if (exception instanceof UnauthorizedError) {
+                redirect(307, '/login');
+            }
+
+            throw exception;
+        }
     }
 
     const shallDownload = url.searchParams.get("download") === '';
-
-    const { simulation } = await parent();
 
     const parameters = simulation.parameters;
 
@@ -44,13 +43,15 @@ export const load = async ({ params, parent, url, fetch, depends }) => {
 
 async function getKPIs(variationId: string, fetchFunction: (...args: any[]) => Promise<Response>): Promise<Outputs | null> {
     const endPoint = `/variations/${variationId}/results/output.json`;
-    const bearerToken = getAccessToken();
 
-    const outputsArray = await tryGetJson<Outputs[]>({ endPoint, httpVerb: 'GET', bearerToken, fetchFunction });
+    try {
+        const outputsArray = await tryGetJson<Outputs[]>({ endPoint, httpVerb: 'GET', fetchFunction });
+        return outputsArray[0];
+    } catch (exception) {
+        if (exception instanceof FetchError && !(exception instanceof UnauthorizedError)) {
+            return null;
+        }
 
-    if (outputsArray === null) {
-        return null;
+        throw exception;
     }
-
-    return outputsArray[0];
 }

@@ -18,8 +18,8 @@
 
 	import Collector from 'src/lib/components/parameters/collector.svelte';
 	import Demand from 'src/lib/components/parameters/demand.svelte';
-	import Tes from 'src/lib/components/parameters/tes.svelte';
 	import Profile from 'src/lib/components/parameters/demand/profile.svelte';
+	import Tes from 'src/lib/components/parameters/tes.svelte';
 	import SystemDescription from './systemDescription.svelte';
 
 	let projectName = '';
@@ -54,22 +54,24 @@
 		placement: 'top'
 	};
 
-	async function onSubmitButtonClicked(): Promise<void> {
-		if (!auth.getIsAuthenticated()) {
-			goto('/login');
-		}
+	async function onSubmitButtonClicked() {
+		const token = auth.getTokenOrNull();
 
-		const bearerToken = auth.getAccessToken();
+		if (token === null) {
+			goto('/login');
+			return;
+		}
 
 		const createSimulation: CreateSimulation = {
 			name: projectName,
+			location: 'Zurich',
 			parameters: { values: parameters }
 		};
 
 		await getJson({
 			endPoint: '/simulations',
 			body: JSON.stringify(createSimulation),
-			bearerToken
+			bearerToken: token.token
 		});
 
 		goto(`/simulations`);

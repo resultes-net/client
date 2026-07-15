@@ -20,6 +20,7 @@
 
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
 
+	import { UnauthorizedError } from 'src/ajax';
 	import type { PageData } from './$types.js';
 	import { loadMoreResults } from './displayResults';
 	import DownladAllResults from './downloadAllResults.svelte';
@@ -53,13 +54,22 @@
 			return;
 		}
 
-		await loadMoreResults({
-			displayResults: myData.displayResults,
-			variationId,
-			nResultsToLoad: null
-		});
+		try {
+			await loadMoreResults({
+				displayResults: myData.displayResults,
+				variationId,
+				nResultsToLoad: null
+			});
 
-		displayResults = myData.displayResults;
+			displayResults = myData.displayResults;
+		} catch (exception) {
+			if (exception instanceof UnauthorizedError) {
+				goto('/login');
+				return;
+			}
+
+			throw exception;
+		}
 	}
 
 	const modalStore = getModalStore();

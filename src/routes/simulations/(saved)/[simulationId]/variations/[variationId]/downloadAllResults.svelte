@@ -43,14 +43,20 @@
 	}
 
 	async function* download(): AsyncIterable<DownloadStatus> {
-		const bearerToken = auth.getAccessToken();
+		const token = auth.getTokenOrNull();
+
+		if (token === null) {
+			goto('/login');
+			yield { status: 'error', message: 'Not logged in.' };
+			return;
+		}
 
 		let response: Response;
 		try {
 			response = await getResponse({
 				endPoint,
 				accept: 'application/zip',
-				bearerToken
+				bearerToken: token.token
 			});
 		} catch (error) {
 			yield { status: 'error', message: `An error occurred fetching ${endPoint}: ${error}` };

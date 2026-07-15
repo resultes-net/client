@@ -32,7 +32,7 @@
 	};
 
 	let userName: string | null;
-	$: userName = $isAuthenticated ? auth.getUserName() : null;
+	$: userName = $isAuthenticated ? (auth.getTokenOrNull()?.userName ?? null) : null;
 
 	function onLogout(): void {
 		auth.unsetToken();

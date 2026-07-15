@@ -4,42 +4,37 @@ import { readonly, writable } from "svelte/store";
 import type { Token } from "./lib/openapi/generated/model/token";
 
 interface LocalToken extends Token {
-    username: string,
+    userName: string,
+}
+
+export interface UserToken {
+    userName: string,
+    token: string,
 }
 
 const _KEY = 'token';
 
-const _writable = writable(getIsAuthenticated());
+const _writable = writable(getTokenOrNull() !== null);
 
 export const isAuthenticated = readonly(_writable);
 
-export function getIsAuthenticated(): boolean {
-    if (!browser) {
-        return false;
+function isInFuture(isoDate: string): boolean {
+    const time = Date.parse(isoDate);
+
+    if (Number.isNaN(time)) {
+        throw new Error("Date couldn't be parsed.");
     }
 
-    const tokenOrNull = getTokenOrNull();
-
-    if (tokenOrNull === null) {
-        return false;
-    }
-
-    return getIsTokenValid();
-}
-
-function getIsTokenValid(): boolean {
-    const token = getToken();
-
-    const valid_until = new Date(token.valid_until);
+    const date = new Date(time);
 
     const now = new Date();
 
-    const isValid = valid_until > now;
+    const isInFuture = date > now;
 
-    return isValid;
+    return isInFuture;
 }
 
-function getTokenOrNull(): LocalToken | null {
+function getLocalTokenOrNull(): LocalToken | null {
     const jsonOrNull = localStorage.getItem(_KEY);
     if (jsonOrNull === null) {
         return null;
@@ -49,31 +44,34 @@ function getTokenOrNull(): LocalToken | null {
     return token
 }
 
-function getToken(): LocalToken {
-    const tokenOrNull = getTokenOrNull();
-
-    if (tokenOrNull === null) {
-        throw new Error("Not authenticated.")
-    }
-
-    return tokenOrNull;
-}
-
-export function setToken(username: string, token: Token): void {
-    const localToken: LocalToken = { username, ...token };
+export function setToken(userName: string, token: Token): void {
+    const localToken: LocalToken = { userName: userName, ...token };
     const json = JSON.stringify(localToken);
     localStorage.setItem(_KEY, json);
     _writable.set(true);
 }
 
-export function getAccessToken(): string {
-    const token = getToken();
-    return token.access_token;
-}
+export function getTokenOrNull(): UserToken | null {
+    if (!browser) {
+        return null;
+    }
 
-export function getUserName(): string {
-    const token = getToken();
-    return token.username
+    const localToken = getLocalTokenOrNull();
+
+    if (localToken === null) {
+        return null;
+    }
+
+    const isValid = isInFuture(localToken.valid_until);
+
+    if (!isValid) {
+        unsetToken();
+        return null;
+    }
+
+    const userToken: UserToken = { userName: localToken.userName, token: localToken.access_token };
+
+    return userToken;
 }
 
 export function unsetToken(): void {

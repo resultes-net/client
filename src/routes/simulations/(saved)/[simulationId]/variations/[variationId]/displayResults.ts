@@ -1,4 +1,4 @@
-import { getBlob } from 'src/ajax';
+import { getBlob, UnauthorizedError } from 'src/ajax';
 import * as auth from 'src/auth';
 
 export type DisplayResult = {
@@ -60,14 +60,17 @@ export async function loadMoreResults({
 async function downloadResultBlob({ resultPath, variationId, accept, fetchFunction = fetch }: {
     resultPath: string, variationId: string, accept: string, fetchFunction?: (...args: any[]) => Promise<Response>
 }): Promise<Blob> {
-    const variationEndPoint = `/variations/${variationId}`
+    const token = auth.getTokenOrNull();
+    if (token === null) {
+        throw new UnauthorizedError();
+    }
 
+    const variationEndPoint = `/variations/${variationId}`
     const endPoint = `${variationEndPoint}/results/${resultPath}`;
-    const bearerToken = auth.getAccessToken();
 
     const blob = await getBlob({
         endPoint,
-        bearerToken,
+        bearerToken: token.token,
         accept,
         fetchFunction
     });

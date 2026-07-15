@@ -5,11 +5,12 @@
 
 	import { EllipsisVertical } from 'lucide-svelte';
 
-	import { getBlob } from 'src/ajax';
+	import { getBlob, UnauthorizedError } from 'src/ajax';
 	import * as auth from 'src/auth';
 
 	import { getBreadCrumbsStore } from '../../../../breadCrumbs';
 
+	import { goto } from '$app/navigation';
 	import { FetchError } from 'src/ajax';
 	import type { Variation } from 'src/lib/openapi/generated/model/variation';
 
@@ -56,15 +57,20 @@
 	}
 
 	async function downloadLogFile(): Promise<LogFileData> {
+		const token = auth.getTokenOrNull();
+
+		if (token === null) {
+			goto('/login');
+			throw new UnauthorizedError();
+		}
+
 		const variationEndPoint = `/variations/${variationId}`;
 		const logFileName = getLogFileName(variation);
 		const endPoint = `${variationEndPoint}/results/${logFileName}`;
 
-		const bearerToken = auth.getAccessToken();
-
 		const blob = await getBlob({
 			endPoint,
-			bearerToken,
+			bearerToken: token.token,
 			accept: 'text/plain'
 		});
 
