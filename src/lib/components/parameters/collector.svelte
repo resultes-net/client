@@ -270,6 +270,7 @@ ${values}
 				id="collector-inclination"
 				title={$t('common.inclination')}
 				type="number"
+				bind:value={parameters.inclination_deg}
 			/>
 			<div><span class="flex flex-grow justify-center">°</span></div>
 		</div>
@@ -281,6 +282,7 @@ ${values}
 				id="collector-orientation"
 				title={$t('common.orientation')}
 				type="number"
+				bind:value={parameters.orientation_east_west_deg}
 			/>
 			<div><span class="flex flex-grow justify-center">°</span></div>
 		</div>
