@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-
 	import { ListBox, ListBoxItem, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { ChevronDown, Folder, Info } from 'lucide-svelte';
 
@@ -8,7 +6,6 @@
 
 	import type { CollectorField } from '$lib/openapi/generated/model/collectorField';
 
-	import { pushState } from '$app/navigation';
 	import { createDefaultIam } from 'src/lib/createDefaultIam';
 	import type { IAM } from 'src/lib/openapi/generated/model/iAM';
 	import { ScaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh as Area } from 'src/lib/openapi/generated/model/scaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh';
@@ -21,6 +18,7 @@
 	export let projectPhase: Phase;
 	export let parameters: CollectorField;
 	export let yearlyHeatDemandGWh: number;
+	export let isShowIam: boolean;
 
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;
 
@@ -76,7 +74,11 @@
 	};
 
 	function onShowIam() {
-		pushState('', { isShowIam: true });
+		isShowIam = true;
+	}
+
+	function onHideIam() {
+		isShowIam = false;
 	}
 
 	async function onIamChanged(e: Event): Promise<void> {
@@ -150,9 +152,9 @@ ${values}
 	}
 </script>
 
-{#if $page.state?.isShowIam}
+{#if isShowIam}
 	<div class="flex flex-col gap-4">
-		<button on:click={() => history.back()} class="anchor mr-auto text-sm">
+		<button on:click={onHideIam} class="anchor mr-auto text-sm">
 			← {$t('common.GoBack')}
 		</button>
 		<h5 class="h5">{$t('common.IAM')} {$t('common.parameterFile')}</h5>

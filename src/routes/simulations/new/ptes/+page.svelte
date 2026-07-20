@@ -49,6 +49,8 @@
 	let areAllParametersValid: boolean;
 	$: areAllParametersValid = areParametersValid.all();
 
+	let collectorIsShowIam = false;
+
 	let collectorFieldAreaM2: number;
 	$: {
 		const area = parameters.collector_field.area;
@@ -188,6 +190,7 @@
 										bind:parameters={parameters.collector_field}
 										{yearlyHeatDemandGWh}
 										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'collector')}
+										bind:isShowIam={collectorIsShowIam}
 									/>
 								{:else if activeParametersTab === 'storage'}
 									<Tes
