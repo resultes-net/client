@@ -281,6 +281,18 @@
 											{/if}
 										</tr>
 										<tr>
+											<td>{$t('common.inclination')}</td>
+											<td>{collector.inclination_deg}</td>
+											<td>°</td>
+											<td />
+										</tr>
+										<tr>
+											<td>{$t('common.orientation')}</td>
+											<td>{collector.orientation_east_west_deg}</td>
+											<td>°</td>
+											<td />
+										</tr>																				
+										<tr>
 											<td>{$t('common.perfCoeffA0')}</td>
 											<td>{collector.performance_coefficients.a0_1}</td>
 											<td>-</td>
