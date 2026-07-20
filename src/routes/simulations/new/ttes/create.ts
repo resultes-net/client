@@ -18,7 +18,7 @@ export function createDefaultParameters(): TtesParametersInput {
             },
             orientation_east_west_deg: 0.0,
             performance_coefficients: {
-                a0: 0.857,
+                a0_1: 0.857,
                 a1_kW_per_m2_per_K: 4.16e-3,
                 a2_kW_per_m2_per_K2: 0.0089e-3
             },

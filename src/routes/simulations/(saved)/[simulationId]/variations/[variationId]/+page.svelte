@@ -282,7 +282,7 @@
 										</tr>
 										<tr>
 											<td>{$t('common.perfCoeffA0')}</td>
-											<td>{collector.performance_coefficients.a0}</td>
+											<td>{collector.performance_coefficients.a0_1}</td>
 											<td>-</td>
 											<td />
 										</tr>

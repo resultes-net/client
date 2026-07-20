@@ -300,7 +300,7 @@ ${values}
 					id="perf-coeff-a0"
 					title={$t('common.perfCoeffA0')}
 					type="number"
-					bind:value={parameters.performance_coefficients.a0}
+					bind:value={parameters.performance_coefficients.a0_1}
 				/>
 				<div><span class="flex flex-grow justify-center">-</span></div>
 			</div>
