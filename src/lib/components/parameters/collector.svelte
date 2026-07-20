@@ -295,13 +295,25 @@ ${values}
 		>
 			<label for="perf-coeff-a0">{$t('common.perfCoeffA0')}</label>
 			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-				<input class="input" id="perf-coeff-a0" title={$t('common.perfCoeffA0')} type="number" />
+				<input
+					class="input"
+					id="perf-coeff-a0"
+					title={$t('common.perfCoeffA0')}
+					type="number"
+					bind:value={parameters.performance_coefficients.a0}
+				/>
 				<div><span class="flex flex-grow justify-center">-</span></div>
 			</div>
 
 			<label for="perf-coeff-a1">{$t('common.perfCoeffA1')}</label>
 			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-				<input class="input" id="perf-coeff-a1" title={$t('common.perfCoeffA1')} type="number" />
+				<input
+					class="input"
+					id="perf-coeff-a1"
+					title={$t('common.perfCoeffA1')}
+					type="number"
+					bind:value={parameters.performance_coefficients.a1_kW_per_m2_per_K}
+				/>
 				<div class="!px-0">
 					<span class="flex flex-grow justify-center"
 						>kW m<sup class="top-1">-2</sup>K<sup class="top-1">-1</sup></span
@@ -311,7 +323,13 @@ ${values}
 
 			<label for="perf-coeff-a2">{$t('common.perfCoeffA2')}</label>
 			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-				<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA2')} type="number" />
+				<input
+					class="input"
+					id="perf-coeff-a2"
+					title={$t('common.perfCoeffA2')}
+					type="number"
+					bind:value={parameters.performance_coefficients.a2_kW_per_m2_per_K2}
+				/>
 				<div class="!px-0">
 					<span class="flex flex-grow justify-center"
 						>kW m<sup class="top-1">-2</sup>K<sup class="top-1">-2</sup></span
@@ -321,7 +339,13 @@ ${values}
 
 			<label for="perf-coeff-a3">{$t('common.perfCoeffA3')}</label>
 			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-				<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA3')} type="number" />
+				<input
+					class="input"
+					id="perf-coeff-a2"
+					title={$t('common.perfCoeffA3')}
+					type="number"
+					bind:value={parameters.performance_coefficients.a3_kJ_per_m3_per_K}
+				/>
 				<div class="!px-0">
 					<span class="flex flex-grow justify-center"
 						>kJ m<sup class="top-1">-3</sup>K<sup class="top-1">-1</sup></span
@@ -331,7 +355,13 @@ ${values}
 
 			<label for="perf-coeff-a4">{$t('common.perfCoeffA4')}</label>
 			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-				<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA4')} type="number" />
+				<input
+					class="input"
+					id="perf-coeff-a2"
+					title={$t('common.perfCoeffA4')}
+					type="number"
+					bind:value={parameters.performance_coefficients.a4_1}
+				/>
 				<div class="!px-0">
 					<span class="flex flex-grow justify-center">-</span>
 				</div>
@@ -339,7 +369,13 @@ ${values}
 
 			<label for="perf-coeff-a5">{$t('common.perfCoeffA5')}</label>
 			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
-				<input class="input" id="perf-coeff-a2" title={$t('common.perfCoeffA5')} type="number" />
+				<input
+					class="input"
+					id="perf-coeff-a2"
+					title={$t('common.perfCoeffA5')}
+					type="number"
+					bind:value={parameters.performance_coefficients.a5_kJ_per_m2_per_K}
+				/>
 				<div class="!px-0">
 					<span class="flex flex-grow justify-center"
 						>kJ m<sup class="top-1">-2</sup>K<sup class="top-1">-1</sup></span
