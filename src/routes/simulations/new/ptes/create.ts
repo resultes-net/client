@@ -1,5 +1,6 @@
 import { createDefaultDemand } from "src/lib/createDefaultDemand";
 import { createDefaultIam } from "src/lib/createDefaultIam";
+import { createDefaultWasteHeatRecoverySource } from "src/lib/createDefaultWasteHeatRecoverySource";
 import { PtesParametersInput } from "src/lib/openapi/generated/model/ptesParametersInput";
 
 
@@ -30,6 +31,7 @@ export function createDefaultParameters(): PtesParametersInput {
             iam: createDefaultIam(),
             type: "flat-plate",
         },
+        waste_heat_recovery_source: createDefaultWasteHeatRecoverySource(),
         storage: {
             volume: {
                 scaling: "relative_to_collector_area_m3_per_m2",

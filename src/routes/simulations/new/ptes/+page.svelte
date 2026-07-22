@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { type PopupSettings, Tab, TabGroup, popup } from '@skeletonlabs/skeleton';
 
-	import { goto, pushState } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	import { Location } from 'src/lib/openapi/generated/model/location';
 
@@ -18,8 +17,10 @@
 
 	import Collector from 'src/lib/components/parameters/collector.svelte';
 	import Demand from 'src/lib/components/parameters/demand.svelte';
-	import Profile from 'src/lib/components/parameters/demand/profile.svelte';
+	import { default as CollectorProfile } from 'src/lib/components/parameters/demand/profile.svelte';
 	import Tes from 'src/lib/components/parameters/tes.svelte';
+	import WasteHeatRecoverySource from 'src/lib/components/parameters/wasteHeatRecoverySource.svelte';
+	import { default as WhrSourceProfile } from 'src/lib/components/parameters/wasteHeatRecoverySource/profile.svelte';
 	import Control from './control.svelte';
 	import SystemDescription from './systemDescription.svelte';
 
@@ -30,7 +31,7 @@
 		parameters: { values: parameters }
 	};
 
-	type ActiveParamtersTab = 'demand' | 'collector' | 'storage' | 'control';
+	type ActiveParamtersTab = 'demand' | 'collector' | 'wasteHeatRecovery' | 'storage' | 'control';
 	let activeParametersTab: ActiveParamtersTab = 'demand';
 	let projectPhase: Phase = 'pre-design';
 
@@ -39,11 +40,14 @@
 	const areParametersValid = {
 		demand: true,
 		collector: true,
+		wasteHeatRecovery: true,
 		storage: true,
 		control: true,
 
 		all(): boolean {
-			return this.demand && this.collector && this.storage && this.control;
+			return (
+				this.demand && this.collector && this.wasteHeatRecovery && this.storage && this.control
+			);
 		}
 	};
 	let areAllParametersValid: boolean;
@@ -94,18 +98,42 @@
 		goto(`/simulations`);
 	}
 
-	function onShowProfileDetails() {
-		pushState('', { isShowProfileDetails: true });
+	let isShowCollectorProfileDetails = false;
+
+	function onShowCollectorProfileDetails() {
+		isShowCollectorProfileDetails = true;
+	}
+
+	function onHideCollectorProfileDetails() {
+		isShowCollectorProfileDetails = false;
+	}
+
+	let isShowWhrSourceProfileDetails = false;
+
+	function onShowWhrSourceProfileDetails() {
+		isShowWhrSourceProfileDetails = true;
+	}
+
+	function onHideWhrSourceProfileDetails() {
+		isShowWhrSourceProfileDetails = false;
 	}
 </script>
 
-{#if $page.state?.isShowProfileDetails}
+{#if isShowCollectorProfileDetails}
 	<div class="flex flex-col gap-4">
-		<button on:click={() => history.back()} class="anchor mr-auto text-sm"
+		<button on:click={onHideCollectorProfileDetails} class="anchor mr-auto text-sm"
 			>← {$t('common.GoBack')}</button
 		>
 		<h5 class="h5">Demand profile properties</h5>
-		<Profile bind:demand={parameters.demand} />
+		<CollectorProfile bind:demand={parameters.demand} />
+	</div>
+{:else if isShowWhrSourceProfileDetails}
+	<div class="flex flex-col gap-4">
+		<button on:click={onHideWhrSourceProfileDetails} class="anchor mr-auto text-sm"
+			>← {$t('common.GoBack')}</button
+		>
+		<h5 class="h5">Demand profile properties</h5>
+		<WhrSourceProfile bind:whrSource={parameters.waste_heat_recovery_source} />
 	</div>
 {:else}
 	<div class="flex flex-row gap-[2%] ltr:mr-[2%] rtl:ml-[2%]">
@@ -162,6 +190,16 @@
 								config={{ shallWarn: !areParametersValid.collector, errorMessage: null }}
 							/>
 						</Tab>
+						<Tab
+							bind:group={activeParametersTab}
+							name="wasteHeatRecovery"
+							value="wasteHeatRecovery"
+						>
+							<TextWithWarning
+								text={$t('common.WasteHeatRecoverySource')}
+								config={{ shallWarn: !areParametersValid.collector, errorMessage: null }}
+							/>
+						</Tab>
 						<Tab bind:group={activeParametersTab} name="storage" value="storage">
 							<TextWithWarning
 								text={$t('common.storage')}
@@ -180,7 +218,7 @@
 								{#if activeParametersTab === 'demand'}
 									<Demand
 										bind:parameters={parameters.demand}
-										{onShowProfileDetails}
+										onShowProfileDetails={onShowCollectorProfileDetails}
 										bind:yearlyHeatDemandGWh
 										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'demand')}
 									/>
@@ -191,6 +229,13 @@
 										{yearlyHeatDemandGWh}
 										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'collector')}
 										bind:isShowIam={collectorIsShowIam}
+									/>
+								{:else if activeParametersTab === 'wasteHeatRecovery'}
+									<WasteHeatRecoverySource
+										bind:parameters={parameters.waste_heat_recovery_source}
+										onAreParametersValidChanged={(v) =>
+											onAreParametersValidChanged(v, 'wasteHeatRecovery')}
+										onShowProfileDetails={onShowWhrSourceProfileDetails}
 									/>
 								{:else if activeParametersTab === 'storage'}
 									<Tes

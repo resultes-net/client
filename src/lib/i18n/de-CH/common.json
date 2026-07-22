@@ -68,5 +68,7 @@
     "TesRoundTripEfficiency": "Round-Trip-Wirkungsgrad des Speichers übers Jahr",
     "TesYearlyNetHeatGain": "Jährlicher Netto-Wärmeeintrag in Speicher",
     "IAM": "Einfallswinkel-Korrekturfaktor",
-    "parameterFile": "Parameter-Datei"
+    "parameterFile": "Parameter-Datei",
+    "WasteHeatRecoverySource": "Abwärme-Quelle",
+    "WasteHeatSupplyProfile": "Abwärmeangebots-Profile"
 }

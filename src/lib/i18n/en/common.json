@@ -68,5 +68,7 @@
     "TesRoundTripEfficiency": "Yearly round-trip efficiency of storage",
     "TesYearlyNetHeatGain": "Yearly net heat gain of storage",
     "IAM": "Incident Angle Modifier",
-    "parameterFile": "parameter file"
+    "parameterFile": "parameter file",
+    "WasteHeatRecoverySource": "Waste heat recovery source",
+    "WasteHeatSupplyProfile": "Waste heat supply profile"
 }
