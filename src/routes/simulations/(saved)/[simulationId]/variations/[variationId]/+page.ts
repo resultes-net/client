@@ -15,6 +15,8 @@ export interface Outputs {
 export const load = async ({ parent, url, fetch }) => {
     const { simulation, variation } = await parent();
 
+    const parameters = tryGetJson({ endPoint: `/simulations/${simulation.id}/parameters`, httpVerb: 'GET', fetchFunction: fetch });
+
     let kpis = null;
     let displayResults = null;
     if (variation.state === 'done') {
@@ -35,8 +37,6 @@ export const load = async ({ parent, url, fetch }) => {
     }
 
     const shallDownload = url.searchParams.get("download") === '';
-
-    const parameters = simulation.parameters;
 
     return { parameters, variation, kpis, displayResults, shallDownload }
 }

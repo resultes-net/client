@@ -5,14 +5,13 @@
 
 	import { goto } from '$app/navigation';
 
-	import type { Simulation } from 'src/lib/openapi/generated/model/simulation';
-
 	import { getJson } from 'src/ajax';
 	import * as auth from 'src/auth';
 	import { toLocalDateTimeIgnoringTodayDate } from 'src/lib/utils';
 
 	import { getBreadCrumbsStore } from './breadCrumbs';
 
+	import type { GetSimulation } from 'src/lib/openapi/generated/model/getSimulation';
 	import { TimeRemainingEstimator, millisecondsToMinutes } from './time';
 
 	export let data;
@@ -28,7 +27,7 @@
 	let timeRemainingEstimators: { [index: string]: TimeRemainingEstimator } = {};
 	updateTimeRemainingEstimators(simulations);
 
-	function updateTimeRemainingEstimators(simulations: Simulation[]): void {
+	function updateTimeRemainingEstimators(simulations: GetSimulation[]): void {
 		for (const simulation of simulations) {
 			if (simulation.state !== 'done' && simulation.state !== 'running-variations') {
 				continue;
@@ -46,7 +45,7 @@
 		timeRemainingEstimators = timeRemainingEstimators;
 	}
 
-	let sortedSimulations: Simulation[];
+	let sortedSimulations: GetSimulation[];
 	$: sortedSimulations = simulations.toSorted((s1, s2) =>
 		s2.created_on.localeCompare(s1.created_on, 'en')
 	);
@@ -85,7 +84,7 @@
 		}
 	}
 
-	function getEllapsedMinutes(simulation: Simulation): number {
+	function getEllapsedMinutes(simulation: GetSimulation): number {
 		const start = new Date(simulation.created_on);
 		const end =
 			simulation.state === 'done' || simulation.state == 'error'
@@ -132,7 +131,7 @@
 					<td><a class="anchor" href="/simulations/{simulation.id}">{simulation.id}</a></td>
 					<td>{simulation.name}</td>
 					<td>{toLocalDateTimeIgnoringTodayDate(simulation.created_on)}</td>
-					<td>{simulation.parameters.values.type}</td>
+					<td>{simulation.type}</td>
 					<td>{simulation.state}</td>
 					<td class="flex flex-row">
 						{#if simulation.state == 'done'}

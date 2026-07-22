@@ -1,12 +1,11 @@
 import { tryGetJson } from 'src/authAjax';
-
-import type { Simulation } from 'src/lib/openapi/generated/model/simulation';
+import type { GetSimulation } from 'src/lib/openapi/generated/model/getSimulation.js';
 
 export const load = async ({ params, fetch, depends }) => {
     const simulationId = params.simulationId;
     depends(`resultes:simulation:${simulationId}`);
 
-    const simulation = await tryGetJson<Simulation>(
+    const simulation = await tryGetJson<GetSimulation>(
         {
             endPoint: `/simulations/${simulationId}`,
             httpVerb: 'GET',
