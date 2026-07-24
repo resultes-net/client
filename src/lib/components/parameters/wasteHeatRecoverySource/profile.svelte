@@ -13,23 +13,9 @@
 		return new Date(ms);
 	}
 
-	let plotData: {
-		dates: Date[];
-		massFlowRates: number[];
-		temperatures: number[];
-	};
-	$: {
-		const hourlyValues = whrSource.hourly_values;
-		const dates = hourlyValues.map((_, i) => hourToDate(i));
-		const massFlowRates = hourlyValues.map((v) => v.mass_flow_rate_kg_per_h);
-		const temperatures = hourlyValues.map((v) => v.temperature_deg_C);
-
-		plotData = {
-			dates,
-			massFlowRates,
-			temperatures
-		};
-	}
+	const dates = Array.from({ length: whrSource.mass_flow_rates_kg_per_h.length }, (_, i) =>
+		hourToDate(i)
+	);
 
 	let hourlyValuesElement: HTMLElement | null = null;
 	$: if (hourlyValuesElement) {
@@ -37,18 +23,18 @@
 			hourlyValuesElement,
 			[
 				{
-					x: plotData.dates,
-					y: plotData.massFlowRates,
+					x: dates,
+					y: whrSource.mass_flow_rates_kg_per_h,
 					name: 'Mass flow rate',
 					type: 'scatter',
 					mode: 'markers',
 					hovertemplate: '%{x}: %{y} kg/h<extra></extra>',
 					xhoverformat: '%x %H h',
-					yhoverformat: '.2f',
+					yhoverformat: '.2f'
 				},
 				{
-					x: plotData.dates,
-					y: plotData.temperatures,
+					x: dates,
+					y: whrSource.temperatures_deg_C,
 					name: 'Temperature',
 					type: 'scatter',
 					mode: 'markers',

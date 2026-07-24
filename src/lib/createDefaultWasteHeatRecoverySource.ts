@@ -1,14 +1,14 @@
-import type { MassFlowRateAndTemperature } from "./openapi/generated/model/massFlowRateAndTemperature";
 import type { WasteHeatRecoverySource } from "./openapi/generated/model/wasteHeatRecoverySource";
 
 const HOURS_IN_A_YEAR = 365 * 24;
 
 export function createDefaultWasteHeatRecoverySource(): WasteHeatRecoverySource {
-    const hourly_values: MassFlowRateAndTemperature[] = Array.from({ length: HOURS_IN_A_YEAR }, () => ({ mass_flow_rate_kg_per_h: 0, temperature_deg_C: 0 }));
+    const hourly_zeros = Array(HOURS_IN_A_YEAR).fill(0);
 
-    const wasteHeatRecoverySource = {
+    const wasteHeatRecoverySource: WasteHeatRecoverySource = {
         name: "<disabled>",
-        hourly_values
+        mass_flow_rates_kg_per_h: hourly_zeros,
+        temperatures_deg_C: hourly_zeros
     }
 
     return wasteHeatRecoverySource;

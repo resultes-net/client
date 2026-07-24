@@ -6,7 +6,6 @@
 	import { t } from '$lib/i18n/translations';
 
 	import { createDefaultWasteHeatRecoverySource } from 'src/lib/createDefaultWasteHeatRecoverySource';
-	import type { MassFlowRateAndTemperature } from 'src/lib/openapi/generated/model/massFlowRateAndTemperature';
 	import type { WasteHeatRecoverySource } from 'src/lib/openapi/generated/model/wasteHeatRecoverySource';
 	import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
 
@@ -34,25 +33,26 @@
 
 		// TODO: deal with reading and parsing errors
 		const text = await file.text();
-		const hourly_values: MassFlowRateAndTemperature[] = text
+		const rows: [number, number][] = text
 			.split('\n')
 			.slice(1)
 			.filter((s) => s.trim())
 			.map((l) => l.split(/\s+/))
-			.map(([m, t]) => ({
-				mass_flow_rate_kg_per_h: Number(m.trim()),
-				temperature_deg_C: Number(t.trim())
-			}));
+			.map(([m, t]) => [Number(m.trim()), Number(t.trim())]);
 
-		if (hourly_values.length !== HOURS_IN_A_YEAR) {
+		if (rows.length !== HOURS_IN_A_YEAR) {
 			throw new Error(
-				`Waste heat recovery profile must contain exactly ${HOURS_IN_A_YEAR} lines, but got ${hourly_values.length}.`
+				`Waste heat recovery profile must contain exactly ${HOURS_IN_A_YEAR} lines, but got ${rows.length}.`
 			);
 		}
 
+		const massFlowRates = rows.map(([m]) => m);
+		const temperatures = rows.map(([, t]) => t);
+
 		parameters = {
 			name: file.name,
-			hourly_values
+			mass_flow_rates_kg_per_h: massFlowRates,
+			temperatures_deg_C: temperatures
 		};
 	}
 
