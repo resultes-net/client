@@ -21,13 +21,15 @@
 	import Tes from 'src/lib/components/parameters/tes.svelte';
 	import WasteHeatRecoverySource from 'src/lib/components/parameters/wasteHeatRecoverySource.svelte';
 	import { default as WhrSourceProfile } from 'src/lib/components/parameters/wasteHeatRecoverySource/profile.svelte';
+	import type { CreateSimulation } from 'src/lib/openapi/generated/model/createSimulation';
 	import Control from './control.svelte';
 	import SystemDescription from './systemDescription.svelte';
 
 	const parameters = createDefaultParameters();
-	const simulation = {
+	const simulation: CreateSimulation = {
 		name: '',
 		location: Location.Zurich,
+		type: 'ptes',
 		parameters: { values: parameters }
 	};
 
