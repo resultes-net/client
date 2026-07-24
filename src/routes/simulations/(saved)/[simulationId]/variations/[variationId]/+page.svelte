@@ -291,7 +291,7 @@
 											<td>{collector.orientation_east_west_deg}</td>
 											<td>°</td>
 											<td />
-										</tr>																				
+										</tr>
 										<tr>
 											<td>{$t('common.perfCoeffA0')}</td>
 											<td>{collector.performance_coefficients.a0_1}</td>
@@ -301,28 +301,19 @@
 										<tr>
 											<td>{$t('common.perfCoeffA1')}</td>
 											<td>{collector.performance_coefficients.a1_kW_per_m2_per_K}</td>
-											<td
-												><span>kW m<sup >-2</sup>K<sup >-1</sup></span
-												></td
-											>
+											<td><span>kW m<sup>-2</sup>K<sup>-1</sup></span></td>
 											<td />
 										</tr>
 										<tr>
 											<td>{$t('common.perfCoeffA2')}</td>
 											<td>{collector.performance_coefficients.a2_kW_per_m2_per_K2}</td>
-											<td
-												><span>kW m<sup >-2</sup>K<sup >-2</sup></span
-												></td
-											>
+											<td><span>kW m<sup>-2</sup>K<sup>-2</sup></span></td>
 											<td />
 										</tr>
 										<tr>
 											<td>{$t('common.perfCoeffA3')}</td>
 											<td>{collector.performance_coefficients.a3_kJ_per_m3_per_K}</td>
-											<td
-												><span>kJ m<sup >-3</sup>K<sup >-1</sup></span
-												></td
-											>
+											<td><span>kJ m<sup>-3</sup>K<sup>-1</sup></span></td>
 											<td />
 										</tr>
 										<tr>
@@ -334,10 +325,7 @@
 										<tr>
 											<td>{$t('common.perfCoeffA5')}</td>
 											<td>{collector.performance_coefficients.a5_kJ_per_m2_per_K}</td>
-											<td
-												><span>kJ m<sup >-2</sup>K<sup >-1</sup></span
-												></td
-											>
+											<td><span>kJ m<sup>-2</sup>K<sup>-1</sup></span></td>
 											<td />
 										</tr>
 									</tbody>
