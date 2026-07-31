@@ -41,6 +41,7 @@
 				bind:value={control.demand_temperature_setpoint_degC}
 				min={MIN_TEMPERATURE_DEGC}
 				max={MAX_TEMPERATURE_DEGC}
+				on:change={(e) => onTemperatureChanged(e, 'demand_temperature_setpoint_degC')}
 			/>
 			<div><span class="flex flex-grow justify-center">°C</span></div>
 		</div>
@@ -52,9 +53,10 @@
 				id="demand-delta-t"
 				title={$t('common.DemandDeltaT')}
 				type="number"
-				bind:value={control.demand_delta_T_degC}
+				value={control.demand_delta_T_degC}
 				min={MIN_TEMPERATURE_DEGC}
 				max={MAX_TEMPERATURE_DEGC}
+				on:change={(e) => onTemperatureChanged(e, 'demand_delta_T_degC')}
 			/>
 			<div><span class="flex flex-grow justify-center">°C</span></div>
 		</div>

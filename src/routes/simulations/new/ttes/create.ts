@@ -1,30 +1,15 @@
 import { type TtesParametersInput } from "$lib/openapi/generated/model/ttesParametersInput";
+import { createDefaultCollectorField } from "src/lib/createDefaultCollectorField";
 import { createDefaultDemand } from "src/lib/createDefaultDemand";
+import { createDefaultWasteHeatRecoverySource } from "src/lib/createDefaultWasteHeatRecoverySource";
 
 export function createDefaultParameters(): TtesParametersInput {
     const defaultParameters: TtesParametersInput = {
         type: "ttes",
-        time: { start: 5760, stop: 17280, dt_sim: 0.5 },
+        time: { start: 0, stop: 3 * 365 * 24, dt_sim: 5 / 60 },
         demand: createDefaultDemand(),
-        collector_field: {
-            area: {
-                scaling: "relative_to_demand_m2_per_MWh",
-                value: 0.004
-            },
-            inclination_deg: 45.0,
-            nominal_massflow: {
-                scaling: "relative_to_collector_area_kg_per_h_m2",
-                value: 15.0,
-            },
-            orientation_east_west_deg: 0.0,
-            performance_coefficients: {
-                a0_1: 0.857,
-                a1_kW_per_m2_per_K: 4.16e-3,
-                a2_kW_per_m2_per_K2: 0.0089e-3
-            },
-            type: "flat-plate",
-            output_temperature_setpoint_degC: 95.0
-        },
+        collector_field: createDefaultCollectorField(),
+        waste_heat_recovery_source: createDefaultWasteHeatRecoverySource(),
         storage: {
             heat_conductance_kW_per_m2_per_K: 0.08e-3,
             ports_relative_heights_1: {
@@ -32,12 +17,13 @@ export function createDefaultParameters(): TtesParametersInput {
                 middle: 0.50,
                 bottom: 0.01
             },
-            size: {
-                size_type: "scaled-floor-area",
-                floor_area_relative_to_demand_m2_per_GWh: 200,
-                height_m: 20,
+            volume: {
+                scaling: "relative_to_collector_area_m3_per_m2",
+                value: 1
             },
+            height_to_diameter_ratio_1: 5,
             location: "above-ground-free-standing",
+
         }
     };
 
