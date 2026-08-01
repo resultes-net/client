@@ -1,7 +1,8 @@
 import { type TtesParametersInput } from "$lib/openapi/generated/model/ttesParametersInput";
-import { createDefaultCollectorField } from "src/lib/createDefaultCollectorField";
-import { createDefaultDemand } from "src/lib/createDefaultDemand";
-import { createDefaultWasteHeatRecoverySource } from "src/lib/createDefaultWasteHeatRecoverySource";
+import { createDefaultCollectorField } from "$lib/parameters/createDefaultCollectorField";
+import { createDefaultControl } from "$lib/parameters/createDefaultControl";
+import { createDefaultDemand } from "$lib/parameters/createDefaultDemand";
+import { createDefaultWasteHeatRecoverySource } from "$lib/parameters/createDefaultWasteHeatRecoverySource";
 
 export function createDefaultParameters(): TtesParametersInput {
     const defaultParameters: TtesParametersInput = {
@@ -24,7 +25,8 @@ export function createDefaultParameters(): TtesParametersInput {
             height_to_diameter_ratio_1: 5,
             location: "above-ground-free-standing",
 
-        }
+        },
+        control: createDefaultControl()
     };
 
     return defaultParameters;

@@ -1,4 +1,4 @@
-import type { IAM } from "./openapi/generated/model/iAM";
+import type { IAM } from "../openapi/generated/model/iAM";
 
 export function createDefaultIam(): IAM {
     const iam: IAM = {

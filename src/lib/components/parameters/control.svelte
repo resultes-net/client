@@ -2,9 +2,9 @@
 	import { t } from '$lib/i18n/translations';
 	import { parseAndClampInputValue } from '$lib/utils';
 
-	import { type Control } from 'src/lib/openapi/generated/model/control';
+	import { type Control } from '$lib/openapi/generated/model/control';
 
-	import { type OnAreParametersValidChanged } from 'src/lib/components/parameters/onAreParametersValidChanged';
+	import { type OnAreParametersValidChanged } from '$lib/components/parameters/onAreParametersValidChanged';
 
 	export let control: Control;
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;

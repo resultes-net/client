@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { createDefaultParameters } from './create';
 
+	import Control from '$lib/components/parameters/control.svelte';
 	import System, { type Exports } from '$lib/components/system.svelte';
-	import Tes from 'src/lib/components/parameters/tes.svelte';
-	import Control from './control.svelte';
 	import SystemDescription from './systemDescription.svelte';
+	import Tes from './tes.svelte';
 
 	let exports: Exports;
 

@@ -1,4 +1,4 @@
-import type { Demand } from "./openapi/generated/model/demand";
+import type { Demand } from "../openapi/generated/model/demand";
 
 export function createDefaultDemand(): Demand {
 

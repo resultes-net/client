@@ -5,8 +5,8 @@
 
 	import { t } from '$lib/i18n/translations';
 
-	import { createDefaultWasteHeatRecoverySource } from 'src/lib/createDefaultWasteHeatRecoverySource';
-	import type { WasteHeatRecoverySource } from 'src/lib/openapi/generated/model/wasteHeatRecoverySource';
+	import type { WasteHeatRecoverySource } from '$lib/openapi/generated/model/wasteHeatRecoverySource';
+	import { createDefaultWasteHeatRecoverySource } from '$lib/parameters/createDefaultWasteHeatRecoverySource';
 	import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
 
 	export let parameters: WasteHeatRecoverySource;

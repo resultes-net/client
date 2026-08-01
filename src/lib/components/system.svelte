@@ -20,7 +20,7 @@
 
 	import { goto } from '$app/navigation';
 
-	import { Location } from 'src/lib/openapi/generated/model/location';
+	import { Location } from '$lib/openapi/generated/model/location';
 
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
 	import { t } from '$lib/i18n/translations';
@@ -28,14 +28,14 @@
 	import { getJson } from 'src/ajax';
 	import * as auth from 'src/auth';
 
-	import { type Phase } from 'src/lib/components/parameters/phase';
+	import { type Phase } from '$lib/components/parameters/phase';
 
-	import Collector from 'src/lib/components/parameters/collector.svelte';
-	import Demand from 'src/lib/components/parameters/demand.svelte';
-	import { default as CollectorProfile } from 'src/lib/components/parameters/demand/profile.svelte';
-	import WasteHeatRecoverySource from 'src/lib/components/parameters/wasteHeatRecoverySource.svelte';
-	import { default as WhrSourceProfile } from 'src/lib/components/parameters/wasteHeatRecoverySource/profile.svelte';
-	import type { CreateSimulation } from 'src/lib/openapi/generated/model/createSimulation';
+	import Collector from '$lib/components/parameters/collector.svelte';
+	import Demand from '$lib/components/parameters/demand.svelte';
+	import { default as CollectorProfile } from '$lib/components/parameters/demand/profile.svelte';
+	import WasteHeatRecoverySource from '$lib/components/parameters/wasteHeatRecoverySource.svelte';
+	import { default as WhrSourceProfile } from '$lib/components/parameters/wasteHeatRecoverySource/profile.svelte';
+	import type { CreateSimulation } from '$lib/openapi/generated/model/createSimulation';
 	import type { Type } from '../openapi/generated/model/type';
 	import type { Values } from '../openapi/generated/model/values';
 

@@ -1,4 +1,4 @@
-import type { WasteHeatRecoverySource } from "./openapi/generated/model/wasteHeatRecoverySource";
+import type { WasteHeatRecoverySource } from "../openapi/generated/model/wasteHeatRecoverySource";
 
 const HOURS_IN_A_YEAR = 365 * 24;
 

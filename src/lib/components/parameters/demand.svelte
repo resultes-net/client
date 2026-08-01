@@ -7,7 +7,7 @@
 
 	import { type Demand } from '$lib/openapi/generated/model/demand';
 
-	import { createDefaultDemand } from 'src/lib/createDefaultDemand';
+	import { createDefaultDemand } from '$lib/parameters/createDefaultDemand';
 	import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
 
 	export let parameters: Demand;
@@ -15,7 +15,7 @@
 	export let yearlyHeatDemandGWh: number;
 
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;
-	
+
 	const profileInfoHoverPopupSettings: PopupSettings = {
 		event: 'hover',
 		target: 'profileInfoHoverPopup',
@@ -74,9 +74,8 @@
 <div data-popup="profileInfoHoverPopup">
 	<div class="card p-4 variant-filled-secondary z-50">
 		<p class="mb-2">
-			A CSV file with one header row and one column, giving - for each hour of the
-			year - the heat demand in MW. Therefore, the file will contain 8760+1 lines
-			like this:
+			A CSV file with one header row and one column, giving - for each hour of the year - the heat
+			demand in MW. Therefore, the file will contain 8760+1 lines like this:
 		</p>
 		<pre>Hourly heat demand [MW]
 2.25666336

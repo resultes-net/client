@@ -1,7 +1,8 @@
-import { createDefaultDemand } from "src/lib/createDefaultDemand";
-import { createDefaultWasteHeatRecoverySource } from "src/lib/createDefaultWasteHeatRecoverySource";
-import { PtesParametersInput } from "src/lib/openapi/generated/model/ptesParametersInput";
-import { createDefaultCollectorField } from "../../../../lib/createDefaultCollectorField";
+import { PtesParametersInput } from "$lib/openapi/generated/model/ptesParametersInput";
+import { createDefaultCollectorField } from "$lib/parameters/createDefaultCollectorField";
+import { createDefaultControl } from "$lib/parameters/createDefaultControl";
+import { createDefaultDemand } from "$lib/parameters/createDefaultDemand";
+import { createDefaultWasteHeatRecoverySource } from "$lib/parameters/createDefaultWasteHeatRecoverySource";
 
 
 export function createDefaultParameters(): PtesParametersInput {
@@ -22,14 +23,12 @@ export function createDefaultParameters(): PtesParametersInput {
                 bottom: 0.05,
             }
         },
-        control: {
-            demand_temperature_setpoint_degC: 80,
-            demand_delta_T_degC: 30,
-            storage_temperature_maximum_degC: 85,
-        }
+        control: createDefaultControl()
     };
 
     return defaultParameters;
 };
+
+
 
 

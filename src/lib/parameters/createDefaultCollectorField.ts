@@ -1,5 +1,5 @@
-import { createDefaultIam } from "src/lib/createDefaultIam";
-import type { CollectorField } from "src/lib/openapi/generated/model/collectorField";
+import type { CollectorField } from "$lib/openapi/generated/model/collectorField";
+import { createDefaultIam } from "$lib/parameters/createDefaultIam";
 
 export function createDefaultCollectorField(): CollectorField {
     return {

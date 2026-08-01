@@ -6,10 +6,10 @@
 
 	import type { CollectorField } from '$lib/openapi/generated/model/collectorField';
 
-	import { createDefaultIam } from 'src/lib/createDefaultIam';
-	import type { IAM } from 'src/lib/openapi/generated/model/iAM';
-	import { ScaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh as Area } from 'src/lib/openapi/generated/model/scaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh';
-	import { assert } from 'src/lib/utils';
+	import type { IAM } from '$lib/openapi/generated/model/iAM';
+	import { ScaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh as Area } from '$lib/openapi/generated/model/scaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh';
+	import { createDefaultIam } from '$lib/parameters/createDefaultIam';
+	import { assert } from '$lib/utils';
 	import { popupSizeApplyReferenceWidthIncludingBorder } from './common';
 	import type { OnAreParametersValidChanged } from './onAreParametersValidChanged';
 	import type { Phase } from './phase';
