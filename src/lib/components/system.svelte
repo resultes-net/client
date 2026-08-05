@@ -37,7 +37,6 @@
 	import { default as WhrSourceProfile } from '$lib/components/parameters/wasteHeatRecoverySource/profile.svelte';
 	import type { CreateSimulation } from '$lib/openapi/generated/model/createSimulation';
 	import type { Type } from '../openapi/generated/model/type';
-	import type { Values } from '../openapi/generated/model/values';
 
 	export let systemType: Type;
 
@@ -95,7 +94,6 @@
 	export let exports: Exports;
 	$: {
 		exports = {
-			parameters,
 			projectPhase,
 			yearlyHeatDemandGWh,
 			collectorFieldAreaM2,
