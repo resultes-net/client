@@ -139,7 +139,7 @@
 								<ProgressBar class="self-center" value={100} max={100} />
 							</div>
 							<span class="w-14">100/100</span>
-						{:else if (simulation.state === 'running-variations' || simulation.state === 'error') && simulation.progress < 100}
+						{:else if (simulation.state === 'running-variations' && simulation.progress < 100) || simulation.state === 'error'}
 							<div class="flex flex-row w-24">
 								<ProgressBar class="self-center" value={simulation.progress} max={100} />
 							</div>
