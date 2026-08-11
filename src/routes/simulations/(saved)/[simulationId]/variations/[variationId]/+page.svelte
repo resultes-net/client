@@ -444,30 +444,18 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>{$t('common.TesYearlyCharge')}</td>
-									<td>{(kpis.pitStoreQCharge_Tot / 1000 / 1000).toFixed(2)}</td>
-									<td>GWh</td>
-									<td />
-								</tr>
-								<tr>
-									<td>{$t('common.TesYearlyDischarge')}</td>
-									<td>{(kpis.pitStoreQDisharge_Tot / 1000 / 1000).toFixed(2)}</td>
-									<td>GWh</td>
-									<td />
-								</tr>
-								<tr>
-									<td>{$t('common.TesRoundTripEfficiency')}</td>
-									<td>{kpis.pitStoreEff.toFixed(2)}</td>
-									<td>-</td>
-									<td />
-								</tr>
-								<tr>
-									<td>{$t('common.TesYearlyNetHeatGain')}</td>
-									<td>{(kpis.pitStoreQAccum_kW_Tot / 1000 / 1000).toFixed(2)}</td>
-									<td>GWh</td>
-									<td />
-								</tr>
+								{#each kpis as kpi}
+									<tr>
+										<td>{kpi.description}</td>
+										<td>{kpi.formattedValue}</td>
+										<td>{kpi.unit}</td>
+										{#if kpi.note !== null}
+											<td>{kpi.note}</td>
+										{:else}
+											<td />
+										{/if}
+									</tr>
+								{/each}
 							</tbody>
 						</table>
 					</div>

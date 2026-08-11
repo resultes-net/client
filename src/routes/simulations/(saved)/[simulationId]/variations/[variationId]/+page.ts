@@ -1,21 +1,20 @@
 
+import { type Type } from '$lib/openapi/generated/model/type';
+import * as ptes from '$lib/outputs/ptes';
+import * as ttes from '$lib/outputs/ttes';
 import { redirect } from '@sveltejs/kit';
-import { FetchError, UnauthorizedError } from 'src/ajax';
+import { UnauthorizedError } from 'src/ajax';
 import { tryGetJson } from 'src/authAjax';
-import { createDisplayResults, loadMoreResults } from './displayResults';
-
-export interface Outputs {
-    pitStoreQCharge_Tot: number,
-    pitStoreQDisharge_Tot: number,
-    pitStoreEff: number,
-    pitStoreQAccum_kW_Tot: number,
-}
-
+import type { CreateDisplayResults } from 'src/lib/outputs/displayResults';
+import type { CreateKpis } from 'src/lib/outputs/kpis';
+import { loadMoreResults } from './displayResults';
 
 export const load = async ({ parent, url, fetch }) => {
     const { simulation, variation } = await parent();
 
     const parameters = await tryGetJson({ endPoint: `/simulations/${simulation.id}/parameters`, httpVerb: 'GET', fetchFunction: fetch });
+
+    const { createDisplayResults, createKpis } = getFactoryFunctions(simulation.type);
 
     let kpis = null;
     let displayResults = null;
@@ -24,7 +23,7 @@ export const load = async ({ parent, url, fetch }) => {
 
         try {
             [kpis,] = await Promise.all([
-                getKPIs(variation.id, fetch),
+                createKpis(variation.id, fetch),
                 loadMoreResults({ displayResults, variationId: variation.id, nResultsToLoad: 3 })
             ]);
         } catch (exception) {
@@ -41,17 +40,14 @@ export const load = async ({ parent, url, fetch }) => {
     return { parameters, variation, kpis, displayResults, shallDownload }
 }
 
-async function getKPIs(variationId: string, fetchFunction: (...args: any[]) => Promise<Response>): Promise<Outputs | null> {
-    const endPoint = `/variations/${variationId}/results/output.json`;
-
-    try {
-        const outputsArray = await tryGetJson<Outputs[]>({ endPoint, httpVerb: 'GET', fetchFunction });
-        return outputsArray[0];
-    } catch (exception) {
-        if (exception instanceof FetchError && !(exception instanceof UnauthorizedError)) {
-            return null;
-        }
-
-        throw exception;
+function getFactoryFunctions(systemType: Type): {
+    createDisplayResults: CreateDisplayResults,
+    createKpis: CreateKpis
+} {
+    switch (systemType) {
+        case 'ttes': return ttes;
+        case 'ptes': return ptes
+        case 'btes': throw new Error("BTES not supported ATM.");
+        default: throw new Error(`Unknown system type: ${systemType}.`);
     }
 }
