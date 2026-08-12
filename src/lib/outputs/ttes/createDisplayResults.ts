@@ -16,7 +16,6 @@ export const createDisplayResults: CreateDisplayResults = () => {
         { id: 'solarPMonthly', title: 'Collector power monthly', path: '/solar/solar-monthly-A4.png', data: { status: 'not-downloaded' } },
         { id: 'solarStagnation', title: 'Collector stagnation', path: '/solar/stagnation-hourly-A4.png', data: { status: 'not-downloaded' } },
         { id: 'source', title: 'Additional source power', path: '/source/source-hourly-A4.png', data: { status: 'not-downloaded' } },
-        { id: 'solarPMonthly', title: 'Collector power monthly', path: '/solar/solar-monthly-A4.png', data: { status: 'not-downloaded' } },
     ];
 
     return displayResults;
