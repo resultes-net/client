@@ -41,14 +41,14 @@
 	let activeParametersTab: ActiveParamtersTab = 'demand';
 
 	$: if (displayResults !== null) {
-		for (const r of displayResults) {
-			if (r.data === null || r.data.url !== null) {
+		for (const displayResult of displayResults) {
+			const data = displayResult.data;
+
+			if (data.status !== 'downloaded') {
 				continue;
 			}
 
-			const myData = r.data;
-
-			myData.url = URL.createObjectURL(myData.blob);
+			displayResult.data = { status: 'object-url-created', url: URL.createObjectURL(data.blob) };
 		}
 	}
 
@@ -166,11 +166,9 @@
 			return;
 		}
 
-		for (const displayResult of displayResults) {
-			const url = displayResult.data?.url ?? null;
-
-			if (url !== null) {
-				URL.revokeObjectURL(url);
+		for (const { data } of displayResults) {
+			if (data.status === 'object-url-created') {
+				URL.revokeObjectURL(data.url);
 			}
 		}
 	});
@@ -400,26 +398,24 @@
 										</tr>
 									</thead>
 									<tbody>
-										{#if parameters.values.type === 'ptes'}
-											<tr>
-												<td>{$t('common.demandSetpointTemperature')}</td>
-												<td>{parameters.values.control.demand_temperature_setpoint_degC}</td>
-												<td>°C</td>
-												<td />
-											</tr>
-											<tr>
-												<td>{$t('common.DemandDeltaT')}</td>
-												<td>{parameters.values.control.demand_delta_T_degC}</td>
-												<td>°C</td>
-												<td />
-											</tr>
-											<tr>
-												<td>{$t('common.maximumStorageTemperature')}</td>
-												<td>{parameters.values.control.storage_temperature_maximum_degC}</td>
-												<td>°C</td>
-												<td />
-											</tr>
-										{/if}
+										<tr>
+											<td>{$t('common.demandSetpointTemperature')}</td>
+											<td>{parameters.values.control.demand_temperature_setpoint_degC}</td>
+											<td>°C</td>
+											<td />
+										</tr>
+										<tr>
+											<td>{$t('common.DemandDeltaT')}</td>
+											<td>{parameters.values.control.demand_delta_T_degC}</td>
+											<td>°C</td>
+											<td />
+										</tr>
+										<tr>
+											<td>{$t('common.maximumStorageTemperature')}</td>
+											<td>{parameters.values.control.storage_temperature_maximum_degC}</td>
+											<td>°C</td>
+											<td />
+										</tr>
 									</tbody>
 								</table>
 							</div>
@@ -464,11 +460,17 @@
 				{/if}
 
 				{#if displayResults}
-					{#each displayResults as displayResult}
+					{#each displayResults as { id, title, data }}
 						<div class="mt-6">
-							<h5 class="h5" id={displayResult.id}>{displayResult.title}</h5>
-							{#if displayResult.data?.url}
-								<img src={displayResult.data.url} alt={displayResult.title} />
+							<h5 class="h5" {id}>{title}</h5>
+							{#if data.status === 'not-downloaded' || data.status == 'downloaded'}
+								<span>Downloading...</span>
+							{:else if data.status === 'not-found'}
+								<span>ERROR: Plot could not be found.</span>
+							{:else if data.status === 'object-url-created'}
+								<img src={data.url} alt={title} />
+							{:else}
+								<span>INTERNAL ERROR: Unknown display result status {data.status}</span>
 							{/if}
 						</div>
 					{/each}
