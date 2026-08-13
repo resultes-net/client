@@ -11,6 +11,8 @@
 
 	import { getBreadCrumbsStore } from './breadCrumbs';
 
+	import { t } from 'src/lib/i18n/translations';
+
 	import type { GetSimulation } from 'src/lib/openapi/generated/model/getSimulation';
 	import { TimeRemainingEstimator, millisecondsToMinutes } from './time';
 
@@ -19,8 +21,8 @@
 	const breadCrumbs = getBreadCrumbsStore();
 
 	breadCrumbs.set([
-		{ href: '/', text: 'Home' },
-		{ href: '/', text: 'Simulations' }
+		{ href: '/', text: t.get('common.Home') },
+		{ href: '/simulations', text: t.get('common.Simulations') }
 	]);
 
 	let simulations = data.simulations;
@@ -111,17 +113,17 @@
 <div class="w-4/5 mt-4 table-container self-center">
 	<table class="mt-4 table table-hover text-end">
 		<thead>
-			<tr>
-				<th>ID</th>
-				<th>Name</th>
-				<th>Created on</th>
-				<th>System</th>
-				<th>State</th>
-				<th>Progress</th>
-				<th>Time elapsed</th>
-				<th>Estimated time remaining</th>
-				<th>Estimated time done</th>
-				<th>Number of variations</th>
+			<tr class="!normal-case">
+				<th>{$t('common.ID')}</th>
+				<th>{$t('common.Name')}</th>
+				<th>{$t('common.CreatedOn')}</th>
+				<th>{$t('common.System')}</th>
+				<th>{$t('common.State')}</th>
+				<th>{$t('common.Progress')}</th>
+				<th>{$t('common.TimeElapsed')}</th>
+				<th>{$t('common.EstimatedTimeRemaining')}</th>
+				<th>{$t('common.EstimatedTimeDone')}</th>
+				<th>{$t('common.NumberOfVariations')}</th>
 			</tr>
 		</thead>
 		<tbody>

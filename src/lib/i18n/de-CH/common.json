@@ -70,5 +70,18 @@
     "IAM": "Einfallswinkel-Korrekturfaktor",
     "parameterFile": "Parameter-Datei",
     "WasteHeatRecoverySource": "Abwärme-Quelle",
-    "WasteHeatSupplyProfile": "Abwärmeangebots-Profile"
+    "WasteHeatSupplyProfile": "Abwärmeangebots-Profile",
+    "ID": "ID",
+    "Name": "Name",
+    "CreatedOn": "Erstellt",
+    "System": "System",
+    "State": "Status",
+    "Progress": "Fortschritt",
+    "TimeElapsed": "Verstrichene Zeit",
+    "EstimatedTimeRemaining": "Geschätzte verbleibende Zeit",
+    "EstimatedTimeDone": "Getschätztes Simulationsende",
+    "NumberOfVariations": "Anzahl Variationen",
+    "Home": "Start",
+    "Simulations": "Simulationen",
+    "Variations": "Variationen"
 }

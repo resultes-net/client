@@ -90,10 +90,10 @@
 	const breadCrumbs = getBreadCrumbsStore();
 
 	$: breadCrumbs.set([
-		{ href: '/', text: 'Home' },
-		{ href: '/simulations', text: 'Simulations' },
+		{ href: '/', text: t.get('common.Home') },
+		{ href: '/simulations', text: t.get('common.Simulations') },
 		{ href: `/simulations/${simulationId}`, text: simulationId },
-		{ text: 'Variations' },
+		{ text: t.get('common.Variations') },
 		{
 			href: `/simulations/${simulationId}/variations/${variationId}`,
 			text: variationId

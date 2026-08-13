@@ -70,5 +70,18 @@
     "IAM": "Incident Angle Modifier",
     "parameterFile": "parameter file",
     "WasteHeatRecoverySource": "Waste heat recovery source",
-    "WasteHeatSupplyProfile": "Waste heat supply profile"
+    "WasteHeatSupplyProfile": "Waste heat supply profile",
+    "ID": "ID",
+    "Name": "Name",
+    "CreatedOn": "Created on",
+    "System": "System",
+    "State": "State",
+    "Progress": "Progress",
+    "TimeElapsed": "Time elapsed",
+    "EstimatedTimeRemaining": "Estimated time remaining",
+    "EstimatedTimeDone": "Estimated time done",
+    "NumberOfVariations": "Number of variations",
+    "Home": "Home",
+    "Simulations": "Simulations",
+    "Variations": "Variations"
 }
