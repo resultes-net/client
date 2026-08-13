@@ -4,6 +4,7 @@
 	import { t } from '$lib/i18n/translations';
 	import type { ParametersOutput } from 'src/lib/openapi/generated/model/parametersOutput';
 	import PtesTableRows from './parametersTable/tes/PtesTableRows.svelte';
+	import TtesTableRows from './parametersTable/tes/TtesTableRows.svelte';
 
 	export let parameters: ParametersOutput;
 
@@ -35,40 +36,26 @@
 
 	<svelte:fragment slot="panel">
 		<div class="ltr:ml-[1%] rtl:mr-[1%]">
-			{#if activeParametersTab === 'demand'}
-				<div class="table-container">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>Description</th>
-								<th>Value</th>
-								<th>Unit</th>
-								<th>Notes</th>
-							</tr>
-						</thead>
-						<tbody>
+			<div class="table-container">
+				<table class="table table-hover [&_th]:text-nowrap [&_td]:text-nowrap">
+					<thead>
+						<tr>
+							<th>{$t('common.Description')}</th>
+							<th>{$t('common.Value')}</th>
+							<th>{$t('common.Unit')}</th>
+							<th>{$t('common.Notes')}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#if activeParametersTab === 'demand'}
 							<tr>
 								<td>{$t('common.yearlyHeatDemand')}</td>
 								<td>{yearlyHeatDemandGWh.toFixed(1)}</td>
 								<td> GWh </td>
 								<td />
 							</tr>
-						</tbody>
-					</table>
-				</div>
-			{:else if activeParametersTab === 'collector'}
-				{@const collector = parameters.values.collector_field}
-				<div class="table-container">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>Description</th>
-								<th>Value</th>
-								<th>Unit</th>
-								<th>Notes</th>
-							</tr>
-						</thead>
-						<tbody>
+						{:else if activeParametersTab === 'collector'}
+							{@const collector = parameters.values.collector_field}
 							<tr>
 								<td>{$t('common.collectorArea')}</td>
 								<td>{collector.area.value}</td>
@@ -137,39 +124,21 @@
 								<td><span>kJ m<sup>-2</sup>K<sup>-1</sup></span></td>
 								<td />
 							</tr>
-						</tbody>
-					</table>
-				</div>
-			{:else if activeParametersTab === 'storage'}
-				<div class="table-container">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>Description</th>
-								<th>Value</th>
-								<th>Unit</th>
-								<th>Notes</th>
-							</tr>
-						</thead>
-						<tbody>
-							{#if parameters.values.type === 'ptes'}
-								<PtesTableRows {parameters} {yearlyHeatDemandMWh} {collectorFieldAreaM2} />
+						{:else if activeParametersTab === 'storage'}
+							{#if parameters.values.type === 'ttes'}
+								<TtesTableRows
+									parameters={parameters.values.storage}
+									{yearlyHeatDemandMWh}
+									{collectorFieldAreaM2}
+								/>
+							{:else if parameters.values.type === 'ptes'}
+								<PtesTableRows
+									parameters={parameters.values.storage}
+									{yearlyHeatDemandMWh}
+									{collectorFieldAreaM2}
+								/>
 							{/if}
-						</tbody>
-					</table>
-				</div>
-			{:else if activeParametersTab === 'control'}
-				<div class="table-container">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>Description</th>
-								<th>Value</th>
-								<th>Unit</th>
-								<th>Notes</th>
-							</tr>
-						</thead>
-						<tbody>
+						{:else if activeParametersTab === 'control'}
 							<tr>
 								<td>{$t('common.demandSetpointTemperature')}</td>
 								<td>{parameters.values.control.demand_temperature_setpoint_degC}</td>
@@ -188,12 +157,12 @@
 								<td>°C</td>
 								<td />
 							</tr>
-						</tbody>
-					</table>
-				</div>
-			{:else}
-				ERROR: Unknown tab `{activeParametersTab}`.
-			{/if}
+						{:else}
+							ERROR: Unknown tab `{activeParametersTab}`.
+						{/if}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</svelte:fragment>
 </TabGroup>

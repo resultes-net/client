@@ -12,7 +12,7 @@ export function createDefaultCollectorField(
         inclination_deg: 45.0,
         nominal_massflow: {
             scaling: "relative_to_collector_area_kg_per_h_m2",
-            value: 15.0,
+            value: 20.0,
         },
         orientation_east_west_deg: 0.0,
         performance_coefficients: {

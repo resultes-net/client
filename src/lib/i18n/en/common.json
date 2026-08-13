@@ -86,5 +86,9 @@
     "Variations": "Variations",
     "Simulation": "Simulation",
     "Variation": "Variation",
-    "Parameters": "Parameters"
+    "Parameters": "Parameters",
+    "Description": "Description",
+    "Value": "Value",
+    "Unit": "Unit",
+    "Notes": "Notes"
 }

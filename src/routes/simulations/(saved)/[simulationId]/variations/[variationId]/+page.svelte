@@ -2,8 +2,6 @@
 	import { onDestroy, onMount } from 'svelte';
 
 	import {
-		Tab,
-		TabGroup,
 		TableOfContents,
 		getModalStore,
 		popup,
@@ -192,20 +190,18 @@
 			use:tocCrawler={{ mode: 'generate', key: [variation.state, kpis, displayResults] }}
 		>
 			<h5 class="h5">{$t('common.Parameters')}</h5>
-
 			<ParametersTable {parameters} />
-
 			{#if variation.state === 'done'}
 				<h5 class="h5 mt-6">{$t('common.KPIs')}</h5>
 				{#if kpis}
 					<div class="table-container">
-						<table class="table table-hover">
+						<table class="table table-hover [&_th]:text-nowrap [&_td]:text-nowrap">
 							<thead>
 								<tr>
-									<th>Description</th>
-									<th>Value</th>
-									<th>Unit</th>
-									<th>Notes</th>
+									<th>{$t('common.Description')}</th>
+									<th>{$t('common.Value')}</th>
+									<th>{$t('common.Unit')}</th>
+									<th>{$t('common.Notes')}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -227,7 +223,6 @@
 				{:else}
 					<span>{$t('common.KPIsNotAvailable')}</span>
 				{/if}
-
 				{#if displayResults}
 					{#each displayResults as { id, title, data }}
 						<div class="mt-6">
