@@ -1,4 +1,6 @@
 {
     "createSimulation": "Create simulation with tank thermal energy storage",
-    "diagram": "The diagram for the TTES system"
+    "diagram": "The diagram for the TTES system",
+    "HeightToDiameterRatio": "Height to diameter ratio",
+    "InsulationThickness": "Insulation thickness"
 }

@@ -10,7 +10,7 @@ export function createDefaultParameters(): PtesParametersInput {
         type: "ptes",
         time: { start: 0, stop: 3 * 365 * 24, dt_sim: 5 / 60 },
         demand: createDefaultDemand(),
-        collector_field: createDefaultCollectorField(),
+        collector_field: createDefaultCollectorField({ area_relative_to_demand_m2_per_MWh: 2.0 }),
         waste_heat_recovery_source: createDefaultWasteHeatRecoverySource(),
         storage: {
             volume: {
@@ -23,7 +23,7 @@ export function createDefaultParameters(): PtesParametersInput {
                 bottom: 0.05,
             }
         },
-        control: createDefaultControl()
+        control: createDefaultControl( { storage_temperature_maximum_degC: 85 })
     };
 
     return defaultParameters;

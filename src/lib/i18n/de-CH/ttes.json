@@ -1,4 +1,6 @@
 {
     "createSimulation": "Simulation mit Tank-Wärmespeicher erstellen",
-    "diagram": "Das Diagram des TTES-Systems"
+    "diagram": "Das Diagram des TTES-Systems",
+    "HeightToDiameterRatio": "Verhältnis Höhe : Durchmesser",
+    "InsulationThickness": "Dicke Isolationsschicht"
 }

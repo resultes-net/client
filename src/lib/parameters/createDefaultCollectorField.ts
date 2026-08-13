@@ -1,11 +1,13 @@
 import type { CollectorField } from "$lib/openapi/generated/model/collectorField";
 import { createDefaultIam } from "$lib/parameters/createDefaultIam";
 
-export function createDefaultCollectorField(): CollectorField {
+export function createDefaultCollectorField(
+    { area_relative_to_demand_m2_per_MWh }: { area_relative_to_demand_m2_per_MWh: number }
+): CollectorField {
     return {
         area: {
             scaling: "relative_to_demand_m2_per_MWh",
-            value: 2.0
+            value: area_relative_to_demand_m2_per_MWh
         },
         inclination_deg: 45.0,
         nominal_massflow: {
