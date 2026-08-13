@@ -83,5 +83,8 @@
     "NumberOfVariations": "Anzahl Variationen",
     "Home": "Start",
     "Simulations": "Simulationen",
-    "Variations": "Variationen"
+    "Variations": "Variationen",
+    "Simulation": "Simulation",
+    "Variation": "Variation",
+    "Parameters": "Parameter"
 }

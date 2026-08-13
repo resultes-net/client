@@ -98,7 +98,8 @@
 <div class="w-4/5 mt-6 table-container self-center">
 	<div class="flex flex-row">
 		<h2 class="h2">
-			Simulation {simulation.id}
+			{$t('common.Simulation')}
+			{simulation.id}
 		</h2>
 		{#if simulation.state === 'error'}
 			<div class="self-center" use:popup={simulationMenuPopupSettings}><EllipsisVertical /></div>
@@ -109,13 +110,13 @@
 			<LoaderCircle class="self-center animate-spin ml-1" />
 		{/if}
 	</div>
-	<h3 class="h3 mt-4">Variations</h3>
+	<h3 class="h3 mt-4">{$t('common.Variations')}</h3>
 	<table class="mt-4 table table-hover">
 		<thead>
 			<tr>
-				<th>ID</th>
-				<th>Created on</th>
-				<th>State</th>
+				<th>{$t('common.ID')}</th>
+				<th>{$t('common.CreatedOn')}</th>
+				<th>{$t('common.State')}</th>
 			</tr>
 		</thead>
 		<tbody>

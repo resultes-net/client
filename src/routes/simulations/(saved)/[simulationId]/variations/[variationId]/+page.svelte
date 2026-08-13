@@ -179,7 +179,7 @@
 
 	<div class="ml-6 flex flex-col">
 		<div class="flex flex-row">
-			<h2 class="h2">Variation {variationId}</h2>
+			<h2 class="h2">{$t('common.Variation')} {variationId}</h2>
 			{#if variation.state !== 'done' && variation.state !== 'error'}
 				<div class="self-center"><EllipsisVertical /></div>
 				<LoaderCircle class="self-center animate-spin ml-1" />
@@ -191,7 +191,7 @@
 			class="mt-8"
 			use:tocCrawler={{ mode: 'generate', key: [variation.state, kpis, displayResults] }}
 		>
-			<h5 class="h5">Parameters</h5>
+			<h5 class="h5">{$t('common.Parameters')}</h5>
 
 			<ParametersTable {parameters} />
 
