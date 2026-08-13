@@ -289,11 +289,9 @@ ${values}
 	</div>
 
 	{#if projectPhase === 'design'}
-		<hr class="!border-t-2 mt-6 mb-4" />
-
 		<h7 class="h7">{$t('common.collectorPerformanceCoefficients')}</h7>
 		<div
-			class="m-2 border rounded-lg dark:border-surface-600 light:boder-surface-300 p-2 grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]"
+			class="grid grid-cols-[--input-grid-cols] border rounded-lg border-surface-300-600-token items-center gap-y-[--input-gap-y] m-2 p-2"
 		>
 			<label for="perf-coeff-a0">{$t('common.perfCoeffA0')}</label>
 			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">

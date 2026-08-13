@@ -94,7 +94,7 @@
 	</div>
 </div>
 
-<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]">
+<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] m-2 p-2">
 	<p>{$t('common.WasteHeatSupplyProfile')}</p>
 	<div class="flex flex-col mb-2">
 		<div class="input-group input-group-divider grid grid-cols-[auto_1fr_auto] items-center gap-2">
