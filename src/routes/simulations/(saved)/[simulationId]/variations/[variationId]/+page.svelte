@@ -86,10 +86,10 @@
 	const breadCrumbs = getBreadCrumbsStore();
 
 	$: breadCrumbs.set([
-		{ href: '/', text: t.get('common.Home') },
-		{ href: '/simulations', text: t.get('common.Simulations') },
+		{ href: '/', text: $t('common.Home') },
+		{ href: '/simulations', text: $t('common.Simulations') },
 		{ href: `/simulations/${simulationId}`, text: simulationId },
-		{ text: t.get('common.Variations') },
+		{ text: $t('common.Variations') },
 		{
 			href: `/simulations/${simulationId}/variations/${variationId}`,
 			text: variationId
@@ -207,7 +207,7 @@
 							<tbody>
 								{#each kpis as kpi}
 									<tr>
-										<td>{kpi.description}</td>
+										<td>{$t(kpi.descriptionKey)}</td>
 										<td>{kpi.formattedValue}</td>
 										<td>{kpi.unit}</td>
 										{#if kpi.note !== null}

@@ -1,5 +1,5 @@
 export interface Kpi {
-    description: string,
+    descriptionKey: string,
     formattedValue: string,
     unit: string,
     note: string | null,

@@ -1,4 +1,3 @@
-import { t } from '$lib/i18n/translations';
 import { FetchError, UnauthorizedError } from 'src/ajax';
 import { tryGetJson } from 'src/authAjax';
 import type { CreateKpis, Kpi } from 'src/lib/outputs/kpis';
@@ -19,10 +18,10 @@ export const createKpis: CreateKpis = async (variationId, fetchFunction) => {
         const outputs = outputsArray[0];
 
         const kpis: Kpi[] = [
-            { description: t.get('common.TesYearlyCharge'), formattedValue: (outputs.pitStoreQCharge_Tot / 1000 / 1000).toFixed(2), unit: 'GWh', note: null },
-            { description: t.get('common.TesYearlyDischarge'), formattedValue: (outputs.pitStoreQDisharge_Tot / 1000 / 1000).toFixed(2), unit: 'GWh', note: null },
-            { description: t.get('common.TesRoundTripEfficiency'), formattedValue: outputs.pitStoreEff.toFixed(2), unit: 'GWh', note: null },
-            { description: t.get('common.TesYearlyNetHeatGain'), formattedValue: (outputs.pitStoreQAccum_kW_Tot / 1000 / 1000).toFixed(2), unit: 'GWh', note: null },
+            { descriptionKey: 'common.TesYearlyCharge', formattedValue: (outputs.pitStoreQCharge_Tot / 1000 / 1000).toFixed(2), unit: 'GWh', note: null },
+            { descriptionKey: 'common.TesYearlyDischarge', formattedValue: (outputs.pitStoreQDisharge_Tot / 1000 / 1000).toFixed(2), unit: 'GWh', note: null },
+            { descriptionKey: 'common.TesRoundTripEfficiency', formattedValue: outputs.pitStoreEff.toFixed(2), unit: 'GWh', note: null },
+            { descriptionKey: 'common.TesYearlyNetHeatGain', formattedValue: (outputs.pitStoreQAccum_kW_Tot / 1000 / 1000).toFixed(2), unit: 'GWh', note: null },
         ]
 
         return kpis;

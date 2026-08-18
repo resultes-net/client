@@ -21,8 +21,8 @@
 	const breadCrumbs = getBreadCrumbsStore();
 
 	breadCrumbs.set([
-		{ href: '/', text: t.get('common.Home') },
-		{ href: '/simulations', text: t.get('common.Simulations') }
+		{ href: '/', text: $t('common.Home') },
+		{ href: '/simulations', text: $t('common.Simulations') }
 	]);
 
 	let simulations = data.simulations;
