@@ -1,5 +1,6 @@
 
 import { type Type } from '$lib/openapi/generated/model/type';
+import * as btes from '$lib/outputs/btes';
 import * as ptes from '$lib/outputs/ptes';
 import * as ttes from '$lib/outputs/ttes';
 import { redirect } from '@sveltejs/kit';
@@ -48,7 +49,7 @@ function getFactoryFunctions(systemType: Type): {
     switch (systemType) {
         case 'ttes': return ttes;
         case 'ptes': return ptes
-        case 'btes': throw new Error("BTES not supported ATM.");
+        case 'btes': return btes;
         default: throw new Error(`Unknown system type: ${systemType}.`);
     }
 }
