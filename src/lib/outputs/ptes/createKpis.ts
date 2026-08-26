@@ -20,7 +20,7 @@ export const createKpis: CreateKpis = async (variationId, fetchFunction) => {
         const kpis: Kpi[] = [
             { descriptionKey: 'common.TesYearlyCharge', formattedValue: (outputs.pitStoreQCharge_Tot / 1000 / 1000).toFixed(2), unit: 'GWh', note: null },
             { descriptionKey: 'common.TesYearlyDischarge', formattedValue: (outputs.pitStoreQDisharge_Tot / 1000 / 1000).toFixed(2), unit: 'GWh', note: null },
-            { descriptionKey: 'common.TesRoundTripEfficiency', formattedValue: outputs.pitStoreEff.toFixed(2), unit: 'GWh', note: null },
+            { descriptionKey: 'common.TesRoundTripEfficiency', formattedValue: outputs.pitStoreEff.toFixed(2), unit: '-', note: null },
             { descriptionKey: 'common.TesYearlyNetHeatGain', formattedValue: (outputs.pitStoreQAccum_kW_Tot / 1000 / 1000).toFixed(2), unit: 'GWh', note: null },
         ]
 

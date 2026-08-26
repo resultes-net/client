@@ -209,9 +209,9 @@
 									<tr>
 										<td>{$t(kpi.descriptionKey)}</td>
 										<td>{kpi.formattedValue}</td>
-										<td>{kpi.unit}</td>
+										<td>{@html kpi.unit}</td>
 										{#if kpi.note !== null}
-											<td>{kpi.note}</td>
+											<td>{@html kpi.note}</td>
 										{:else}
 											<td />
 										{/if}

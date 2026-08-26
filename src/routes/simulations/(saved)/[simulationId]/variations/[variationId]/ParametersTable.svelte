@@ -66,7 +66,7 @@
 									<td />
 								{:else if collector.area.scaling == 'relative_to_demand_m2_per_MWh'}
 									<td>
-										m<sup>2</sup>MWh<sup>-1</sup>
+										m<sup>2</sup> MWh<sup>-1</sup>
 									</td>
 									<td
 										>{collectorFieldAreaM2.toFixed(0)}
