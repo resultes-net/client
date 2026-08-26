@@ -40,7 +40,7 @@ async function downloadResultBlob({ resultPath, variationId, accept, fetchFuncti
     }
 
     const variationEndPoint = `/variations/${variationId}`
-    const endPoint = `${variationEndPoint}/results/${resultPath}`;
+    const endPoint = `${variationEndPoint}/results${resultPath}`;
 
     try {
         const blob = await getBlob({
