@@ -86,7 +86,6 @@
 	const breadCrumbs = getBreadCrumbsStore();
 
 	$: breadCrumbs.set([
-		{ href: '/', text: $t('common.Home') },
 		{ href: '/simulations', text: $t('common.Simulations') },
 		{ href: `/simulations/${simulationId}`, text: simulationId },
 		{ text: $t('common.Variations') },
@@ -192,7 +191,7 @@
 			<h5 class="h5">{$t('common.Parameters')}</h5>
 			<ParametersTable {parameters} />
 			{#if variation.state === 'done'}
-				<h5 class="h5 mt-6">{$t('common.KPIs')}</h5>
+				<h5 class="h5 mt-6">{$t('common.YearlyKPIs')}</h5>
 				{#if kpis}
 					<div class="table-container">
 						<table class="table table-hover [&_th]:text-nowrap [&_td]:text-nowrap">

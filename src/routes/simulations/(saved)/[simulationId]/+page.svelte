@@ -23,7 +23,6 @@
 	const breadCrumbs = getBreadCrumbsStore();
 
 	$: breadCrumbs.set([
-		{ href: '/', text: $t('common.Home') },
 		{ href: '/simulations', text: $t('common.Simulations') },
 		{ href: `/simulations/${simulation.id}`, text: simulation.id }
 	]);
