@@ -88,5 +88,7 @@
     "HeatPump": "Wärmepumpe",
     "Boiler": "Boiler",
     "DistrictHeatingNetwork": "Fernwärmenetz",
-    "Losses": "Verluste"
+    "Losses": "Verluste",
+    "PowerOutput": "Leistungsabgabe",
+    "CollectorField": "Kollektorfeld"
 }

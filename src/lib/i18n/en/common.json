@@ -88,5 +88,7 @@
     "HeatPump": "Heat pump",
     "Boiler": "Boiler",
     "DistrictHeatingNetwork": "District heating network",
-    "Losses": "Losses"
+    "Losses": "Losses",
+    "PowerOutput": "Power output",
+    "CollectorField": "Collector field"
 }

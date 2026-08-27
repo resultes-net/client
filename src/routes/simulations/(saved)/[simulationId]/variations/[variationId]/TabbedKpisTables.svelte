@@ -12,7 +12,7 @@
 		const totalEnergyInput_GWh =
 			kpis.boilerPower_GWh +
 			kpis.collectorField.outputPower_GWh +
-			(kpis.type === 'ptes' || kpis.type === 'btes' ? kpis.heatPump.condenserPower_GWh : 0);
+			(kpis.type === 'ptes' || kpis.type === 'btes' ? kpis.heatPump.compressorPower_GWh : 0);
 		const relative_percent = (absolute / totalEnergyInput_GWh) * 100;
 		const value = relative_percent.toFixed(2);
 		return { value };
@@ -25,7 +25,7 @@
 <TabGroup>
 	<Tab bind:group={activeParametersTab} name="demand" value="demand">{$t('common.demand')}</Tab>
 	<Tab bind:group={activeParametersTab} name="collector" value="collector"
-		>{$t('common.collector')}</Tab
+		>{$t('common.CollectorField')}</Tab
 	>
 	<Tab bind:group={activeParametersTab} name="storage" value="storage">{$t('common.storage')}</Tab>
 	{#if kpis.type === 'ptes' || kpis.type === 'btes'}
@@ -54,7 +54,7 @@
 						{#if activeParametersTab === 'demand'}
 							{@const demand = kpis.demand}
 							<tr>
-								<td>{$t('common.yearlyHeatDemand')}</td>
+								<td>{$t('common.demand')}</td>
 								<td>{demand.demand_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
@@ -62,17 +62,30 @@
 										'kpis.percentageOfEnergyInputs',
 										getRelativeToDemandAndLossesParam(demand.demand_GWh)
 									)}
-								</td>							</tr>
+								</td>
+							</tr>
+							<tr>
+								<td>{$t('kpis.AverageSupplyTemperature')}</td>
+								<td>{demand.averageSupplyTemp_degC.toFixed(2)}</td>
+								<td>GWh</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>{$t('kpis.AverageReturnTemperature')}</td>
+								<td>{demand.averageReturnTemp_degC.toFixed(2)}</td>
+								<td>GWh</td>
+								<td></td>
+							</tr>
 						{:else if activeParametersTab === 'collector'}
 							{@const collectorField = kpis.collectorField}
 							<tr>
-								<td>{$t('kpis.CollectorFieldYearlySpecificTotalSolarIrradiation')}</td>
+								<td>{$t('kpis.TotalSolarIrradiationOnCollector')}</td>
 								<td>{collectorField.specificTotalIrradiation_MWh_per_m2.toFixed(2)}</td>
 								<td>MWh m<sup>-2</sup></td>
 								<td></td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.CollectorFieldSpecificTotalPowerOutput')}</td>
+								<td>{$t('kpis.SpecificCollectorPowerOutput')}</td>
 								<td>{collectorField.specificOutputPower_MWh_per_m2.toFixed(2)}</td>
 								<td>MWh m<sup>-2</sup></td>
 								<td></td>
@@ -84,7 +97,7 @@
 								<td></td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.CollectorFieldYearlyTotalPowerOutput')}</td>
+								<td>{$t('common.PowerOutput')}</td>
 								<td>{collectorField.outputPower_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
@@ -97,13 +110,13 @@
 						{:else if activeParametersTab === 'storage'}
 							{@const storage = kpis.storage}
 							<tr>
-								<td>{$t('kpis.TesYearlyCharge')}</td>
+								<td>{$t('kpis.GrossCharge')}</td>
 								<td>{storage.charged_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td></td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.TesYearlyDischarge')}</td>
+								<td>{$t('kpis.GrossDischarge')}</td>
 								<td>{storage.discharged_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
@@ -117,22 +130,32 @@
 								<td>{$t('common.Losses')}</td>
 								<td>{storage.losses_GWh.toFixed(2)}</td>
 								<td>GWh</td>
-								<td></td>
+								<td>
+									{$t(
+										'kpis.percentageOfEnergyInputs',
+										getRelativeToDemandAndLossesParam(storage.losses_GWh)
+									)}
+								</td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.TesYearlyNetHeatGain')}</td>
+								<td>{$t('kpis.NetHeatGain')}</td>
 								<td>{storage.netHeatGain_GWh.toFixed(2)}</td>
 								<td>GWh</td>
-								<td></td>
+								<td>
+									{$t(
+										'kpis.percentageOfEnergyInputs',
+										getRelativeToDemandAndLossesParam(storage.netHeatGain_GWh)
+									)}
+								</td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.TesRoundTripEfficiency')}</td>
+								<td>{$t('kpis.RoundTripEfficiency')}</td>
 								<td>{storage.roundTripEfficiency_1.toFixed(2)}</td>
 								<td>-</td>
 								<td></td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.TesNumberOfCyclesOverOneYear')}</td>
+								<td>{$t('kpis.NumberOfChargingDischargingCycles')}</td>
 								<td>{storage.nChargingCycles_1.toFixed(2)}</td>
 								<td>-</td>
 								<td></td>
@@ -140,13 +163,13 @@
 						{:else if activeParametersTab === 'heatPump'}
 							{@const heatPump = kpis.heatPump}
 							<tr>
-								<td>{$t('kpis.HPYearlyEvaporatorPower')}</td>
+								<td>{$t('kpis.EvaporatorPower')}</td>
 								<td>{heatPump.evaporatorPower_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td></td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.HPYearlyCompressorPower')}</td>
+								<td>{$t('kpis.CompressorPower')}</td>
 								<td>{heatPump.compressorPower_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
@@ -157,7 +180,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.HPYearlyCondenserPower')}</td>
+								<td>{$t('kpis.CondenserPower')}</td>
 								<td>{heatPump.condenserPower_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
@@ -175,7 +198,7 @@
 							</tr>
 						{:else if activeParametersTab === 'boiler'}
 							<tr>
-								<td>{$t('kpis.BoilerAnnualPower')}</td>
+								<td>{$t('common.PowerOutput')}</td>
 								<td>{kpis.boilerPower_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
@@ -187,7 +210,7 @@
 							</tr>
 						{:else if activeParametersTab === 'district'}
 							<tr>
-								<td>{$t('kpis.DistrictHeatingLosses')}</td>
+								<td>{$t('common.Losses')}</td>
 								<td>{kpis.districtHeatingLosses_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
