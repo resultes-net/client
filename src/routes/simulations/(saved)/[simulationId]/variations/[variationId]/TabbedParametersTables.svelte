@@ -3,8 +3,8 @@
 
 	import { t } from '$lib/i18n/translations';
 	import type { ParametersOutput } from 'src/lib/openapi/generated/model/parametersOutput';
-	import PtesTableRows from './parametersTable/tes/PtesTableRows.svelte';
-	import TtesTableRows from './parametersTable/tes/TtesTableRows.svelte';
+	import PtesTableRows from './tabbedParametersTables/tes/PtesTableRows.svelte';
+	import TtesTableRows from './tabbedParametersTables/tes/TtesTableRows.svelte';
 
 	export let parameters: ParametersOutput;
 

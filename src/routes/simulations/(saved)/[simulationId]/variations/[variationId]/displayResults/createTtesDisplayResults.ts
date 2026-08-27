@@ -1,7 +1,7 @@
 import type { CreateDisplayResults, DisplayResult } from '$lib/outputs/displayResults';
 
 
-export const createDisplayResults: CreateDisplayResults = () => {
+export const createTtesDisplayResults: CreateDisplayResults = () => {
     const displayResults: DisplayResult[] = [
         { id: 'energyBalance', title: 'Monthly energy balance of the system', path: '/balance/balance-monthly-A4.png', data: { status: 'not-downloaded' } },
         { id: 'systemQt', title: 'System Q vs. T plot', path: '/q_vs_t/q_t-A4.png', data: { status: 'not-downloaded' } },

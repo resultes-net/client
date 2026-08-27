@@ -24,10 +24,12 @@
 	import type { PageData } from './$types.js';
 	import { loadMoreResults } from './displayResults';
 	import DownladAllResults from './DownloadAllResults.svelte';
-	import ParametersTable from './ParametersTable.svelte';
+	import TabbedKpisTables from './TabbedKpisTables.svelte';
+	import ParametersTable from './TabbedParametersTables.svelte';
 
 	export let data;
 
+	const systemType = data.systemType;
 	const parameters = data.parameters;
 
 	$: variation = data.variation;
@@ -177,6 +179,7 @@
 	<div class="ml-6 flex flex-col">
 		<div class="flex flex-row">
 			<h2 class="h2">{$t('common.Variation')} {variationId}</h2>
+			<span class="ml-2 font-mono text-xs content-start">{systemType.toLocaleUpperCase()}</span>
 			{#if variation.state !== 'done' && variation.state !== 'error'}
 				<div class="self-center"><EllipsisVertical /></div>
 				<LoaderCircle class="self-center animate-spin ml-1" />
@@ -191,36 +194,11 @@
 			<h5 class="h5">{$t('common.Parameters')}</h5>
 			<ParametersTable {parameters} />
 			{#if variation.state === 'done'}
-				<h5 class="h5 mt-6">{$t('common.YearlyKPIs')}</h5>
+				<h5 class="h5 mt-6">{$t('kpis.YearlyKPIs')}</h5>
 				{#if kpis}
-					<div class="table-container">
-						<table class="table table-hover [&_th]:text-nowrap [&_td]:text-nowrap">
-							<thead>
-								<tr>
-									<th>{$t('common.Description')}</th>
-									<th>{$t('common.Value')}</th>
-									<th>{$t('common.Unit')}</th>
-									<th>{$t('common.Notes')}</th>
-								</tr>
-							</thead>
-							<tbody>
-								{#each kpis as kpi}
-									<tr>
-										<td>{$t(kpi.descriptionKey)}</td>
-										<td>{kpi.formattedValue}</td>
-										<td>{@html kpi.unit}</td>
-										{#if kpi.note !== null}
-											<td>{@html kpi.note}</td>
-										{:else}
-											<td />
-										{/if}
-									</tr>
-								{/each}
-							</tbody>
-						</table>
-					</div>
+					<TabbedKpisTables {kpis} />
 				{:else}
-					<span>{$t('common.KPIsNotAvailable')}</span>
+					<span>{$t('kpis.KPIsNotAvailable')}</span>
 				{/if}
 				{#if displayResults}
 					{#each displayResults as { id, title, data }}

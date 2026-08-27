@@ -1,0 +1,23 @@
+{
+    "YearlyKPIs": "Yearly Key Performance Indicators",
+    "KPIsNotAvailable": "KPIs not available",
+    "TesYearlyCharge": "Yearly gross charge into storage",
+    "TesYearlyDischarge": "Yearly gross discharge out of storage",
+    "Losses": "Losses",
+    "TesRoundTripEfficiency": "Yearly round-trip efficiency of storage",
+    "TesYearlyNetHeatGain": "Yearly net heat gain of storage",
+    "TesNumberOfCyclesOverOneYear": "Number of charging-discharging cycles over one year",
+    "CollectorFieldYearlySpecificTotalSolarIrradiation": "Yearly total solar irradiation on collector",
+    "CollectorFieldYearlyTotalPowerOutput": "Yearly collector power output",
+    "CollectorFieldSpecificTotalPowerOutput": "Specific collector power output",
+    "CollectorFieldStagnationDays": "Number of days in which collector field was in stagnation",
+    "HPYearlyEvaporatorPower": "Heat pump's annual evaporator power",
+    "HPYearlyCompressorPower": "Heat pump's annual compressor power",
+    "HPYearlyCondenserPower": "Heat pump's annual condenser power",
+    "AnnualPerformanceFactor": "Annual Performance Factor (APF)",
+    "BoilerAnnualPower": "Boiler's annual power output",
+    "YearlyAverageSupplyTemperature": "Yearly average supply temperature",
+    "YearlyAverageReturnTemperature": "Yearly average return temperature",
+    "DistrictHeatingLosses": "District heating losses",
+    "percentageOfEnergyInputs": "{{value:number}}% of energy inputs"
+}

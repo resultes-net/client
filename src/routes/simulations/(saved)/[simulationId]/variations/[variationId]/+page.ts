@@ -1,15 +1,18 @@
 
 import { type Type } from '$lib/openapi/generated/model/type';
-import * as btes from '$lib/outputs/btes';
-import * as ptes from '$lib/outputs/ptes';
-import * as ttes from '$lib/outputs/ttes';
 import { redirect } from '@sveltejs/kit';
 import { UnauthorizedError } from 'src/ajax';
 import { tryGetJson } from 'src/authAjax';
 import type { ParametersOutput } from 'src/lib/openapi/generated/model/parametersOutput';
-import type { CreateDisplayResults } from 'src/lib/outputs/displayResults';
-import type { CreateKpis } from 'src/lib/outputs/kpis';
 import { loadMoreResults } from './displayResults';
+import { createBtesDisplayResults } from './displayResults/createBtesDisplayResults';
+import { createPtesDisplayResults } from './displayResults/createPtesDisplayResults';
+import { createTtesDisplayResults } from './displayResults/createTtesDisplayResults';
+import type { CreateDisplayResults } from './displayResults/displayResults';
+import { createBtesKpis } from './tabbedKpisTables/createBtesKpis';
+import { createPtesKpis } from './tabbedKpisTables/createPtesKpis';
+import { createTtesKpis } from './tabbedKpisTables/createTtesKpis';
+import type { CreateKpis } from './tabbedKpisTables/kpis';
 
 export const load = async ({ parent, url, fetch }) => {
     const { simulation, variation } = await parent();
@@ -39,7 +42,7 @@ export const load = async ({ parent, url, fetch }) => {
 
     const shallDownload = url.searchParams.get("download") === '';
 
-    return { parameters, variation, kpis, displayResults, shallDownload }
+    return { systemType: simulation.type, parameters, variation, kpis, displayResults, shallDownload }
 }
 
 function getFactoryFunctions(systemType: Type): {
@@ -47,9 +50,9 @@ function getFactoryFunctions(systemType: Type): {
     createKpis: CreateKpis
 } {
     switch (systemType) {
-        case 'ttes': return ttes;
-        case 'ptes': return ptes
-        case 'btes': return btes;
+        case 'ttes': return { createDisplayResults: createTtesDisplayResults, createKpis: createTtesKpis };
+        case 'ptes': return { createDisplayResults: createPtesDisplayResults, createKpis: createPtesKpis };
+        case 'btes': return { createDisplayResults: createBtesDisplayResults, createKpis: createBtesKpis };
         default: throw new Error(`Unknown system type: ${systemType}.`);
     }
 }

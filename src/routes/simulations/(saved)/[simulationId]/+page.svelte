@@ -100,6 +100,7 @@
 			{$t('common.Simulation')}
 			{simulation.id}
 		</h2>
+		<span class="ml-2 font-mono text-xs content-start">{simulation.type.toLocaleUpperCase()}</span>
 		{#if simulation.state === 'error'}
 			<div class="self-center" use:popup={simulationMenuPopupSettings}><EllipsisVertical /></div>
 		{:else}
