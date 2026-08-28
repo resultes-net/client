@@ -5,6 +5,7 @@
 	import type { ParametersOutput } from 'src/lib/openapi/generated/model/parametersOutput';
 	import PtesTableRows from './tabbedParametersTables/tes/PtesTableRows.svelte';
 	import TtesTableRows from './tabbedParametersTables/tes/TtesTableRows.svelte';
+	import VolumeRows from './tabbedParametersTables/tes/VolumeRows.svelte';
 
 	export let parameters: ParametersOutput;
 
@@ -125,18 +126,27 @@
 								<td />
 							</tr>
 						{:else if activeParametersTab === 'storage'}
-							{#if parameters.values.type === 'ttes'}
+							{@const systemType = parameters.values.type}
+							{#if systemType === 'ttes'}
 								<TtesTableRows
 									parameters={parameters.values.storage}
 									{yearlyHeatDemandMWh}
 									{collectorFieldAreaM2}
 								/>
-							{:else if parameters.values.type === 'ptes'}
+							{:else if systemType === 'ptes'}
 								<PtesTableRows
 									parameters={parameters.values.storage}
 									{yearlyHeatDemandMWh}
 									{collectorFieldAreaM2}
 								/>
+							{:else if systemType === 'btes'}
+								<VolumeRows
+									parameters={parameters.values.storage.volume}
+									{yearlyHeatDemandMWh}
+									{collectorFieldAreaM2}
+								/>
+							{:else}
+								ERROR: Unknonw system type `{systemType}`.
 							{/if}
 						{:else if activeParametersTab === 'control'}
 							<tr>

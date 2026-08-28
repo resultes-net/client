@@ -13,8 +13,8 @@ export function createDefaultParameters() {
         waste_heat_recovery_source: createDefaultWasteHeatRecoverySource(),
         storage: {
             volume: {
-                scaling: "absolute_m3",
-                value: 500
+                scaling: "relative_to_collector_area_m3_per_m2",
+                value: 2.7
             },
         },
         control: createDefaultControl({ storage_temperature_maximum_degC: 98 })
