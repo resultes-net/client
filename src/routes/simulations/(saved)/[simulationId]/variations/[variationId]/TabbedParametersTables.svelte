@@ -30,7 +30,7 @@
 <TabGroup>
 	<Tab bind:group={activeParametersTab} name="demand" value="demand">{$t('common.demand')}</Tab>
 	<Tab bind:group={activeParametersTab} name="collector" value="collector"
-		>{$t('common.collector')}</Tab
+		>{$t('common.CollectorField')}</Tab
 	>
 	<Tab bind:group={activeParametersTab} name="demand" value="storage">{$t('common.storage')}</Tab>
 	<Tab bind:group={activeParametersTab} name="demand" value="control">{$t('common.Control')}</Tab>
