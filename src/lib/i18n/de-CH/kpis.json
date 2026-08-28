@@ -13,6 +13,7 @@
     "CompressorPower": "Kompressor-Leistung",
     "CondenserPower": "Kondensator-Leistung",
     "AnnualPerformanceFactor": "Jahresarbeitszahl (JAZ)",
+    "Efficiency": "Wirkungsgrad",
     "AverageSupplyTemperature": "Vorlauf-Durchschnittstemperatur",
     "AverageReturnTemperature": "Rücklauf-Durchschnittstemperatur",
     "percentageOfEnergyInputs": "{{value:number}}% der Energie-Inputs"

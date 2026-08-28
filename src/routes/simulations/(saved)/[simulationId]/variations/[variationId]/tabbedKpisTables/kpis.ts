@@ -16,7 +16,7 @@ export interface CollectorField {
 	specificTotalIrradiation_MWh_per_m2: number,
 	outputPower_GWh: number,
 	specificOutputPower_MWh_per_m2: number,
-	performanceFactor_1: number,
+	efficiency_1: number,
 	nStagnationDays_1: number,
 }
 

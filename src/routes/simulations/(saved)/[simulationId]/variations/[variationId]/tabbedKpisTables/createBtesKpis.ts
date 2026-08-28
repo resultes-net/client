@@ -52,7 +52,7 @@ export const createBtesKpis: CreateKpis = async (variationId, fetchFunction) => 
                 specificTotalIrradiation_MWh_per_m2: outputs.IT_kW_m2 / 1e3,
                 outputPower_GWh: outputs.CollP_kW_calc_Tot / 1e6,
                 specificOutputPower_MWh_per_m2: outputs.Q_kW_m2 / 1e3,
-                performanceFactor_1: outputs.Q_kW_m2 / outputs.IT_kW_m2,
+                efficiency_1: outputs.Q_kW_m2 / outputs.IT_kW_m2,
                 nStagnationDays_1: outputs.SolarControlStagDays,
             },
             storage: {

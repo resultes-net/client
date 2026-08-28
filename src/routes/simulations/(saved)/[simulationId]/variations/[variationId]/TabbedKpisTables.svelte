@@ -91,8 +91,8 @@
 								<td></td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.AnnualPerformanceFactor')}</td>
-								<td>{collectorField.performanceFactor_1.toFixed(2)}</td>
+								<td>{$t('kpis.Efficiency')}</td>
+								<td>{collectorField.efficiency_1.toFixed(2)}</td>
 								<td>-</td>
 								<td></td>
 							</tr>

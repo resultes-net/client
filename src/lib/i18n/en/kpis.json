@@ -13,6 +13,7 @@
     "CompressorPower": "Compressor power",
     "CondenserPower": "Condenser power",
     "AnnualPerformanceFactor": "Annual Performance Factor (APF)",
+    "Efficiency": "Efficiency",
     "AverageSupplyTemperature": "Average supply temperature",
     "AverageReturnTemperature": "Average return temperature",
     "percentageOfEnergyInputs": "{{value:number}}% of energy inputs"
