@@ -54,7 +54,7 @@
 						{#if activeParametersTab === 'demand'}
 							{@const demand = kpis.demand}
 							<tr>
-								<td>{$t('common.demand')}</td>
+								<td>{$t('kpis.HeatDemandIncludingNetworkLosses')}</td>
 								<td>{demand.demand_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
@@ -67,13 +67,13 @@
 							<tr>
 								<td>{$t('kpis.AverageSupplyTemperature')}</td>
 								<td>{demand.averageSupplyTemp_degC.toFixed(2)}</td>
-								<td>GWh</td>
+								<td>°C</td>
 								<td></td>
 							</tr>
 							<tr>
 								<td>{$t('kpis.AverageReturnTemperature')}</td>
 								<td>{demand.averageReturnTemp_degC.toFixed(2)}</td>
-								<td>GWh</td>
+								<td>°C</td>
 								<td></td>
 							</tr>
 						{:else if activeParametersTab === 'collector'}

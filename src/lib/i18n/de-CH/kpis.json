@@ -16,5 +16,6 @@
     "Efficiency": "Wirkungsgrad",
     "AverageSupplyTemperature": "Vorlauf-Durchschnittstemperatur",
     "AverageReturnTemperature": "Rücklauf-Durchschnittstemperatur",
-    "percentageOfEnergyInputs": "{{value:number}}% der Energie-Inputs"
+    "percentageOfEnergyInputs": "{{value:number}}% der Energie-Inputs",
+    "HeatDemandIncludingNetworkLosses": "Wärmebedarf (inkl. Verluste im Fernwärmenetz)"
 }
