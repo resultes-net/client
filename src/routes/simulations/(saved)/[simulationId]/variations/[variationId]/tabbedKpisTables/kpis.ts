@@ -35,5 +35,3 @@ export interface HeatPump {
 	compressorPower_GWh: number,
 	performanceFactor_1: number,
 }
-
-export type CreateKpis = (variationId: string, fetchFunction: (...args: any[]) => Promise<Response>) => Promise<KpisBase | null>;

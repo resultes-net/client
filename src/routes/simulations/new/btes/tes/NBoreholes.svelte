@@ -43,7 +43,13 @@
 
 		const scalingFactor = scalingFactors[newScaling][oldScaling];
 
-		parameters.value = Math.round(parameters.value * scalingFactor * 1e4) / 1e4;
+		const scaleValue = parameters.value * scalingFactor;
+		if (newScaling === 'absolute_1') {
+			parameters.value = Math.ceil(scaleValue);
+		} else {
+			parameters.value = Math.round(parameters.value * scalingFactor * 1e4) / 1e4;
+		}
+
 		parameters.scaling = newScaling;
 	}
 

@@ -2,5 +2,6 @@
     "createSimulation": "Simulation mit Sondenfeld-Wärmespeicher erstellen",
     "NumberOfBoreholes": "Anzahl Bohrlöcher",
     "BoreholeSpacing": "Bohrloch-Abstand",
-    "BoreholeDepth": "Bohrloch-Tiefe"
+    "BoreholeDepth": "Bohrloch-Tiefe",
+    "Boreholes": "Bohrlöcher"
 }

@@ -10,9 +10,9 @@ import { createPtesDisplayResults } from './displayResults/createPtesDisplayResu
 import { createTtesDisplayResults } from './displayResults/createTtesDisplayResults';
 import type { CreateDisplayResults } from './displayResults/displayResults';
 import { createBtesKpis } from './tabbedKpisTables/createBtesKpis';
+import type { CreateKpis } from './tabbedKpisTables/createKpis';
 import { createPtesKpis } from './tabbedKpisTables/createPtesKpis';
 import { createTtesKpis } from './tabbedKpisTables/createTtesKpis';
-import type { CreateKpis } from './tabbedKpisTables/kpis';
 
 export const load = async ({ parent, url, fetch }) => {
     const { simulation, variation } = await parent();

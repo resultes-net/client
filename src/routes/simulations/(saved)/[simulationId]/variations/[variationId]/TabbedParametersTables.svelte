@@ -3,9 +3,9 @@
 
 	import { t } from '$lib/i18n/translations';
 	import type { ParametersOutput } from 'src/lib/openapi/generated/model/parametersOutput';
+	import BtesTableRows from './tabbedParametersTables/tes/BtesTableRows.svelte';
 	import PtesTableRows from './tabbedParametersTables/tes/PtesTableRows.svelte';
 	import TtesTableRows from './tabbedParametersTables/tes/TtesTableRows.svelte';
-	import VolumeRows from './tabbedParametersTables/tes/VolumeRows.svelte';
 
 	export let parameters: ParametersOutput;
 
@@ -140,8 +140,8 @@
 									{collectorFieldAreaM2}
 								/>
 							{:else if systemType === 'btes'}
-								<VolumeRows
-									parameters={parameters.values.storage.volume}
+								<BtesTableRows
+									parameters={parameters.values.storage}
 									{yearlyHeatDemandMWh}
 									{collectorFieldAreaM2}
 								/>
