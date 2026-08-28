@@ -1,8 +1,8 @@
 {
     "YearlyKPIs": "Jahres-Key-Performance-Indicators",
     "KPIsNotAvailable": "KPIs nicht verfügbar",
-    "GrossCharge": "Bruttowärmeeintrag",
-    "GrossDischarge": "Bruttowärmeaustrag",
+    "ChargingPower": "Ladeleistung",
+    "DischargingPower": "Entladeleistung",
     "RoundTripEfficiency": "Round-Trip-Wirkungsgrad",
     "NetHeatGain": "Netto-Wärmeeintrag",
     "NumberOfChargingDischargingCycles": "Anzahl Lade- und Entladezyklen",

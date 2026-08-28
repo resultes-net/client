@@ -110,13 +110,13 @@
 						{:else if activeParametersTab === 'storage'}
 							{@const storage = kpis.storage}
 							<tr>
-								<td>{$t('kpis.GrossCharge')}</td>
+								<td>{$t('kpis.ChargingPower')}</td>
 								<td>{storage.charged_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td></td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.GrossDischarge')}</td>
+								<td>{$t('kpis.DischargingPower')}</td>
 								<td>{storage.discharged_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>

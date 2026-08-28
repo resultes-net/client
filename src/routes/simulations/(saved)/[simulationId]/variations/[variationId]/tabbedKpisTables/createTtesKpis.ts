@@ -52,7 +52,7 @@ export const createTtesKpis: CreateKpis = async (variationId, fetchFunction) => 
                 discharged_GWh: outputs.TesQDisharge_Tot / 1e6,
                 losses_GWh: outputs.QLoss_Tes1_Tot / 1e6,
                 netHeatGain_GWh: outputs.QAcum_Tes1_Tot / 1e6,
-                roundTripEfficiency_1: outputs.TesEff,
+                roundTripEfficiency_1: outputs.TesQCharge_Tot === 0 ? Infinity : outputs.TesEff,
                 nChargingCycles_1: outputs.TesNCycles
             },
             boilerPower_GWh: outputs.BolrPOut_kW_Tot / 1e6,

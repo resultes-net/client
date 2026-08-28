@@ -61,7 +61,7 @@ export const createPtesKpis: CreateKpis = async (variationId, fetchFunction) => 
                 discharged_GWh: outputs.pitStoreQDisharge_Tot / 1e6,
                 losses_GWh: outputs.pitStoreQLosses_kW_Tot / 1e6,
                 netHeatGain_GWh: outputs.pitStoreQAccum_kW_Tot / 1e6,
-                roundTripEfficiency_1: outputs.pitStoreEff,
+                roundTripEfficiency_1: outputs.pitStoreQCharge_Tot === 0 ? Infinity : outputs.pitStoreEff,
                 nChargingCycles_1: outputs.pitStoreNCycles
             },
             heatPump: {

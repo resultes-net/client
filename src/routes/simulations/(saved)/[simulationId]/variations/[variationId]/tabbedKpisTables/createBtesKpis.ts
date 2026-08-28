@@ -60,7 +60,7 @@ export const createBtesKpis: CreateKpis = async (variationId, fetchFunction) => 
                 discharged_GWh: outputs.BoHxQDischar_kW_Tot / 1e6,
                 losses_GWh: outputs.BoHxQLoss_kW_Tot / 1e6,
                 netHeatGain_GWh: outputs.BoHxQAccum_kW_Tot / 1e6,
-                roundTripEfficiency_1: outputs.BoHxEff,
+                roundTripEfficiency_1: outputs.BoHxQChar_kW_Tot === 0 ? Infinity : outputs.BoHxEff,
                 nChargingCycles_1: outputs.BoHxNCycles
             },
             heatPump: {
@@ -72,6 +72,7 @@ export const createBtesKpis: CreateKpis = async (variationId, fetchFunction) => 
             boilerPower_GWh: outputs.BolrPOut_kW_Tot / 1e6,
             districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3
         };
+
 
         return kpis;
     } catch (exception) {

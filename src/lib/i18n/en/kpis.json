@@ -1,8 +1,8 @@
 {
     "YearlyKPIs": "Yearly Key Performance Indicators",
     "KPIsNotAvailable": "KPIs not available",
-    "GrossCharge": "Gross charge",
-    "GrossDischarge": "Gross discharge",
+    "ChargingPower": "Charging power",
+    "DischargingPower": "Discharging power",
     "RoundTripEfficiency": "Rround-trip efficiency",
     "NetHeatGain": "Net heat gain",
     "NumberOfChargingDischargingCycles": "Number of charging-discharging cycles",
