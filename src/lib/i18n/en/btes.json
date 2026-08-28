@@ -1,3 +1,6 @@
 {
-    "createSimulation": "Create simulation with borehole thermal energy storage"
+    "createSimulation": "Create simulation with borehole thermal energy storage",
+    "NumberOfBoreholes": "Number of boreholes",
+    "BoreholeSpacing": "Borehole spacing",
+    "BoreholeDepth": "Borehole depth"
 }
