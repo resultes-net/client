@@ -72,7 +72,7 @@
 	</div>
 </div>
 
-<div class="flex flex-col">
+<div id="page" class="flex flex-col h-screen overflow-y-auto">
 	<header>
 		<AppBar gap="" slotTrail="justify-self-end">
 			<a href="/" class="text-2xl">ResulTES</a>

@@ -175,7 +175,7 @@
 </div>
 
 <div class="flex flex-row mt-6">
-	<TableOfContents class="sticky top-10 h-screen ml-4" indentStyles={{ h5: 'ml-0' }} />
+	<TableOfContents class="sticky top-10 self-start ml-4" indentStyles={{ h5: 'ml-0' }} />
 
 	<div class="ml-6 flex flex-col">
 		<div class="flex flex-row">
@@ -190,7 +190,11 @@
 		</div>
 		<div
 			class="mt-8"
-			use:tocCrawler={{ mode: 'generate', key: [variation.state, kpis, displayResults] }}
+			use:tocCrawler={{
+				mode: 'generate',
+				scrollTarget: '#page',
+				key: [variation.state, kpis, displayResults]
+			}}
 		>
 			<h5 class="h5">{$t('common.Parameters')}</h5>
 			<ParametersTable {parameters} />
