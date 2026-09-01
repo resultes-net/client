@@ -75,21 +75,21 @@
 		hover="hover:variant-soft-primary pr-[44px]"
 	>
 		<ListBoxItem bind:group={newScaling} name="absolute" value={NBoreholes.ScalingEnum.Absolute1}>
-			{$t('units.absolute')} [m<sup>3</sup>]
+			{$t('units.absolute')} [-]
 		</ListBoxItem>
 		<ListBoxItem
 			bind:group={newScaling}
 			name="relativeToDemand"
 			value={NBoreholes.ScalingEnum.RelativeToDemand1PerMwh}
 		>
-			{$t('units.relativeToDemand')} [m<sup>3</sup>MWh<sup>-1</sup>]
+			{$t('units.relativeToDemand')} [MWh<sup>-1</sup>]
 		</ListBoxItem>
 		<ListBoxItem
 			bind:group={newScaling}
 			name="relativeToCollectorArea"
 			value={NBoreholes.ScalingEnum.RelativeToCollectorArea1PerM2}
 		>
-			{$t('units.relativeToCollectorArea')} [m<sup>3</sup>m<sup>-2</sup>]
+			{$t('units.relativeToCollectorArea')} [m<sup>-2</sup>]
 		</ListBoxItem>
 	</ListBox>
 </div>
@@ -111,7 +111,7 @@
 		>
 			<span>
 				{#if parameters.scaling === 'absolute_1'}
-					{$t('units.absolute')} [1]
+					{$t('units.absolute')} [-]
 				{:else if parameters.scaling === 'relative_to_demand_1_per_MWh'}
 					{$t('units.relativeToDemand')} [MWh<sup>-1</sup>]
 				{:else if parameters.scaling === 'relative_to_collector_area_1_per_m2'}
