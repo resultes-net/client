@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	import { t } from '$lib/i18n/translations';
 
 	import type { UserCreate } from '$lib/openapi/generated/model/userCreate';
 
 	import { FetchError, getJson } from 'src/ajax';
+
+	const redirect = $page.url.searchParams.get('redirect');
 
 	let user_create: UserCreate = {
 		full_name: '',
@@ -33,8 +36,8 @@
 					errorMessage = $t('auth.UsernameAlreadyTaken');
 					return;
 				}
-			} 
-			
+			}
+
 			if (error instanceof Error) {
 				errorMessage = `${$t('common.AnErrorOccurred')}: ${error.message}`;
 				return;
@@ -43,7 +46,9 @@
 			throw error;
 		}
 
-		goto('/login?registered');
+		const redirectPart = redirect === null ? '' : `&{redirect}`;
+
+		goto(`/login?registered${redirectPart}`);
 	}
 </script>
 

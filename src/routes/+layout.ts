@@ -9,7 +9,7 @@ import { redirect } from '@sveltejs/kit';
 import * as auth from '../auth';
 
 
-export const load: LayoutLoad = async ({ data, url: { pathname } }) => {
+export const load: LayoutLoad = async ({ data, url: { pathname, search } }) => {
     const { i18n: { locale, route: localeRoute }, translations } = data;
 
     addTranslations(translations);
@@ -18,13 +18,13 @@ export const load: LayoutLoad = async ({ data, url: { pathname } }) => {
     await setLocale(locale);
 
     if (browser) {
-        checkLoggedInAndRedirectIfNeeded(pathname);
+        checkLoggedInAndRedirectIfNeeded(pathname, search);
     }
     
     return {};
 };
 
-function checkLoggedInAndRedirectIfNeeded(pathname: string) {
+function checkLoggedInAndRedirectIfNeeded(pathname: string, search: string) {
     const isTryingToLogIn = pathname === '/login' || pathname === '/register';
     const isLoggedIn = auth.getTokenOrNull() !== null;
 
@@ -33,6 +33,7 @@ function checkLoggedInAndRedirectIfNeeded(pathname: string) {
     }
 
     if (!isLoggedIn && !isTryingToLogIn) {
-        redirect(307, "/login");
+        const url = encodeURIComponent(`${pathname}${search}`);
+        redirect(307, `/login?redirect=${url}`);
     }
 }

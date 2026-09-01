@@ -12,6 +12,8 @@
 
 	const hasJustRegistered = $page.url.searchParams.has('registered');
 
+	const redirect = $page.url.searchParams.get('redirect') ?? '/';
+
 	type MessageType = 'info' | 'error';
 	let message: { type: MessageType; value: string } | null = hasJustRegistered
 		? { type: 'info', value: 'Registration successful. You can now log in.' }
@@ -45,7 +47,7 @@
 
 			auth.setToken(username, token);
 
-			goto('/');
+			goto(redirect);
 		} catch (error) {
 			if (error instanceof UnauthorizedError) {
 				message = { type: 'error', value: $t('auth.WrongUserNameOrPassword') };
