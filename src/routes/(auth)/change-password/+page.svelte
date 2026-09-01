@@ -6,9 +6,8 @@
 
 	import type { UserModify } from '$lib/openapi/generated/model/userModify';
 
-	import { getJson } from 'src/ajax';
-	import * as auth from 'src/auth';
-	import { gotoLoginWithRedirect } from '$lib/components/goto';
+	import { tryGetJson, UnauthorizedError } from 'src/authAjax';
+	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
 
 	let user_create: UserModify = {
 		old_plain_password: '',
@@ -16,16 +15,18 @@
 	};
 
 	async function onClick(): Promise<void> {
-		const token = auth.getTokenOrNull();
+		try {
+			const body = JSON.stringify(user_create);
 
-		if (token === null) {
-			gotoLoginWithRedirect($page.url);
-			return;
+			await tryGetJson({ endPoint: '/user', httpVerb: 'PUT', body });
+		} catch (exception) {
+			if (exception instanceof UnauthorizedError) {
+				gotoLoginWithRedirect($page.url);
+				return;
+			}
+
+			throw exception;
 		}
-
-		const body = JSON.stringify(user_create);
-
-		await getJson({ endPoint: '/user', httpVerb: 'PUT', body, bearerToken: token.token });
 
 		goto('/');
 	}

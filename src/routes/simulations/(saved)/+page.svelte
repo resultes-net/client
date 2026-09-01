@@ -5,17 +5,16 @@
 
 	import { page } from '$app/stores';
 
-	import { getJson } from 'src/ajax';
-	import * as auth from 'src/auth';
 	import { toLocalDateTimeIgnoringTodayDate } from '$lib/utils';
 
 	import { getBreadCrumbsStore } from './breadCrumbs';
 
 	import { t } from '$lib/i18n/translations';
 
-	import { gotoLoginWithRedirect } from '$lib/components/goto';
 	import type { GetSimulation } from '$lib/openapi/generated/model/getSimulation';
-	import { TimeRemainingEstimator, millisecondsToMinutes } from './time';
+	import { tryGetJson, UnauthorizedError } from 'src/authAjax';
+	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
+	import { millisecondsToMinutes, TimeRemainingEstimator } from './time';
 
 	export let data;
 
@@ -64,18 +63,19 @@
 	});
 
 	async function pollSimulations(): Promise<void> {
-		const token = auth.getTokenOrNull();
+		try {
+			await tryGetJson({
+				endPoint: '/simulations',
+				httpVerb: 'GET'
+			});
+		} catch (exception) {
+			if (exception instanceof UnauthorizedError) {
+				gotoLoginWithRedirect($page.url);
+				return;
+			}
 
-		if (token === null) {
-			gotoLoginWithRedirect($page.url);
-			return;
+			throw exception;
 		}
-
-		simulations = await getJson({
-			endPoint: '/simulations',
-			httpVerb: 'GET',
-			bearerToken: token.token
-		});
 
 		updateTimeRemainingEstimators(simulations);
 

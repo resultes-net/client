@@ -2,10 +2,12 @@ import { getJson, UnauthorizedError } from "./ajax";
 import * as auth from './auth';
 import { redirectToLoginWithRedirect } from "./redirect";
 
+export { UnauthorizedError };
+
 export async function tryGetJson<O>(
     args: {
         endPoint: string,
-        redirectTo: string
+        redirectTo?: string
         body?: BodyInit | null,
         httpVerb?: 'GET' | 'POST' | 'PUT',
         contentType?: string,
@@ -13,12 +15,16 @@ export async function tryGetJson<O>(
         fetchFunction?: (...args: any[]) => Promise<Response>
     }
 ): Promise<O> {
-    const { redirectTo, ...otherArgs } = args;
+    const { redirectTo = null, ...otherArgs } = args;
 
     const token = auth.getTokenOrNull();
 
     if (token === null) {
-        redirectToLoginWithRedirect(redirectTo);
+        if (redirectTo !== null) {
+            redirectToLoginWithRedirect(redirectTo);
+        } else {
+            throw new UnauthorizedError();
+        }
     }
 
     const otherArgsWithToken = { ...otherArgs, bearerToken: token.token };
@@ -26,7 +32,7 @@ export async function tryGetJson<O>(
     try {
         return await getJson<O>(otherArgsWithToken);
     } catch (exception) {
-        if (exception instanceof UnauthorizedError) {
+        if (exception instanceof UnauthorizedError && redirectTo !== null) {
             redirectToLoginWithRedirect(redirectTo);
         }
         throw exception;

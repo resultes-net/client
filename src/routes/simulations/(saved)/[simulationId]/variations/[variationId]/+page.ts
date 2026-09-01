@@ -1,9 +1,7 @@
 
 import type { ParametersOutput } from '$lib/openapi/generated/model/parametersOutput';
 import { type Type } from '$lib/openapi/generated/model/type';
-import { UnauthorizedError } from 'src/ajax';
 import { tryGetJson } from 'src/authAjax';
-import { redirectToLoginWithRedirect } from 'src/redirect';
 import { loadMoreResults } from './displayResults';
 import { createBtesDisplayResults } from './displayResults/createBtesDisplayResults';
 import { createPtesDisplayResults } from './displayResults/createPtesDisplayResults';
@@ -28,18 +26,10 @@ export const load = async ({ parent, url, fetch }) => {
     if (variation.state === 'done') {
         displayResults = createDisplayResults();
 
-        try {
-            [kpis,] = await Promise.all([
-                createKpis(variation.id, redirectTo, fetch),
-                loadMoreResults({ displayResults, variationId: variation.id, nResultsToLoad: 3 })
-            ]);
-        } catch (exception) {
-            if (exception instanceof UnauthorizedError) {
-                redirectToLoginWithRedirect(redirectTo);
-            }
-
-            throw exception;
-        }
+        [kpis,] = await Promise.all([
+            createKpis(variation.id, redirectTo, fetch),
+            loadMoreResults({ displayResults, variationId: variation.id, nResultsToLoad: 3 })
+        ]);
     }
 
     const shallDownload = url.searchParams.get("download") === '';

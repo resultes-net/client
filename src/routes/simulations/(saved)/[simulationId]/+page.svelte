@@ -5,15 +5,15 @@
 
 	import { invalidate } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
-	import { getJson, UnauthorizedError } from 'src/ajax';
-	import * as auth from 'src/auth';
 	import { gotoLoginWithRedirect } from '$lib/components/goto';
 	import { t } from '$lib/i18n/translations';
 	import type { GetSimulation } from '$lib/openapi/generated/model/getSimulation';
 	import { SimulationState } from '$lib/openapi/generated/model/simulationState';
 	import type { Variation } from '$lib/openapi/generated/model/variation';
 	import { toLocalDateTimeIgnoringTodayDate } from '$lib/utils';
+	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import { UnauthorizedError } from 'src/ajax';
+	import { tryGetJson } from 'src/authAjax';
 	import { onMount } from 'svelte';
 	import { getBreadCrumbsStore } from '../breadCrumbs';
 
@@ -44,22 +44,15 @@
 		const newState = SimulationState.WaitingForVariationsCreation;
 		const endPoint = `/simulations/${simulation.id}/state?new_state=${newState}`;
 
-		const token = auth.getTokenOrNull();
-
-		if (token === null) {
-			gotoLoginWithRedirect($page.url);
-			return;
-		}
-
 		try {
-			await getJson({ endPoint, httpVerb: 'PUT', bearerToken: token.token });
-		} catch (error) {
-			if (error instanceof UnauthorizedError) {
+			await tryGetJson({ endPoint, httpVerb: 'PUT' });
+		} catch (exception) {
+			if (exception instanceof UnauthorizedError) {
 				gotoLoginWithRedirect($page.url);
 				return;
 			}
 
-			throw error;
+			throw exception;
 		}
 
 		invalidate(`resultes:simulation:${simulation.id}`);

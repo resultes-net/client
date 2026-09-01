@@ -19,17 +19,12 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
-	import { type PopupSettings, Tab, TabGroup, popup } from '@skeletonlabs/skeleton';
+	import { popup, type PopupSettings, Tab, TabGroup } from '@skeletonlabs/skeleton';
 
 	import { Location } from '$lib/openapi/generated/model/location';
 
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
 	import { t } from '$lib/i18n/translations';
-
-	import { getJson } from 'src/ajax';
-	import * as auth from 'src/auth';
-
-	import { gotoLoginWithRedirect } from './goto';
 
 	import { type Phase } from '$lib/components/parameters/phase';
 
@@ -39,7 +34,9 @@
 	import WasteHeatRecoverySource from '$lib/components/parameters/wasteHeatRecoverySource.svelte';
 	import { default as WhrSourceProfile } from '$lib/components/parameters/wasteHeatRecoverySource/profile.svelte';
 	import type { CreateSimulation } from '$lib/openapi/generated/model/createSimulation';
+	import { tryGetJson, UnauthorizedError } from 'src/authAjax';
 	import type { Type } from '../openapi/generated/model/type';
+	import { gotoLoginWithRedirect } from './goto';
 
 	export let systemType: Type;
 
@@ -112,18 +109,19 @@
 	};
 
 	async function onSubmitButtonClicked() {
-		const token = auth.getTokenOrNull();
+		try {
+			await tryGetJson({
+				endPoint: '/simulations',
+				body: JSON.stringify(simulation)
+			});
+		} catch (exception) {
+			if (exception instanceof UnauthorizedError) {
+				gotoLoginWithRedirect($page.url);
+				return;
+			}
 
-		if (token === null) {
-			gotoLoginWithRedirect($page.url);
-			return;
+			throw exception;
 		}
-
-		await getJson({
-			endPoint: '/simulations',
-			body: JSON.stringify(simulation),
-			bearerToken: token.token
-		});
 
 		goto(`/simulations`);
 	}
