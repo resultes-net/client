@@ -117,7 +117,7 @@
 				{:else if parameters.scaling === 'relative_to_collector_area_1_per_m2'}
 					{$t('units.relativeToCollectorArea')} [m<sup>-2</sup>]
 				{:else}
-					ERROR: Uknown scalilng
+					ERROR: Uknown scaling `{parameters.scaling}`.
 				{/if}
 			</span>
 			<ChevronDown class="text-surface-400-500-token" size="20" />
