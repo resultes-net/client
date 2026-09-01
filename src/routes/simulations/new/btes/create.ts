@@ -19,7 +19,7 @@ export function createDefaultParameters() {
             borehole_depth_m: 70.0,
             borehole_spacing_m: 3.0
         },
-        control: createDefaultControl({ storage_temperature_maximum_degC: 75 })
+        control: createDefaultControl({ storage_temperature_maximum_degC: 95 })
     };
 
     return defaultParameters;
