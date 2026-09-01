@@ -90,5 +90,12 @@
     "DistrictHeatingNetwork": "Fernwärmenetz",
     "Losses": "Verluste",
     "PowerOutput": "Leistungsabgabe",
-    "CollectorField": "Kollektorfeld"
+    "CollectorField": "Kollektorfeld",
+    "simulationStates": {
+        "done": "Fertig",
+        "error": "Fehler",
+        "generate": "Wird generiert",
+        "runningVariations": "Variationen werden berechnet",
+        "waitingForVariationRuns": "Wartet auf Variationsberechnungen"
+    }
 }

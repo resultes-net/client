@@ -90,5 +90,12 @@
     "DistrictHeatingNetwork": "District heating network",
     "Losses": "Losses",
     "PowerOutput": "Power output",
-    "CollectorField": "Collector field"
+    "CollectorField": "Collector field",
+    "simulationStates": {
+        "done": "Done",
+        "error": "Error",
+        "generate": "Generating",
+        "runningVariations": "Running variations",
+        "waitingForVariationRuns": "Waiting for variation runs"
+    }
 }
