@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { type ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2 as Volume } from 'src/lib/openapi/generated/model/scaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2';
-	import type { TtesStorage } from 'src/lib/openapi/generated/model/ttesStorage';
+	import { type ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2 as Volume } from '$lib/openapi/generated/model/scaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2';
+	import type { TtesStorage } from '$lib/openapi/generated/model/ttesStorage';
 	import PortHeightsRows from './PortHeightsRows.svelte';
 	import VolumeRows from './VolumeRows.svelte';
 
-	import { t } from 'src/lib/i18n/translations';
+	import { t } from '$lib/i18n/translations';
 
 	export let parameters: TtesStorage;
 	export let yearlyHeatDemandMWh: number;

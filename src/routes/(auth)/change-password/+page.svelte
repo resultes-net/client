@@ -4,11 +4,11 @@
 
 	import { t } from '$lib/i18n/translations';
 
-	import type { UserModify } from 'src/lib/openapi/generated/model/userModify';
+	import type { UserModify } from '$lib/openapi/generated/model/userModify';
 
 	import { getJson } from 'src/ajax';
 	import * as auth from 'src/auth';
-	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
+	import { gotoLoginWithRedirect } from '$lib/components/goto';
 
 	let user_create: UserModify = {
 		old_plain_password: '',

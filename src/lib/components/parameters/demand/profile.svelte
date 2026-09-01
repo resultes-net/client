@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from '$lib/i18n/translations';
 	import Plotly from 'plotly.js-dist-min';
-	import type { Demand } from 'src/lib/openapi/generated/model/demand';
+	import type { Demand } from '$lib/openapi/generated/model/demand';
 
 	export let demand: Demand;
 

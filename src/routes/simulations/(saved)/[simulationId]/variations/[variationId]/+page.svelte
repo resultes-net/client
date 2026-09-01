@@ -26,7 +26,7 @@
 	import DownladAllResults from './DownloadAllResults.svelte';
 	import TabbedKpisTables from './TabbedKpisTables.svelte';
 	import ParametersTable from './TabbedParametersTables.svelte';
-	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
+	import { gotoLoginWithRedirect } from '$lib/components/goto';
 
 	export let data;
 

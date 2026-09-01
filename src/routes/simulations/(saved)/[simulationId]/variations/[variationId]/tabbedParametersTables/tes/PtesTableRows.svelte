@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PtesStorage } from 'src/lib/openapi/generated/model/ptesStorage';
+	import type { PtesStorage } from '$lib/openapi/generated/model/ptesStorage';
 	import PortHeightsRows from './PortHeightsRows.svelte';
 	import VolumeRows from './VolumeRows.svelte';
 

@@ -12,8 +12,8 @@
 
 	import { page } from '$app/stores';
 	import { FetchError } from 'src/ajax';
-	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
-	import type { Variation } from 'src/lib/openapi/generated/model/variation';
+	import { gotoLoginWithRedirect } from '$lib/components/goto';
+	import type { Variation } from '$lib/openapi/generated/model/variation';
 
 	const breadCrumbs = getBreadCrumbsStore();
 

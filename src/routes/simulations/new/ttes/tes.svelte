@@ -3,8 +3,8 @@
 	import type { Phase } from '$lib/components/parameters/phase';
 	import Ports from '$lib/components/parameters/tes/ports.svelte';
 	import Size from '$lib/components/parameters/tes/size.svelte';
-	import { t } from 'src/lib/i18n/translations';
-	import type { TtesStorage } from 'src/lib/openapi/generated/model/ttesStorage';
+	import { t } from '$lib/i18n/translations';
+	import type { TtesStorage } from '$lib/openapi/generated/model/ttesStorage';
 
 	export let projectPhase: Phase;
 	export let parameters: TtesStorage;

@@ -1,6 +1,7 @@
 import { FetchError, UnauthorizedError } from 'src/ajax';
 import { tryGetJson } from 'src/authAjax';
-import type { CreateKpis, HeatPump, KpisBase } from './kpis';
+import type { CreateKpis } from './createKpis';
+import type { HeatPump, KpisBase } from './kpis';
 
 
 interface Outputs {
@@ -33,11 +34,11 @@ export interface BtesKpis extends KpisBase {
     heatPump: HeatPump,
 }
 
-export const createBtesKpis: CreateKpis = async (variationId, fetchFunction) => {
+export const createBtesKpis: CreateKpis = async (variationId, redirectTo, fetchFunction) => {
     const endPoint = `/variations/${variationId}/results/output.json`;
 
     try {
-        const outputsArray = await tryGetJson<Outputs[]>({ endPoint, httpVerb: 'GET', fetchFunction });
+        const outputsArray = await tryGetJson<Outputs[]>({ endPoint, redirectTo, httpVerb: 'GET', fetchFunction });
         const outputs = outputsArray[0];
 
 

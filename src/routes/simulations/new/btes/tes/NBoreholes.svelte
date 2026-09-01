@@ -4,7 +4,7 @@
 
 	import { t } from '$lib/i18n/translations';
 
-	import { ScaledValueLiteralAbsolute1RelativeToDemand1PerMWhRelativeToCollectorArea1PerM2 as NBoreholes } from 'src/lib/openapi/generated/model/scaledValueLiteralAbsolute1RelativeToDemand1PerMWhRelativeToCollectorArea1PerM2';
+	import { ScaledValueLiteralAbsolute1RelativeToDemand1PerMWhRelativeToCollectorArea1PerM2 as NBoreholes } from '$lib/openapi/generated/model/scaledValueLiteralAbsolute1RelativeToDemand1PerMWhRelativeToCollectorArea1PerM2';
 
 	import { popupSizeApplyReferenceWidthIncludingBorder } from '$lib/components/parameters/common';
 	import type { OnAreParametersValidChanged } from '$lib/components/parameters/onAreParametersValidChanged';

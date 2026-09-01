@@ -4,7 +4,7 @@
 	import { assert } from '$lib/utils';
 	import { page } from '$app/stores';
 
-	import { type Token } from 'src/lib/openapi/generated/model/token';
+	import { type Token } from '$lib/openapi/generated/model/token';
 
 	import * as auth from 'src/auth';
 

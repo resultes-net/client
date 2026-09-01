@@ -7,14 +7,14 @@
 
 	import { getJson } from 'src/ajax';
 	import * as auth from 'src/auth';
-	import { toLocalDateTimeIgnoringTodayDate } from 'src/lib/utils';
+	import { toLocalDateTimeIgnoringTodayDate } from '$lib/utils';
 
 	import { getBreadCrumbsStore } from './breadCrumbs';
 
-	import { t } from 'src/lib/i18n/translations';
+	import { t } from '$lib/i18n/translations';
 
-	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
-	import type { GetSimulation } from 'src/lib/openapi/generated/model/getSimulation';
+	import { gotoLoginWithRedirect } from '$lib/components/goto';
+	import type { GetSimulation } from '$lib/openapi/generated/model/getSimulation';
 	import { TimeRemainingEstimator, millisecondsToMinutes } from './time';
 
 	export let data;

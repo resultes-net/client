@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from '$lib/i18n/translations';
 	import Plotly from 'plotly.js-dist-min';
-	import type { WasteHeatRecoverySource } from 'src/lib/openapi/generated/model/wasteHeatRecoverySource';
+	import type { WasteHeatRecoverySource } from '$lib/openapi/generated/model/wasteHeatRecoverySource';
 
 	export let whrSource: WasteHeatRecoverySource;
 

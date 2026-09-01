@@ -1,10 +1,11 @@
-import { redirect } from "@sveltejs/kit";
 import { getJson, UnauthorizedError } from "./ajax";
 import * as auth from './auth';
+import { redirectToLoginWithRedirect } from "./redirect";
 
 export async function tryGetJson<O>(
     args: {
         endPoint: string,
+        redirectTo: string
         body?: BodyInit | null,
         httpVerb?: 'GET' | 'POST' | 'PUT',
         contentType?: string,
@@ -12,19 +13,21 @@ export async function tryGetJson<O>(
         fetchFunction?: (...args: any[]) => Promise<Response>
     }
 ): Promise<O> {
+    const { redirectTo, ...otherArgs } = args;
+
     const token = auth.getTokenOrNull();
 
     if (token === null) {
-        redirect(307, '/login');
+        redirectToLoginWithRedirect(redirectTo);
     }
 
-    const argsWithToken = { ...args, bearerToken: token.token };
+    const otherArgsWithToken = { ...otherArgs, bearerToken: token.token };
 
     try {
-        return await getJson<O>(argsWithToken);
+        return await getJson<O>(otherArgsWithToken);
     } catch (exception) {
         if (exception instanceof UnauthorizedError) {
-            redirect(307, '/login');
+            redirectToLoginWithRedirect(redirectTo);
         }
         throw exception;
     }

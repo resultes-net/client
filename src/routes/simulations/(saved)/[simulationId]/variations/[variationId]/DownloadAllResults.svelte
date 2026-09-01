@@ -6,7 +6,7 @@
 	import { page } from '$app/stores';
 	import { getResponse } from 'src/ajax';
 	import * as auth from 'src/auth';
-	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
+	import { gotoLoginWithRedirect } from '$lib/components/goto';
 
 	export let endPoint: string;
 	export let targetFileName: string;

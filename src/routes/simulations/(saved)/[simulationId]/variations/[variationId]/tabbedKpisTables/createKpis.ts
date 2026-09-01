@@ -4,4 +4,4 @@ import type { TtesKpis } from "./createTtesKpis";
 
 export type Kpis = TtesKpis | PtesKpis | BtesKpis;
 
-export type CreateKpis = (variationId: string, fetchFunction: (...args: any[]) => Promise<Response>) => Promise<Kpis | null>;
+export type CreateKpis = (variationId: string, redirectTo: string, fetchFunction: (...args: any[]) => Promise<Response>) => Promise<Kpis | null>;

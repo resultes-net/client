@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { OnAreParametersValidChanged } from '$lib/components/parameters/onAreParametersValidChanged';
 	import type { Phase } from '$lib/components/parameters/phase';
-	import type { BtesStorage } from 'src/lib/openapi/generated/model/btesStorage';
+	import type { BtesStorage } from '$lib/openapi/generated/model/btesStorage';
 	import NBoreholes from './tes/NBoreholes.svelte';
-	import { t } from 'src/lib/i18n/translations';
+	import { t } from '$lib/i18n/translations';
 
 	export let projectPhase: Phase;
 	export let parameters: BtesStorage;

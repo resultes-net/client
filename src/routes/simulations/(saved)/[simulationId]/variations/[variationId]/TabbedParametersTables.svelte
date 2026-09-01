@@ -2,7 +2,7 @@
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 
 	import { t } from '$lib/i18n/translations';
-	import type { ParametersOutput } from 'src/lib/openapi/generated/model/parametersOutput';
+	import type { ParametersOutput } from '$lib/openapi/generated/model/parametersOutput';
 	import BtesTableRows from './tabbedParametersTables/tes/BtesTableRows.svelte';
 	import PtesTableRows from './tabbedParametersTables/tes/PtesTableRows.svelte';
 	import TtesTableRows from './tabbedParametersTables/tes/TtesTableRows.svelte';

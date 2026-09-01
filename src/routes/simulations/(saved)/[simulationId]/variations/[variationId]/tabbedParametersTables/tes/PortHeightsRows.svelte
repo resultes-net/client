@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { t } from 'src/lib/i18n/translations';
-	import type { TesRelativePortHeights } from 'src/lib/openapi/generated/model/tesRelativePortHeights';
+	import { t } from '$lib/i18n/translations';
+	import type { TesRelativePortHeights } from '$lib/openapi/generated/model/tesRelativePortHeights';
 
 	export let parameters: TesRelativePortHeights;
 </script>

@@ -8,12 +8,12 @@
 	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { getJson, UnauthorizedError } from 'src/ajax';
 	import * as auth from 'src/auth';
-	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
-	import { t } from 'src/lib/i18n/translations';
-	import type { GetSimulation } from 'src/lib/openapi/generated/model/getSimulation';
-	import { SimulationState } from 'src/lib/openapi/generated/model/simulationState';
-	import type { Variation } from 'src/lib/openapi/generated/model/variation';
-	import { toLocalDateTimeIgnoringTodayDate } from 'src/lib/utils';
+	import { gotoLoginWithRedirect } from '$lib/components/goto';
+	import { t } from '$lib/i18n/translations';
+	import type { GetSimulation } from '$lib/openapi/generated/model/getSimulation';
+	import { SimulationState } from '$lib/openapi/generated/model/simulationState';
+	import type { Variation } from '$lib/openapi/generated/model/variation';
+	import { toLocalDateTimeIgnoringTodayDate } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import { getBreadCrumbsStore } from '../breadCrumbs';
 

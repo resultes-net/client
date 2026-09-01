@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { t } from 'src/lib/i18n/translations';
-	import { type ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2 as Volume } from 'src/lib/openapi/generated/model/scaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2';
+	import { t } from '$lib/i18n/translations';
+	import { type ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2 as Volume } from '$lib/openapi/generated/model/scaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2';
 
 	export let parameters: Volume;
 	export let yearlyHeatDemandMWh: number;

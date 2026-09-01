@@ -19,6 +19,8 @@
 	import { isAuthenticated } from 'src/auth';
 
 	import { goto } from '$app/navigation';
+	
+	import '../app.postcss';
 
 	initializeStores();
 

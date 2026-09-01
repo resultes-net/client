@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { t } from 'src/lib/i18n/translations';
-	import type { BtesStorage } from 'src/lib/openapi/generated/model/btesStorage';
-	import { ScaledValueLiteralAbsolute1RelativeToDemand1PerMWhRelativeToCollectorArea1PerM2 as NBoreholes } from 'src/lib/openapi/generated/model/scaledValueLiteralAbsolute1RelativeToDemand1PerMWhRelativeToCollectorArea1PerM2';
+	import { t } from '$lib/i18n/translations';
+	import type { BtesStorage } from '$lib/openapi/generated/model/btesStorage';
+	import { ScaledValueLiteralAbsolute1RelativeToDemand1PerMWhRelativeToCollectorArea1PerM2 as NBoreholes } from '$lib/openapi/generated/model/scaledValueLiteralAbsolute1RelativeToDemand1PerMWhRelativeToCollectorArea1PerM2';
 
 	export let parameters: BtesStorage;
 	export let yearlyHeatDemandMWh: number;

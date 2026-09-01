@@ -1,9 +1,9 @@
 
+import type { ParametersOutput } from '$lib/openapi/generated/model/parametersOutput';
 import { type Type } from '$lib/openapi/generated/model/type';
-import { redirect } from '@sveltejs/kit';
 import { UnauthorizedError } from 'src/ajax';
 import { tryGetJson } from 'src/authAjax';
-import type { ParametersOutput } from 'src/lib/openapi/generated/model/parametersOutput';
+import { redirectToLoginWithRedirect } from 'src/redirect';
 import { loadMoreResults } from './displayResults';
 import { createBtesDisplayResults } from './displayResults/createBtesDisplayResults';
 import { createPtesDisplayResults } from './displayResults/createPtesDisplayResults';
@@ -17,7 +17,9 @@ import { createTtesKpis } from './tabbedKpisTables/createTtesKpis';
 export const load = async ({ parent, url, fetch }) => {
     const { simulation, variation } = await parent();
 
-    const parameters = await tryGetJson<ParametersOutput>({ endPoint: `/simulations/${simulation.id}/parameters`, httpVerb: 'GET', fetchFunction: fetch });
+    const redirectTo = `${url.pathname}${url.search}`
+
+    const parameters = await tryGetJson<ParametersOutput>({ endPoint: `/simulations/${simulation.id}/parameters`, redirectTo, httpVerb: 'GET', fetchFunction: fetch });
 
     const { createDisplayResults, createKpis } = getFactoryFunctions(simulation.type);
 
@@ -28,12 +30,12 @@ export const load = async ({ parent, url, fetch }) => {
 
         try {
             [kpis,] = await Promise.all([
-                createKpis(variation.id, fetch),
+                createKpis(variation.id, redirectTo, fetch),
                 loadMoreResults({ displayResults, variationId: variation.id, nResultsToLoad: 3 })
             ]);
         } catch (exception) {
             if (exception instanceof UnauthorizedError) {
-                redirect(307, '/login');
+                redirectToLoginWithRedirect(redirectTo);
             }
 
             throw exception;
