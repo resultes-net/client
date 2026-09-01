@@ -103,7 +103,6 @@
 			title={$t('btes.NumberOfBoreholes')}
 			type="number"
 			min="0"
-			step="1e-4"
 			bind:value={parameters.value}
 		/>
 		<button
