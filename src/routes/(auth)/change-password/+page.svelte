@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	import { t } from '$lib/i18n/translations';
 
@@ -7,6 +8,7 @@
 
 	import { getJson } from 'src/ajax';
 	import * as auth from 'src/auth';
+	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
 
 	let user_create: UserModify = {
 		old_plain_password: '',
@@ -17,7 +19,7 @@
 		const token = auth.getTokenOrNull();
 
 		if (token === null) {
-			goto('/login');
+			gotoLoginWithRedirect($page.url);
 			return;
 		}
 

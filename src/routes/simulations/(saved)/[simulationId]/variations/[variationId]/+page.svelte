@@ -26,6 +26,7 @@
 	import DownladAllResults from './DownloadAllResults.svelte';
 	import TabbedKpisTables from './TabbedKpisTables.svelte';
 	import ParametersTable from './TabbedParametersTables.svelte';
+	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
 
 	export let data;
 
@@ -67,7 +68,7 @@
 			displayResults = myData.displayResults;
 		} catch (exception) {
 			if (exception instanceof UnauthorizedError) {
-				goto('/login');
+				gotoLoginWithRedirect($page.url);
 				return;
 			}
 

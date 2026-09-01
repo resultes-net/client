@@ -16,9 +16,10 @@
 </script>
 
 <script lang="ts">
-	import { type PopupSettings, Tab, TabGroup, popup } from '@skeletonlabs/skeleton';
-
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+
+	import { type PopupSettings, Tab, TabGroup, popup } from '@skeletonlabs/skeleton';
 
 	import { Location } from '$lib/openapi/generated/model/location';
 
@@ -27,6 +28,8 @@
 
 	import { getJson } from 'src/ajax';
 	import * as auth from 'src/auth';
+
+	import { gotoLoginWithRedirect } from './goto';
 
 	import { type Phase } from '$lib/components/parameters/phase';
 
@@ -112,7 +115,7 @@
 		const token = auth.getTokenOrNull();
 
 		if (token === null) {
-			goto('/login');
+			gotoLoginWithRedirect($page.url);
 			return;
 		}
 

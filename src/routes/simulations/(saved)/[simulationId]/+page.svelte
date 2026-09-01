@@ -3,12 +3,14 @@
 
 	import type { PageData } from './$types';
 
-	import { goto, invalidate } from '$app/navigation';
+	import { invalidate } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { getJson, UnauthorizedError } from 'src/ajax';
 	import * as auth from 'src/auth';
+	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
 	import { t } from 'src/lib/i18n/translations';
-	import type { Simulation } from 'src/lib/openapi/generated/model/simulation';
+	import type { GetSimulation } from 'src/lib/openapi/generated/model/getSimulation';
 	import { SimulationState } from 'src/lib/openapi/generated/model/simulationState';
 	import type { Variation } from 'src/lib/openapi/generated/model/variation';
 	import { toLocalDateTimeIgnoringTodayDate } from 'src/lib/utils';
@@ -17,7 +19,7 @@
 
 	export let data: PageData;
 
-	let simulation: Simulation;
+	let simulation: GetSimulation;
 	$: simulation = data.simulation;
 
 	const breadCrumbs = getBreadCrumbsStore();
@@ -45,7 +47,7 @@
 		const token = auth.getTokenOrNull();
 
 		if (token === null) {
-			goto('/login');
+			gotoLoginWithRedirect($page.url);
 			return;
 		}
 
@@ -53,7 +55,7 @@
 			await getJson({ endPoint, httpVerb: 'PUT', bearerToken: token.token });
 		} catch (error) {
 			if (error instanceof UnauthorizedError) {
-				goto('/login');
+				gotoLoginWithRedirect($page.url);
 				return;
 			}
 

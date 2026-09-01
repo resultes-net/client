@@ -10,8 +10,9 @@
 
 	import { getBreadCrumbsStore } from '../../../../breadCrumbs';
 
-	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { FetchError } from 'src/ajax';
+	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
 	import type { Variation } from 'src/lib/openapi/generated/model/variation';
 
 	const breadCrumbs = getBreadCrumbsStore();
@@ -60,7 +61,7 @@
 		const token = auth.getTokenOrNull();
 
 		if (token === null) {
-			goto('/login');
+			gotoLoginWithRedirect($page.url);
 			throw new UnauthorizedError();
 		}
 

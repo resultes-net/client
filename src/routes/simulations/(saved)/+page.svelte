@@ -3,7 +3,7 @@
 
 	import { ProgressBar } from '@skeletonlabs/skeleton';
 
-	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	import { getJson } from 'src/ajax';
 	import * as auth from 'src/auth';
@@ -13,6 +13,7 @@
 
 	import { t } from 'src/lib/i18n/translations';
 
+	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
 	import type { GetSimulation } from 'src/lib/openapi/generated/model/getSimulation';
 	import { TimeRemainingEstimator, millisecondsToMinutes } from './time';
 
@@ -20,9 +21,7 @@
 
 	const breadCrumbs = getBreadCrumbsStore();
 
-	$: breadCrumbs.set([
-		{ href: '/simulations', text: $t('common.Simulations') }
-	]);
+	$: breadCrumbs.set([{ href: '/simulations', text: $t('common.Simulations') }]);
 
 	let simulations = data.simulations;
 	let timeRemainingEstimators: { [index: string]: TimeRemainingEstimator } = {};
@@ -68,7 +67,7 @@
 		const token = auth.getTokenOrNull();
 
 		if (token === null) {
-			goto('/login');
+			gotoLoginWithRedirect($page.url);
 			return;
 		}
 

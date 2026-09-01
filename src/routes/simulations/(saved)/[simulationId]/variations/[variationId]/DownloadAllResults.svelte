@@ -3,9 +3,10 @@
 
 	import { ProgressBar } from '@skeletonlabs/skeleton';
 
-	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { getResponse } from 'src/ajax';
 	import * as auth from 'src/auth';
+	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
 
 	export let endPoint: string;
 	export let targetFileName: string;
@@ -46,7 +47,7 @@
 		const token = auth.getTokenOrNull();
 
 		if (token === null) {
-			goto('/login');
+			gotoLoginWithRedirect($page.url);
 			yield { status: 'error', message: 'Not logged in.' };
 			return;
 		}
@@ -65,7 +66,7 @@
 
 		if (response.status === 401) {
 			onClose({ closeModal: true });
-			goto('/login');
+			gotoLoginWithRedirect($page.url);
 			return;
 		}
 
