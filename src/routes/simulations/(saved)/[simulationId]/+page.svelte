@@ -15,6 +15,14 @@
 	import { onMount } from 'svelte';
 	import { getBreadCrumbsStore } from '../breadCrumbs';
 
+	const variationStateTranslationKeys: Record<string, string> = {
+		done: 'common.simulationStates.done',
+		error: 'common.simulationStates.error',
+		generate: 'common.simulationStates.generate',
+		'running-variations': 'common.simulationStates.runningVariations',
+		'waiting-for-variation-runs': 'common.simulationStates.waitingForVariationRuns'
+	};
+
 	export let data: PageData;
 
 	let simulation: Simulation;
@@ -130,9 +138,9 @@
 					<td>{toLocalDateTimeIgnoringTodayDate(variation.created_on)}</td>
 					<td class="flex flex-row">
 						{#if variation.state !== 'done' && variation.state !== 'error'}
-							<LoaderCircle class="animate-spin mr-2" /> {variation.state}
+							<LoaderCircle class="animate-spin mr-2" /> {variationStateTranslationKeys[variation.state] ? $t(variationStateTranslationKeys[variation.state]) : variation.state}
 						{:else}
-							{variation.state}
+							{variationStateTranslationKeys[variation.state] ? $t(variationStateTranslationKeys[variation.state]) : variation.state}
 						{/if}
 					</td>
 				</tr>
