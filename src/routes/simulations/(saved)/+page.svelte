@@ -16,6 +16,14 @@
 	import type { GetSimulation } from 'src/lib/openapi/generated/model/getSimulation';
 	import { TimeRemainingEstimator, millisecondsToMinutes } from './time';
 
+	const simulationStateTranslationKeys: Record<string, string> = {
+		done: 'common.simulationStates.done',
+		error: 'common.simulationStates.error',
+		generate: 'common.simulationStates.generate',
+		'running-variations': 'common.simulationStates.runningVariations',
+		'waiting-for-variation-runs': 'common.simulationStates.waitingForVariationRuns'
+	};
+
 	export let data;
 
 	const breadCrumbs = getBreadCrumbsStore();
@@ -133,7 +141,7 @@
 					<td>{simulation.name}</td>
 					<td>{toLocalDateTimeIgnoringTodayDate(simulation.created_on)}</td>
 					<td>{simulation.type}</td>
-					<td>{simulation.state}</td>
+					<td>{simulationStateTranslationKeys[simulation.state] ? $t(simulationStateTranslationKeys[simulation.state]) : simulation.state}</td>
 					<td class="flex flex-row">
 						{#if simulation.state == 'done'}
 							<div class="flex flex-row w-24">
