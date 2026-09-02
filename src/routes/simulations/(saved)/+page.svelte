@@ -64,7 +64,7 @@
 
 	async function pollSimulations(): Promise<void> {
 		try {
-			await tryGetJson({
+			simulations = await tryGetJson({
 				endPoint: '/simulations',
 				httpVerb: 'GET'
 			});
