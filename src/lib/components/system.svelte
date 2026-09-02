@@ -152,7 +152,7 @@
 		<button on:click={onHideCollectorProfileDetails} class="anchor mr-auto text-sm"
 			>← {$t('common.GoBack')}</button
 		>
-		<h5 class="h5">Demand profile properties</h5>
+		<h5 class="h5">{$t('common.DemandProfileProperties')}</h5>
 		<CollectorProfile bind:demand={parameters.demand} />
 	</div>
 {:else if isShowWhrSourceProfileDetails}
@@ -160,7 +160,7 @@
 		<button on:click={onHideWhrSourceProfileDetails} class="anchor mr-auto text-sm"
 			>← {$t('common.GoBack')}</button
 		>
-		<h5 class="h5">Demand profile properties</h5>
+		<h5 class="h5">{$t('common.SupplyProfileProperties')}</h5>
 		<WhrSourceProfile bind:whrSource={parameters.waste_heat_recovery_source} />
 	</div>
 {:else}

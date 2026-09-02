@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from '$lib/i18n/translations';
-	import Plotly from 'plotly.js-dist-min';
 	import type { Demand } from '$lib/openapi/generated/model/demand';
+	import Plotly from 'plotly.js-dist-min';
 
 	export let demand: Demand;
 
@@ -95,7 +95,10 @@
 					yhoverformat: '.2f'
 				}
 			],
-			{ xaxis: { title: { text: 'Time' } }, yaxis: { title: { text: 'Demand [MW]' } } }
+			{
+				xaxis: { title: { text: $t('common.Time') } },
+				yaxis: { title: { text: `${$t('common.demand')} [MW]` } }
+			}
 		);
 	}
 
@@ -116,7 +119,10 @@
 					yhoverformat: '.2f'
 				}
 			],
-			{ xaxis: { title: { text: 'Hours' } }, yaxis: { title: { text: 'Demand [MW]' } } }
+			{
+				xaxis: { title: { text: $t('common.Hours') } },
+				yaxis: { title: { text: `${$t('common.demand')} [MW]` } }
+			}
 		);
 	}
 </script>
@@ -127,27 +133,27 @@
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th>Description</th>
-						<th>Value</th>
-						<th>Unit</th>
-						<th>Remark</th>
+						<th>{$t('common.Description')}</th>
+						<th>{$t('common.Value')}</th>
+						<th>{$t('common.Unit')}</th>
+						<th>{$t('common.Notes')}</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td>Yearly energy demand</td>
+						<td>{$t('common.yearlyHeatDemand')}</td>
 						<td>{stats.yearlyDemandGWh.toFixed(0)}</td>
 						<td>MWh</td>
 						<td></td>
 					</tr>
 					<tr>
-						<td>(First) time of maximum energy demand</td>
+						<td>{$t('common.(First)TimeOfMaximumEnergyDemand')}</td>
 						<td>{stats.maxDate.toLocaleTimeString()} {stats.maxDate.toLocaleDateString()}</td>
 						<td>-</td>
 						<td>{dateToHourInYear(stats.maxDate)}h: {stats.maxPower.toFixed(2)} MW</td>
 					</tr>
 					<tr>
-						<td>(First) time of minimum energy demand</td>
+						<td>{$t('common.(First)TimeOfMinimumEnergyDemand')}</td>
 						<td>{stats.minDate.toLocaleTimeString()} {stats.minDate.toLocaleDateString()}</td>
 						<td>-</td>
 						<td>{dateToHourInYear(stats.minDate)}h: {stats.minPower.toFixed(2)} MW</td>

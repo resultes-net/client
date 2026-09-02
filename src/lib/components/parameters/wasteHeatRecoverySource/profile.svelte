@@ -25,7 +25,7 @@
 				{
 					x: dates,
 					y: whrSource.mass_flow_rates_kg_per_h,
-					name: 'Mass flow rate',
+					name: $t('common.MassFlowRate'),
 					type: 'scatter',
 					mode: 'markers',
 					hovertemplate: '%{x}: %{y} kg/h<extra></extra>',
@@ -35,7 +35,7 @@
 				{
 					x: dates,
 					y: whrSource.temperatures_deg_C,
-					name: 'Temperature',
+					name: $t('common.Temperature'),
 					type: 'scatter',
 					mode: 'markers',
 					hovertemplate: '%{x}: %{y} °C<extra></extra>',
@@ -45,9 +45,9 @@
 				}
 			],
 			{
-				xaxis: { title: { text: 'Time' } },
-				yaxis: { title: { text: 'Mass flow rate [kg/h]' } },
-				yaxis2: { title: { text: 'Temperature [°C]' }, side: 'right', overlaying: 'y' }
+				xaxis: { title: { text: $t('common.Time') } },
+				yaxis: { title: { text: `${$t('common.MassFlowRate')} [kg/h]` } },
+				yaxis2: { title: { text: `${$t('common.Temperature')} [°C]` }, side: 'right', overlaying: 'y' }
 			}
 		);
 	}

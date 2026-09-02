@@ -90,5 +90,13 @@
     "DistrictHeatingNetwork": "District heating network",
     "Losses": "Losses",
     "PowerOutput": "Power output",
-    "CollectorField": "Collector field"
+    "CollectorField": "Collector field",
+    "(First)TimeOfMaximumEnergyDemand": "(First) time of maximum energy demand",
+    "(First)TimeOfMinimumEnergyDemand": "(First) time of minimum energy demand",
+    "Time": "Time",
+    "Hours": "Hours",
+    "DemandProfileProperties": "Demand profile properties",
+    "SupplyProfileProperties": "Supply profile properties",
+    "MassFlowRate": "Mass flow rate",
+    "Temperature": "Temperature"
 }

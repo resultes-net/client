@@ -64,7 +64,7 @@
     "IAM": "Einfallswinkel-Korrekturfaktor",
     "parameterFile": "Parameter-Datei",
     "WasteHeatRecoverySource": "Abwärme-Quelle",
-    "WasteHeatSupplyProfile": "Abwärmeangebots-Profile",
+    "WasteHeatSupplyProfile": "Abwärmeangebots-Profil",
     "ID": "ID",
     "Name": "Name",
     "CreatedOn": "Erstellt",
@@ -90,5 +90,13 @@
     "DistrictHeatingNetwork": "Fernwärmenetz",
     "Losses": "Verluste",
     "PowerOutput": "Leistungsabgabe",
-    "CollectorField": "Kollektorfeld"
+    "CollectorField": "Kollektorfeld",
+    "(First)TimeOfMaximumEnergyDemand": "Zeitpunkt des (frühsten) maximalen Energiebedarfs",
+    "(First)TimeOfMinimumEnergyDemand": "Zeitpunkt des (frühsten) minimalen Energiebedarfs",
+    "Time": "Zeit",
+    "Hours": "Stunden",
+    "DemandProfileProperties": "Nachfrageprofil-Eigenschaften",
+    "SupplyProfileProperties": "Angebotsprofil-Eigenschaften",
+    "MassFlowRate": "Massenfluss",
+    "Temperature": "Temperatur"
 }
