@@ -13,7 +13,7 @@
 
 	import type { GetSimulation } from '$lib/openapi/generated/model/getSimulation';
 	import { tryGetJson, UnauthorizedError } from 'src/authAjax';
-	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
+	import { gotoLoginWithRedirect } from '$lib/components/goto';
 	import { millisecondsToMinutes, TimeRemainingEstimator } from './time';
 
 	export let data;

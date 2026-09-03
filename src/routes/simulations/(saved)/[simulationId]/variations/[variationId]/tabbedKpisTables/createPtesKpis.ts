@@ -1,7 +1,8 @@
-import { FetchError, UnauthorizedError } from 'src/ajax';
+import type { PtesParametersOutput } from '$lib/openapi/generated/model/ptesParametersOutput';
+import { getAbsoluteVolumeFromTtesOrPtesParameters } from '$lib/parameters/toAbsolute';
+import { FetchError, UnauthorizedError, type FetchFunction } from 'src/ajax';
 import { tryGetJson } from 'src/authAjax';
-import type { CreateKpis } from './createKpis';
-import type { HeatPump, KpisBase } from './kpis';
+import type { HeatPump, KpisBase, StorageInvestmentCost } from './kpis';
 
 
 interface Outputs {
@@ -35,13 +36,17 @@ export interface PtesKpis extends KpisBase {
     heatPump: HeatPump,
 }
 
-export const createPtesKpis: CreateKpis = async (variationId, redirectTo, fetchFunction) => {
+export async function createPtesKpis(
+    variationId: string,
+    parameters: PtesParametersOutput,
+    redirectTo: string,
+    fetchFunction: FetchFunction)
+    : Promise<PtesKpis | null> {
     const endPoint = `/variations/${variationId}/results/output.json`;
 
     try {
         const outputsArray = await tryGetJson<Outputs[]>({ endPoint, redirectTo, httpVerb: 'GET', fetchFunction });
         const outputs = outputsArray[0];
-
 
         const kpis: PtesKpis = {
             type: 'ptes',
@@ -72,7 +77,10 @@ export const createPtesKpis: CreateKpis = async (variationId, redirectTo, fetchF
                 performanceFactor_1: outputs.HpCOP,
             },
             boilerPower_GWh: outputs.BolrPOut_kW_Tot / 1e6,
-            districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3
+            districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3,
+            investmentCost: {
+                storage: getStorageInvestmentCosts(parameters, outputs)
+            }
         };
 
         return kpis;
@@ -83,4 +91,14 @@ export const createPtesKpis: CreateKpis = async (variationId, redirectTo, fetchF
 
         throw exception;
     }
+}
+
+function getStorageInvestmentCosts(parameters: PtesParametersOutput, outputs: Outputs): StorageInvestmentCost {
+    const volumeM3 = getAbsoluteVolumeFromTtesOrPtesParameters(parameters);
+    const perVolumeWaterEquivalentEuroPerM3 = 19142 * volumeM3 ** -0.539
+    const absolute_Euro = perVolumeWaterEquivalentEuroPerM3 * volumeM3;
+    const dischargedMWh = outputs.pitStoreQDisharge_Tot / 1e3;
+    const perDischarged_Euro_per_MWh = absolute_Euro / dischargedMWh;
+
+    return { absolute_Euro, perDischarged_Euro_per_MWh };
 }

@@ -17,5 +17,7 @@
     "AverageSupplyTemperature": "Vorlauf-Durchschnittstemperatur",
     "AverageReturnTemperature": "Rücklauf-Durchschnittstemperatur",
     "percentageOfEnergyInputs": "{{value:number}}% der Energie-Inputs",
-    "HeatDemandIncludingNetworkLosses": "Wärmebedarf (inkl. Verluste im Fernwärmenetz)"
+    "HeatDemandIncludingNetworkLosses": "Wärmebedarf (inkl. Verluste im Fernwärmenetz)",
+    "StorageAbsoluteInvestmentCost": "Absolute Speicher-Investitionskosten",
+    "StorageSpecificInvestmentCost": "Spezifische Speicher-Investitionskosten"
 }

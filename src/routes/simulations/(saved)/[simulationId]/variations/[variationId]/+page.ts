@@ -1,50 +1,67 @@
 
 import type { ParametersOutput } from '$lib/openapi/generated/model/parametersOutput';
-import { type Type } from '$lib/openapi/generated/model/type';
 import { tryGetJson } from 'src/authAjax';
 import { loadMoreResults } from './displayResults';
 import { createBtesDisplayResults } from './displayResults/createBtesDisplayResults';
 import { createPtesDisplayResults } from './displayResults/createPtesDisplayResults';
 import { createTtesDisplayResults } from './displayResults/createTtesDisplayResults';
-import type { CreateDisplayResults } from './displayResults/displayResults';
+import type { DisplayResult } from './displayResults/displayResults';
 import { createBtesKpis } from './tabbedKpisTables/createBtesKpis';
-import type { CreateKpis } from './tabbedKpisTables/createKpis';
 import { createPtesKpis } from './tabbedKpisTables/createPtesKpis';
 import { createTtesKpis } from './tabbedKpisTables/createTtesKpis';
 
-export const load = async ({ parent, url, fetch }) => {
-    const { simulation, variation } = await parent();
+export const load = async ({ parent, params, url, fetch }) => {
+    const { variation } = await parent();
 
     const redirectTo = `${url.pathname}${url.search}`
+    const parameters = await tryGetJson<ParametersOutput>({ endPoint: `/simulations/${params.simulationId}/parameters`, redirectTo, httpVerb: 'GET', fetchFunction: fetch });
 
-    const parameters = await tryGetJson<ParametersOutput>({ endPoint: `/simulations/${simulation.id}/parameters`, redirectTo, httpVerb: 'GET', fetchFunction: fetch });
-
-    const { createDisplayResults, createKpis } = getFactoryFunctions(simulation.type);
-
-    let kpis = null;
-    let displayResults = null;
-    if (variation.state === 'done') {
-        displayResults = createDisplayResults();
-
-        [kpis,] = await Promise.all([
-            createKpis(variation.id, redirectTo, fetch),
-            loadMoreResults({ displayResults, variationId: variation.id, nResultsToLoad: 3 })
-        ]);
-    }
+    const systemType = parameters.values.type;
 
     const shallDownload = url.searchParams.get("download") === '';
 
-    return { systemType: simulation.type, parameters, variation, kpis, displayResults, shallDownload }
+    if (variation.state !== 'done') {
+        return { systemType, parameters, variation, kpis: null, displayResults: null, shallDownload }
+    }
+
+    const { displayResults, kpis: kpisPromise } = getDisplayResultsAndKpis(variation.id, parameters, redirectTo, fetch);
+
+    const [kpis,] = await Promise.all([
+        kpisPromise,
+        loadMoreResults({ displayResults, variationId: variation.id, nResultsToLoad: 3 })
+    ]);
+
+
+
+    return { systemType: parameters.values.type, parameters, variation, kpis, displayResults, shallDownload }
 }
 
-function getFactoryFunctions(systemType: Type): {
-    createDisplayResults: CreateDisplayResults,
-    createKpis: CreateKpis
+function getDisplayResultsAndKpis(variationId: string, parameters: ParametersOutput, redirectTo: string, fetchFunction: FetchFunction): {
+    displayResults: DisplayResult[],
+    kpis: Promise<Kpis | null>
 } {
-    switch (systemType) {
-        case 'ttes': return { createDisplayResults: createTtesDisplayResults, createKpis: createTtesKpis };
-        case 'ptes': return { createDisplayResults: createPtesDisplayResults, createKpis: createPtesKpis };
-        case 'btes': return { createDisplayResults: createBtesDisplayResults, createKpis: createBtesKpis };
-        default: throw new Error(`Unknown system type: ${systemType}.`);
+    const systemType = parameters.values.type;
+
+    if (systemType === 'ttes') {
+        const displayResults = createTtesDisplayResults();
+        const kpis = createTtesKpis(variationId, parameters.values, redirectTo, fetchFunction);
+
+        return { displayResults, kpis };
     }
+
+    if (systemType === 'ptes') {
+        const displayResults = createPtesDisplayResults();
+        const kpis = createPtesKpis(variationId, parameters.values, redirectTo, fetchFunction);
+
+        return { displayResults, kpis };
+    }
+
+    if (systemType === 'btes') {
+        const displayResults = createBtesDisplayResults();
+        const kpis = createBtesKpis(variationId, parameters.values, redirectTo, fetchFunction);
+
+        return { displayResults, kpis };
+    }
+
+    throw new Error(`Unknown system type: ${systemType}.`);
 }

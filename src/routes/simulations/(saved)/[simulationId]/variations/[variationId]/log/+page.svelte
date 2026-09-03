@@ -19,9 +19,8 @@
 
 	export let data;
 	const variation = data.variation;
-	const simulation = data.simulation;
-
-	const simulationId = simulation.id;
+	
+	const simulationId = $page.params.simulationId!;
 	const variationId = variation.id;
 
 	const logMenuPopupSettings: PopupSettings = {

@@ -1,7 +1,8 @@
-import { FetchError, UnauthorizedError } from 'src/ajax';
-import { tryGetJson } from 'src/authAjax';
-import type { CreateKpis } from './createKpis';
-import type { KpisBase } from './kpis';
+import type { TtesParametersOutput } from '$lib/openapi/generated/model/ttesParametersOutput';
+import { getAbsoluteVolumeFromTtesOrPtesParameters } from '$lib/parameters/toAbsolute';
+import { FetchError } from 'src/ajax';
+import { tryGetJson, UnauthorizedError, type FetchFunction } from 'src/authAjax';
+import type { KpisBase, StorageInvestmentCost } from './kpis';
 
 
 interface Outputs {
@@ -26,13 +27,17 @@ export interface TtesKpis extends KpisBase {
     type: 'ttes',
 }
 
-export const createTtesKpis: CreateKpis = async (variationId, redirectTo, fetchFunction) => {
+export async function createTtesKpis(
+    variationId: string,
+    parameters: TtesParametersOutput,
+    redirectTo: string,
+    fetchFunction: FetchFunction)
+    : Promise<TtesKpis | null> {
     const endPoint = `/variations/${variationId}/results/output.json`;
 
     try {
         const outputsArray = await tryGetJson<Outputs[]>({ endPoint, redirectTo, httpVerb: 'GET', fetchFunction });
         const outputs = outputsArray[0];
-
 
         const kpis: TtesKpis = {
             type: 'ttes',
@@ -57,7 +62,10 @@ export const createTtesKpis: CreateKpis = async (variationId, redirectTo, fetchF
                 nChargingCycles_1: outputs.TesNCycles
             },
             boilerPower_GWh: outputs.BolrPOut_kW_Tot / 1e6,
-            districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3
+            districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3,
+            investmentCost: {
+                storage: getStorageInvestmentCosts(parameters, outputs)
+            }
         };
 
         return kpis;
@@ -69,3 +77,14 @@ export const createTtesKpis: CreateKpis = async (variationId, redirectTo, fetchF
         throw exception;
     }
 }
+
+function getStorageInvestmentCosts(parameters: TtesParametersOutput, outputs: Outputs): StorageInvestmentCost {
+    const volumeM3 = getAbsoluteVolumeFromTtesOrPtesParameters(parameters);
+    const perVolumeWaterEquivalentEuroPerM3 = 27102 * volumeM3 ** -0.527
+    const absolute_Euro = perVolumeWaterEquivalentEuroPerM3 * volumeM3;
+    const dischargedMWh = outputs.TesQDisharge_Tot / 1e3;
+    const perDischarged_Euro_per_MWh = absolute_Euro / dischargedMWh;
+
+    return { absolute_Euro, perDischarged_Euro_per_MWh };
+}
+

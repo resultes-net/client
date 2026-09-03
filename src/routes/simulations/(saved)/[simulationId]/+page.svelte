@@ -7,19 +7,19 @@
 	import { page } from '$app/stores';
 	import { gotoLoginWithRedirect } from '$lib/components/goto';
 	import { t } from '$lib/i18n/translations';
-	import type { GetSimulation } from '$lib/openapi/generated/model/getSimulation';
 	import { SimulationState } from '$lib/openapi/generated/model/simulationState';
 	import type { Variation } from '$lib/openapi/generated/model/variation';
 	import { toLocalDateTimeIgnoringTodayDate } from '$lib/utils';
 	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { UnauthorizedError } from 'src/ajax';
 	import { tryGetJson } from 'src/authAjax';
+	import type { Simulation } from '$lib/openapi/generated/model/simulation';
 	import { onMount } from 'svelte';
 	import { getBreadCrumbsStore } from '../breadCrumbs';
 
 	export let data: PageData;
 
-	let simulation: GetSimulation;
+	let simulation: Simulation;
 	$: simulation = data.simulation;
 
 	const breadCrumbs = getBreadCrumbsStore();

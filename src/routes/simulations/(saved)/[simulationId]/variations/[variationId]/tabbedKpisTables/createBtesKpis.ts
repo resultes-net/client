@@ -1,7 +1,8 @@
-import { FetchError, UnauthorizedError } from 'src/ajax';
+import type { BtesParametersOutput } from '$lib/openapi/generated/model/btesParametersOutput';
+import { getVolumeM3FromParameters } from '$lib/parameters/toAbsolute/btes';
+import { FetchError, UnauthorizedError, type FetchFunction } from 'src/ajax';
 import { tryGetJson } from 'src/authAjax';
-import type { CreateKpis } from './createKpis';
-import type { HeatPump, KpisBase } from './kpis';
+import type { HeatPump, KpisBase, StorageInvestmentCost } from './kpis';
 
 
 interface Outputs {
@@ -34,7 +35,17 @@ export interface BtesKpis extends KpisBase {
     heatPump: HeatPump,
 }
 
-export const createBtesKpis: CreateKpis = async (variationId, redirectTo, fetchFunction) => {
+const _CP_BTES_KJ_PER_M3_K = 2016.0
+const _CP_WATER_KJ_PER_KG_K = 4.19
+const _RHO_WATER_KG_PER_M3 = 998.0
+const _CP_WATER_KJ_PER_M3_K = _CP_WATER_KJ_PER_KG_K * _RHO_WATER_KG_PER_M3
+
+export async function createBtesKpis(
+    variationId: string,
+    parameters: BtesParametersOutput,
+    redirectTo: string,
+    fetchFunction: FetchFunction)
+    : Promise<BtesKpis | null> {
     const endPoint = `/variations/${variationId}/results/output.json`;
 
     try {
@@ -71,9 +82,11 @@ export const createBtesKpis: CreateKpis = async (variationId, redirectTo, fetchF
                 performanceFactor_1: outputs.HpCOP,
             },
             boilerPower_GWh: outputs.BolrPOut_kW_Tot / 1e6,
-            districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3
+            districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3,
+            investmentCost: {
+                storage: getStorageInvestmentCosts(parameters, outputs)
+            }
         };
-
 
         return kpis;
     } catch (exception) {
@@ -83,4 +96,16 @@ export const createBtesKpis: CreateKpis = async (variationId, redirectTo, fetchF
 
         throw exception;
     }
+}
+
+function getStorageInvestmentCosts(parameters: BtesParametersOutput, outputs: Outputs): StorageInvestmentCost {
+    const volumeM3 = getVolumeM3FromParameters(parameters);
+    const cpRatio = _CP_BTES_KJ_PER_M3_K / _CP_WATER_KJ_PER_M3_K;
+    const volumeWaterEquivalentM3 = volumeM3 / cpRatio;
+    const perVolumeWaterEquivalentEuroPerM3 = 472.54 * volumeWaterEquivalentM3 ** -0.225
+    const absolute_Euro = perVolumeWaterEquivalentEuroPerM3 * volumeWaterEquivalentM3;
+    const dischargedMWh = outputs.BoHxQDischar_kW_Tot / 1e3;
+    const perDischarged_Euro_per_MWh = absolute_Euro / dischargedMWh;
+
+    return { absolute_Euro, perDischarged_Euro_per_MWh };
 }

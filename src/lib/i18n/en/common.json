@@ -98,5 +98,7 @@
     "DemandProfileProperties": "Demand profile properties",
     "SupplyProfileProperties": "Supply profile properties",
     "MassFlowRate": "Mass flow rate",
-    "Temperature": "Temperature"
+    "Temperature": "Temperature",
+    "Financials": "Financials",
+    "Thousand": "Thousand"
 }

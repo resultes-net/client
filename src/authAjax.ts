@@ -1,8 +1,8 @@
-import { getJson, UnauthorizedError } from "./ajax";
+import { type FetchFunction, getJson, UnauthorizedError } from "./ajax";
 import * as auth from './auth';
 import { redirectToLoginWithRedirect } from "./redirect";
 
-export { UnauthorizedError };
+export { UnauthorizedError, type FetchFunction };
 
 export async function tryGetJson<O>(
     args: {
@@ -12,7 +12,7 @@ export async function tryGetJson<O>(
         httpVerb?: 'GET' | 'POST' | 'PUT',
         contentType?: string,
         baseUri?: string,
-        fetchFunction?: (...args: any[]) => Promise<Response>
+        fetchFunction?: FetchFunction
     }
 ): Promise<O> {
     const { redirectTo = null, ...otherArgs } = args;

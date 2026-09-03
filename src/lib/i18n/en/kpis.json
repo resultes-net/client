@@ -17,5 +17,7 @@
     "AverageSupplyTemperature": "Average supply temperature",
     "AverageReturnTemperature": "Average return temperature",
     "percentageOfEnergyInputs": "{{value:number}}% of energy inputs",
-    "HeatDemandIncludingNetworkLosses": "Heat demand (including network losses)"
+    "HeatDemandIncludingNetworkLosses": "Heat demand (including network losses)",
+    "StorageAbsoluteInvestmentCost": "Absolute investment cost of storage",
+    "StorageSpecificInvestmentCost": "Specific investment cost of storage"
 }

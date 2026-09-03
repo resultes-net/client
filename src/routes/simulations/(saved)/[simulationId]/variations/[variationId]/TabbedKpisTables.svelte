@@ -37,6 +37,9 @@
 	<Tab bind:group={activeParametersTab} name="district" value="district"
 		>{$t('common.DistrictHeatingNetwork')}</Tab
 	>
+	<Tab bind:group={activeParametersTab} name="financial" value="financial"
+		>{$t('common.Financials')}</Tab
+	>
 
 	<svelte:fragment slot="panel">
 		<div class="ltr:ml-[1%] rtl:mr-[1%]">
@@ -219,6 +222,21 @@
 										getRelativeToDemandAndLossesParam(kpis.districtHeatingLosses_GWh)
 									)}
 								</td>
+							</tr>
+						{:else if activeParametersTab === 'financial'}
+							{@const storage = kpis.investmentCost.storage}
+							{@const absolute_kEuro = storage.absolute_Euro / 1000}
+							<tr>
+								<td>{$t('kpis.StorageAbsoluteInvestmentCost')}</td>
+								<td>{absolute_kEuro.toFixed(0)}</td>
+								<td>{$t('common.Thousand')} €</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>{$t('kpis.StorageSpecificInvestmentCost')}</td>
+								<td>{storage.perDischarged_Euro_per_MWh.toFixed(0)}</td>
+								<td>€ MWh<sup>-1</sup></td>
+								<td></td>
 							</tr>
 						{:else}
 							ERROR: Unknown tab `{activeParametersTab}`.

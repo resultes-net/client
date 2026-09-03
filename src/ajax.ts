@@ -19,6 +19,7 @@ export class UnauthorizedError extends FetchError {
     }
 }
 
+export type FetchFunction = (...args: any[]) => Promise<Response>
 
 export async function getJson<O>(
     {
@@ -36,7 +37,7 @@ export async function getJson<O>(
         bearerToken?: string | null,
         contentType?: string,
         baseUri?: string,
-        fetchFunction?: (...args: any[]) => Promise<Response>
+        fetchFunction?: FetchFunction
     }
 ): Promise<O> {
     const accept = "application/json"

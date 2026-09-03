@@ -1,26 +1,16 @@
 <script lang="ts">
-	import { type ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2 as Volume } from '$lib/openapi/generated/model/scaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2';
 	import type { TtesStorage } from '$lib/openapi/generated/model/ttesStorage';
 	import PortHeightsRows from './PortHeightsRows.svelte';
 	import VolumeRows from './VolumeRows.svelte';
 
 	import { t } from '$lib/i18n/translations';
+	import { getAbsoluteVolumeM3 } from '$lib/parameters/toAbsolute';
 
 	export let parameters: TtesStorage;
 	export let yearlyHeatDemandMWh: number;
 	export let collectorFieldAreaM2: number;
 
-	const { value: scaledVolume, scaling: volumeScale } = parameters.volume;
-
-	const scalingFactor = (
-		{
-			absolute_m3: 1,
-			relative_to_collector_area_m3_per_m2: collectorFieldAreaM2,
-			relative_to_demand_m3_per_MWh: yearlyHeatDemandMWh
-		} satisfies Record<Volume.ScalingEnum, number>
-	)[volumeScale];
-
-	const volume = scaledVolume * scalingFactor;
+	const volume = getAbsoluteVolumeM3(parameters.volume, yearlyHeatDemandMWh, collectorFieldAreaM2);
 
 	const ratio = parameters.height_to_diameter_ratio_1;
 

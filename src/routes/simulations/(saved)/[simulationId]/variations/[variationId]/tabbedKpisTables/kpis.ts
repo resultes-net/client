@@ -4,6 +4,7 @@ export interface KpisBase {
 	storage: Storage,
 	districtHeatingLosses_GWh: number,
 	boilerPower_GWh: number,
+	investmentCost: InvestmentCost,
 }
 
 export interface Demand {
@@ -34,4 +35,13 @@ export interface HeatPump {
 	condenserPower_GWh: number,
 	compressorPower_GWh: number,
 	performanceFactor_1: number,
+}
+
+export interface InvestmentCost {
+	storage: StorageInvestmentCost
+}
+
+export interface StorageInvestmentCost {
+	absolute_Euro: number,
+	perDischarged_Euro_per_MWh: number,
 }

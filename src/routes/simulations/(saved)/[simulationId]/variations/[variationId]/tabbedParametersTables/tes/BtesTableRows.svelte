@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from '$lib/i18n/translations';
 	import type { BtesStorage } from '$lib/openapi/generated/model/btesStorage';
-	import { ScaledValueLiteralAbsolute1RelativeToDemand1PerMWhRelativeToCollectorArea1PerM2 as NBoreholes } from '$lib/openapi/generated/model/scaledValueLiteralAbsolute1RelativeToDemand1PerMWhRelativeToCollectorArea1PerM2';
+	import { getNBoreholes, getVolumeM3 } from '$lib/parameters/toAbsolute/btes';
 
 	export let parameters: BtesStorage;
 	export let yearlyHeatDemandMWh: number;
@@ -9,20 +9,12 @@
 
 	const { value: scaledNBoreholes, scaling: nBorholesScale } = parameters.n_boreholes;
 
-	const scalingFactor = (
-		{
-			absolute_1: 1,
-			relative_to_collector_area_1_per_m2: collectorFieldAreaM2,
-			relative_to_demand_1_per_MWh: yearlyHeatDemandMWh
-		} satisfies Record<NBoreholes.ScalingEnum, number>
-	)[nBorholesScale];
-
-	const nBoreholes = Math.ceil(scaledNBoreholes * scalingFactor);
-	const volume =
-		nBoreholes *
-		(0.525 * parameters.borehole_spacing_m) ** 2 *
-		Math.PI *
-		parameters.borehole_depth_m;
+	const nBoreholes = getNBoreholes(
+		parameters.n_boreholes,
+		yearlyHeatDemandMWh,
+		collectorFieldAreaM2
+	);
+	const volume = getVolumeM3(parameters, yearlyHeatDemandMWh, collectorFieldAreaM2);
 </script>
 
 <tr>

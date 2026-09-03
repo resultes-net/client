@@ -3,25 +3,20 @@
 
 	import { t } from '$lib/i18n/translations';
 	import type { ParametersOutput } from '$lib/openapi/generated/model/parametersOutput';
+	import { getAbsoluteAreaM2, getYearlyHeatDemandMWh } from '$lib/parameters/toAbsolute';
 	import BtesTableRows from './tabbedParametersTables/tes/BtesTableRows.svelte';
 	import PtesTableRows from './tabbedParametersTables/tes/PtesTableRows.svelte';
 	import TtesTableRows from './tabbedParametersTables/tes/TtesTableRows.svelte';
 
 	export let parameters: ParametersOutput;
 
-	const demand = parameters.values.demand;
+	const yearlyHeatDemandMWh = getYearlyHeatDemandMWh(parameters.values.demand);
+	const yearlyHeatDemandGWh = yearlyHeatDemandMWh / 1e3;
 
-	const yearlyHeatDemandMWh = demand.hourly_heat_demand_MW.reduce(
-		(s, p) => s + demand.scaling_factor * p,
-		0
+	const collectorFieldAreaM2 = getAbsoluteAreaM2(
+		parameters.values.collector_field.area,
+		yearlyHeatDemandMWh
 	);
-
-	const yearlyHeatDemandGWh = yearlyHeatDemandMWh / 1000;
-
-	const collectorFieldArea = parameters.values.collector_field.area;
-	const collectorFieldAreaScalingFactor =
-		collectorFieldArea.scaling === 'relative_to_demand_m2_per_MWh' ? yearlyHeatDemandMWh : 1.0;
-	const collectorFieldAreaM2 = collectorFieldArea.value * collectorFieldAreaScalingFactor;
 
 	type ActiveParamtersTab = 'demand' | 'collector' | 'storage' | 'control';
 	let activeParametersTab: ActiveParamtersTab = 'demand';
@@ -52,7 +47,7 @@
 							<tr>
 								<td>{$t('common.yearlyHeatDemand')}</td>
 								<td>{yearlyHeatDemandGWh.toFixed(1)}</td>
-								<td> GWh </td>
+								<td>GWh</td>
 								<td />
 							</tr>
 						{:else if activeParametersTab === 'collector'}

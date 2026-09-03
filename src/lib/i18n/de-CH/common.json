@@ -98,5 +98,7 @@
     "DemandProfileProperties": "Nachfrageprofil-Eigenschaften",
     "SupplyProfileProperties": "Angebotsprofil-Eigenschaften",
     "MassFlowRate": "Massenfluss",
-    "Temperature": "Temperatur"
+    "Temperature": "Temperatur",
+    "Financials": "Finanzen",
+    "Thousand": "Tausend"
 }

@@ -7,7 +7,7 @@
 	import type { UserModify } from '$lib/openapi/generated/model/userModify';
 
 	import { tryGetJson, UnauthorizedError } from 'src/authAjax';
-	import { gotoLoginWithRedirect } from 'src/lib/components/goto';
+	import { gotoLoginWithRedirect } from '$lib/components/goto';
 
 	let user_create: UserModify = {
 		old_plain_password: '',
