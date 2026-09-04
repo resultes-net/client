@@ -3,5 +3,11 @@
     "NumberOfBoreholes": "Number of boreholes",
     "BoreholeSpacing": "Borehole spacing",
     "BoreholeDepth": "Borehole depth",
-    "Boreholes": "Boreholes"
+    "Boreholes": "Boreholes",
+    "HeatExchangerType": "Heat exchanger type",
+    "single-U": "single-U",
+    "double-U": "double-U",
+    "coaxial": "coaxial",
+    "FluidToGroundResistance": "Fluid to ground resistance",
+    "PipeToPipeResistance": "Pipe to pipe resistance"
 }

@@ -3,5 +3,11 @@
     "NumberOfBoreholes": "Anzahl Bohrlöcher",
     "BoreholeSpacing": "Bohrloch-Abstand",
     "BoreholeDepth": "Bohrloch-Tiefe",
-    "Boreholes": "Bohrlöcher"
+    "Boreholes": "Bohrlöcher",
+    "HeatExchangerType": "Wärmeübertrager-Typ",
+    "single-U": "einfach-U",
+    "double-U": "doppel-U",
+    "coaxial": "koaxial",
+    "FluidToGroundResistance": "Therm. Widerstand Fluid-Boden",
+    "PipeToPipeResistance": "Therm. Kurzschlusswiderstand"
 }

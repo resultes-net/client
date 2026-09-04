@@ -45,7 +45,7 @@
 					id="demand-delta-t"
 					title={$t('ttes.InsulationThickness')}
 					type="number"
-					value={parameters.insulation_thickness_cm}
+					bind:value={parameters.insulation_thickness_cm}
 					min="0"
 				/>
 				<div><span class="flex flex-grow justify-center">cm</span></div>
