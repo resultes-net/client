@@ -236,7 +236,7 @@
 								<td>{$t('kpis.StorageSpecificInvestmentCost')}</td>
 								<td>{storage.perDischarged_Euro_per_MWh.toFixed(0)}</td>
 								<td>€ MWh<sup>-1</sup></td>
-								<td></td>
+								<td>{$t('kpis.PerMWhDischarged')}</td>
 							</tr>
 						{:else}
 							ERROR: Unknown tab `{activeParametersTab}`.

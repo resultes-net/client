@@ -19,5 +19,6 @@
     "percentageOfEnergyInputs": "{{value:number}}% der Energie-Inputs",
     "HeatDemandIncludingNetworkLosses": "Wärmebedarf (inkl. Verluste im Fernwärmenetz)",
     "StorageAbsoluteInvestmentCost": "Absolute Speicher-Investitionskosten",
-    "StorageSpecificInvestmentCost": "Spezifische Speicher-Investitionskosten"
+    "StorageSpecificInvestmentCost": "Spezifische Speicher-Investitionskosten",
+    "PerMWhDischarged": "Pro entladende MWh"
 }
