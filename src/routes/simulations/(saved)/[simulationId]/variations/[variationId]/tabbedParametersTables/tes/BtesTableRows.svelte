@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { t } from '$lib/i18n/translations';
 	import type { BtesStorage } from '$lib/openapi/generated/model/btesStorage';
-	import { getNBoreholes, getVolumeM3 } from '$lib/parameters/toAbsolute/btes';
+	import { getNBoreholes, getVolumeM3 } from '$lib/parameters/btes/toAbsolute';
+	import {
+		isCoaxialDefault,
+		isDoubleUDefault,
+		isSingleUDefault
+	} from 'src/lib/parameters/btes/heatExchangers';
 
 	export let parameters: BtesStorage;
 	export let yearlyHeatDemandMWh: number;
@@ -15,6 +20,8 @@
 		collectorFieldAreaM2
 	);
 	const volume = getVolumeM3(parameters, yearlyHeatDemandMWh, collectorFieldAreaM2);
+
+	const heatExchanger = parameters.heat_exchanger;
 </script>
 
 <tr>
@@ -48,5 +55,39 @@
 	<td>{$t('btes.BoreholeDepth')}</td>
 	<td>{parameters.borehole_depth_m}</td>
 	<td>m</td>
+	<td />
+</tr>
+{#if isSingleUDefault(heatExchanger)}
+	<tr>
+		<td>{$t('btes.HeatExchangerType')}</td>
+		<td>{$t('btes.single-U')}</td>
+		<td>-</td>
+		<td />
+	</tr>
+{:else if isDoubleUDefault(heatExchanger)}
+	<tr>
+		<td>{$t('btes.HeatExchangerType')}</td>
+		<td>{$t('btes.double-U')}</td>
+		<td>-</td>
+		<td />
+	</tr>
+{:else if isCoaxialDefault(heatExchanger)}
+	<tr>
+		<td>{$t('btes.HeatExchangerType')}</td>
+		<td>{$t('btes.coaxial')}</td>
+		<td>-</td>
+		<td />
+	</tr>
+{/if}
+<tr>
+	<td>{$t('btes.FluidToGroundResistance')}</td>
+	<td>{heatExchanger.fluid_to_ground_resistance_m_K_per_W}</td>
+	<td>m KW<sup>-1</sup></td>
+	<td />
+</tr>
+<tr>
+	<td>{$t('btes.PipeToPipeResistance')}</td>
+	<td>{heatExchanger.pipe_to_pipe_resistance_m_K_per_W}</td>
+	<td>m KW<sup>-1</sup></td>
 	<td />
 </tr>

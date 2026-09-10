@@ -1,5 +1,5 @@
 import type { BtesParametersOutput } from '$lib/openapi/generated/model/btesParametersOutput';
-import { getVolumeM3FromParameters } from '$lib/parameters/toAbsolute/btes';
+import { getVolumeM3FromParameters } from '$lib/parameters/btes/toAbsolute';
 import { FetchError, UnauthorizedError, type FetchFunction } from 'src/ajax';
 import { tryGetJson } from 'src/authAjax';
 import type { HeatPump, KpisBase, StorageInvestmentCost } from './kpis';

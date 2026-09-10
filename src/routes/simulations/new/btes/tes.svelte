@@ -3,8 +3,13 @@
 	import type { Phase } from '$lib/components/parameters/phase';
 	import { t } from '$lib/i18n/translations';
 	import type { BtesStorage } from '$lib/openapi/generated/model/btesStorage';
-	import type { HeatExchanger } from 'src/lib/openapi/generated/model/heatExchanger';
-	import { HeatExchangers as HX } from './create';
+	import {
+		createDefault,
+		isCoaxialDefault,
+		isDoubleUDefault,
+		isSingleUDefault,
+		type HeatExchangerType
+	} from '$lib/parameters/btes/heatExchangers';
 	import NBoreholes from './tes/NBoreholes.svelte';
 
 	export let projectPhase: Phase;
@@ -13,14 +18,6 @@
 	export let collectorFieldAreaM2: number;
 
 	export let onAreParametersValidChanged: OnAreParametersValidChanged;
-
-	type HeatExchangerType = 'single-U' | 'double-U' | 'coaxial';
-
-	const HEAT_EXCHANGER_VALUES_BY_TYPE: Readonly<Record<HeatExchangerType, HeatExchanger>> = {
-		'single-U': HX.createSingleUDefault(),
-		'double-U': HX.createDoubleUDefault(),
-		coaxial: HX.createCoaxialDefault()
-	};
 
 	let heatExchangerType: HeatExchangerType = 'double-U';
 
@@ -32,32 +29,19 @@
 	}
 
 	function setHeatExchangerTypeAfterChangingToPreDesign() {
-		let newHeatExchangerType: HeatExchangerType = 'double-U';
-
-		for (const [type, defaultHeatExchanger] of Object.entries(HEAT_EXCHANGER_VALUES_BY_TYPE)) {
-			if (areHeatExchangersEqual(defaultHeatExchanger, heatExchanger)) {
-				newHeatExchangerType = type as keyof typeof HEAT_EXCHANGER_VALUES_BY_TYPE;
-				break;
-			}
+		if (isSingleUDefault(heatExchanger)) {
+			heatExchangerType = 'single-U';
+		} else if (isDoubleUDefault(heatExchanger)) {
+			heatExchangerType = 'double-U';
+		} else if (isCoaxialDefault(heatExchanger)) {
+			heatExchangerType = 'coaxial';
+		} else {
+			heatExchangerType = 'double-U';
 		}
-
-		heatExchangerType = newHeatExchangerType;
-	}
-
-	function areHeatExchangersEqual(
-		heatExchanger1: HeatExchanger,
-		heatExchanger2: HeatExchanger
-	): boolean {
-		return (
-			heatExchanger1.fluid_to_ground_resistance_m_K_per_W ===
-				heatExchanger2.fluid_to_ground_resistance_m_K_per_W &&
-			heatExchanger1.pipe_to_pipe_resistance_m_K_per_W ===
-				heatExchanger2.pipe_to_pipe_resistance_m_K_per_W
-		);
 	}
 
 	function onHeatExchangerTypeChanged() {
-		parameters.heat_exchanger = { ...HEAT_EXCHANGER_VALUES_BY_TYPE[heatExchangerType] };
+		parameters.heat_exchanger = createDefault(heatExchangerType);
 	}
 </script>
 
@@ -117,7 +101,9 @@
 					bind:value={parameters.heat_exchanger.fluid_to_ground_resistance_m_K_per_W}
 					min="0"
 				/>
-				<div><span class="flex flex-grow justify-center">m KW<sup class="top-1">-1</sup></span></div>
+				<div>
+					<span class="flex flex-grow justify-center">m KW<sup class="top-1">-1</sup></span>
+				</div>
 			</div>
 
 			<label for="pipe-to-pipe-resistance">{$t('btes.PipeToPipeResistance')}</label>
@@ -130,7 +116,9 @@
 					bind:value={parameters.heat_exchanger.pipe_to_pipe_resistance_m_K_per_W}
 					min="0"
 				/>
-				<div><span class="flex flex-grow justify-center">m KW<sup class="top-1">-1</sup></span></div>
+				<div>
+					<span class="flex flex-grow justify-center">m KW<sup class="top-1">-1</sup></span>
+				</div>
 			</div>
 		{/if}
 	</div>
