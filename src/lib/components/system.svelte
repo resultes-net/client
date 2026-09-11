@@ -277,9 +277,6 @@
 					</TabGroup>
 				</div>
 				<div class="flex flex-col mt-2 gap-y-1 ml-auto">
-					<button type="button" class="btn variant-filled-primary">
-						{$t('common.downloadPytrnsysProject')}
-					</button>
 					<button
 						type="button"
 						class="btn variant-filled-primary [&>*]:pointer-events-none"
