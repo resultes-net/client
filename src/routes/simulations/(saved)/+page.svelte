@@ -120,6 +120,7 @@
 				<th>{$t('common.Progress')}</th>
 				<th>{$t('common.TimeElapsed')}</th>
 				<th>{$t('common.EstimatedTimeRemaining')}</th>
+				<th>{$t('common.EstimatedTotalTime')}</th>
 				<th>{$t('common.EstimatedTimeDone')}</th>
 				<th>{$t('common.NumberOfVariations')}</th>
 			</tr>
@@ -163,9 +164,12 @@
 					{:else if simulation.id in timeRemainingEstimators && timeRemainingEstimators[simulation.id].hasEstimate()}
 						{@const estimatedMinutesRemaining =
 							timeRemainingEstimators[simulation.id].getEstimatedMinutes()}
+						{@const estimatedTotalTime = ellapsedMinutes + estimatedMinutesRemaining}
 						<td>{estimatedMinutesRemaining} min</td>
+						<td>{estimatedTotalTime} min</td>
 						<td>{formatEstimatedDoneTime(estimatedMinutesRemaining)}</td>
 					{:else}
+						<td>TBD</td>
 						<td>TBD</td>
 						<td>TBD</td>
 					{/if}

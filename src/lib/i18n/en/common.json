@@ -73,6 +73,7 @@
     "Progress": "Progress",
     "TimeElapsed": "Time elapsed",
     "EstimatedTimeRemaining": "Estimated time remaining",
+    "EstimatedTotalTime": "Estimated total time",
     "EstimatedTimeDone": "Estimated time done",
     "NumberOfVariations": "Number of variations",
     "Home": "Home",

@@ -73,6 +73,7 @@
     "Progress": "Fortschritt",
     "TimeElapsed": "Verstrichene Zeit",
     "EstimatedTimeRemaining": "Geschätzte verbleibende Zeit",
+    "EstimatedTotalTime": "Geschätzte Simulationszeit",
     "EstimatedTimeDone": "Getschätztes Simulationsende",
     "NumberOfVariations": "Anzahl Variationen",
     "Home": "Start",
