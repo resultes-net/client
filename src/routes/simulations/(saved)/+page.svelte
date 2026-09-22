@@ -161,6 +161,7 @@
 					{#if simulation.state === 'done' || simulation.state === 'error'}
 						<td>0 min</td>
 						<td>&ndash;</td>
+						<td>&ndash;</td>
 					{:else if simulation.id in timeRemainingEstimators && timeRemainingEstimators[simulation.id].hasEstimate()}
 						{@const estimatedMinutesRemaining =
 							timeRemainingEstimators[simulation.id].getEstimatedMinutes()}
