@@ -43,7 +43,7 @@
 	export let parameters;
 	const simulation: CreateSimulation = {
 		name: '',
-		location: Location.Zurich,
+		location: Location.Alpine,
 		type: systemType,
 		parameters: { values: parameters }
 	};
@@ -186,11 +186,15 @@
 				<div class="grid grid-cols-[--input-grid-cols] items-center">
 					<label for="location">{$t('common.Location')}</label>
 					<select class="select" bind:value={simulation.location}>
-						<option value="Berlin">{$t('common.Berlin')}</option>
-						<option value="Brussels">{$t('common.Brussels')}</option>
-						<option value="Copenhagen">{$t('common.Copenhagen')}</option>
-						<option value="Madrid">{$t('common.Madrid')}</option>
-						<option value="Zurich">{$t('common.Zurich')}</option>
+						<option value="alpine">{$t('common.Alpine/Davos')}</option>
+						<option value="cold">{$t('common.Cold/EdmontonAirport')}</option>
+						<option value="dry">{$t('common.Dry/Cairo')}</option>
+						<option value="hot">{$t('common.Hot/AbuDhabiAirport')}</option>
+						<option value="mediterranean">{$t('common.Mediterranean/RomeAirportCiampino')}</option>
+						<option value="subtropic">{$t('common.Subtropic/ChennaiAirport')}</option>
+						<option value="temperate">{$t('common.Temperate/LondonCityCenter')}</option>
+						<option value="tropical">{$t('common.Tropical/NewOrleansAirport')}</option>
+						<option value="wet">{$t('common.Wet/ManausCityCenter')}</option>
 					</select>
 				</div>
 
