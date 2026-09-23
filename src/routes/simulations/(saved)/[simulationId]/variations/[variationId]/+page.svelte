@@ -153,7 +153,7 @@
 			case 'temperate':
 				return trans('common.Temperate|LondonCityCenter');
 			case 'tropical':
-				return trans('common.NewOrleansAirport');
+				return trans('common.Tropical|NewOrleansAirport');
 			case 'wet':
 				return trans('common.Wet|ManausCityCenter');
 			default:
