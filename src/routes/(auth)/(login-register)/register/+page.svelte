@@ -5,6 +5,8 @@
 	import { t } from '$lib/i18n/translations';
 
 	import type { UserCreate } from '$lib/openapi/generated/model/userCreate';
+	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import { Info } from 'lucide-svelte';
 
 	import { FetchError, getJson } from 'src/ajax';
 
@@ -18,8 +20,13 @@
 		registration_key: ''
 	};
 
-	let errorMessage: string | null = null;
+	const registrationCodeInfoPopupSettings: PopupSettings = {
+		event: 'hover',
+		target: 'registrationCodeInfoPopup',
+		placement: 'right'
+	};
 
+	let errorMessage: string | null = null;
 	async function onSubmit(): Promise<void> {
 		const body = JSON.stringify(user_create);
 
@@ -51,6 +58,13 @@
 		goto(`/login?registered${redirectPart}`);
 	}
 </script>
+
+<div data-popup="registrationCodeInfoPopup">
+	<div class="card p-4 variant-filled-secondary relative z-50">
+		<div class="arrow variant-filled-secondary" />
+		<div class="whitespace-pre-line">{$t('auth.WriteToToAskForRegistrationCode')}</div>
+	</div>
+</div>
 
 <form class="flex flex-col w-[80%] self-center gap-y-3" on:submit|preventDefault={onSubmit}>
 	<label class="label">
@@ -96,12 +110,17 @@
 		/>
 	</label>
 	<label class="label">
-		<span>{$t('auth.registrationCode')}</span>
+		<div class="flex flex-row">
+			<span class="mr-1">{$t('auth.registrationCode')}</span>
+			<div class="[&>*]:pointer-events-none" use:popup={registrationCodeInfoPopupSettings}>
+				<Info />
+			</div>
+		</div>
 		<input class="input" type="text" required bind:value={user_create.registration_key} />
 	</label>
-	<button type="submit" class="btn variant-filled-primary self-center mt-2"
-		>{$t('auth.register')}</button
-	>
+	<button type="submit" class="btn variant-filled-primary self-center mt-2">
+		{$t('auth.register')}
+	</button>
 </form>
 
 {#if errorMessage}
