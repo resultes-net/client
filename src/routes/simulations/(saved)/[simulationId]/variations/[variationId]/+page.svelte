@@ -20,19 +20,19 @@
 
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
 
+	import { gotoLoginWithRedirect } from '$lib/components/goto';
 	import { UnauthorizedError } from 'src/ajax';
+	import type { Location } from 'src/lib/openapi/generated/model/location';
 	import type { PageData } from './$types.js';
 	import { loadMoreResults } from './displayResults';
 	import DownladAllResults from './DownloadAllResults.svelte';
 	import TabbedKpisTables from './TabbedKpisTables.svelte';
 	import ParametersTable from './TabbedParametersTables.svelte';
-	import { gotoLoginWithRedirect } from '$lib/components/goto';
 
 	export let data;
 
-	const systemType = data.systemType;
-	const parameters = data.parameters;
-
+	$: simulation = data.simulation;
+	$: parameters = data.parameters;
 	$: variation = data.variation;
 	$: variationId = variation.id;
 	$: kpis = data.kpis;
@@ -78,8 +78,6 @@
 
 	const modalStore = getModalStore();
 
-	const simulationId = $page.params.simulationId as string;
-
 	const variationMenuPopupSettings: PopupSettings = {
 		event: 'click',
 		target: 'variation-menu-drop-down',
@@ -90,10 +88,10 @@
 
 	$: breadCrumbs.set([
 		{ href: '/simulations', text: $t('common.Simulations') },
-		{ href: `/simulations/${simulationId}`, text: simulationId },
+		{ href: `/simulations/${simulation.id}`, text: simulation.id },
 		{ text: $t('common.Variations') },
 		{
-			href: `/simulations/${simulationId}/variations/${variationId}`,
+			href: `/simulations/${simulation.id}/variations/${variationId}`,
 			text: variationId
 		}
 	]);
@@ -126,6 +124,41 @@
 			component: modalComponent
 		};
 		modalStore.trigger(modal);
+	}
+
+	function getLocationName(location: Location): string {
+		switch (location) {
+			case 'Berlin':
+				return $t('common.Berlin');
+			case 'Brussels':
+				return $t('common.Brussels');
+			case 'Copenhagen':
+				return $t('common.Copenhagen');
+			case 'Madrid':
+				return $t('common.Madrid');
+			case 'Zurich':
+				return $t('common.Zurich');
+			case 'alpine':
+				return $t('common.Alpine|Davos');
+			case 'cold':
+				return $t('common.Cold|EdmontonAirport');
+			case 'dry':
+				return $t('common.Dry|Cairo');
+			case 'hot':
+				return $t('common.Hot|AbuDhabiAirport');
+			case 'mediterranean':
+				return $t('common.Mediterranean|RomeAirportCiampino');
+			case 'subtropic':
+				return $t('common.Subtropic|ChennaiAirport');
+			case 'temperate':
+				return $t('common.Temperate|LondonCityCenter');
+			case 'tropical':
+				return $t('common.NewOrleansAirport');
+			case 'wet':
+				return $t('common.Wet|ManausCityCenter');
+			default:
+				return `ERROR: Unknown location '${location}'`;
+		}
 	}
 
 	let isDestroyed = false;
@@ -166,7 +199,7 @@
 				<a href="?download" class="btn w-full">Download all results</a>
 			</li>
 			<li>
-				<a href={`/simulations/${simulationId}/variations/${variationId}/log`} class="btn w-full"
+				<a href={`/simulations/${simulation.id}/variations/${variationId}/log`} class="btn w-full"
 					>Logs</a
 				>
 			</li>
@@ -180,7 +213,8 @@
 	<div class="ml-6 flex flex-col">
 		<div class="flex flex-row">
 			<h2 class="h2">{$t('common.Variation')} {variationId}</h2>
-			<span class="ml-2 font-mono text-xs content-start">{systemType.toLocaleUpperCase()}</span>
+			<span class="ml-2 font-mono text-xs content-start">{simulation.type.toLocaleUpperCase()}</span
+			>
 			{#if variation.state !== 'done' && variation.state !== 'error'}
 				<div class="self-center"><EllipsisVertical /></div>
 				<LoaderCircle class="self-center animate-spin ml-1" />
@@ -188,6 +222,14 @@
 				<div class="self-center" use:popup={variationMenuPopupSettings}><EllipsisVertical /></div>
 			{/if}
 		</div>
+
+		<div class="grid grid-cols-[8rem_auto] items-center gap-y-2 mt-4">
+			<label class="font-semibold" for="project-name">{$t('common.projectName')}</label>
+			<span>{simulation.name || `${$t('common.<empty>')}`}</span>
+			<label class="font-semibold" for="location">{$t('common.Location')}</label>
+			<span>{getLocationName(simulation.location)}</span>
+		</div>
+
 		<div
 			class="mt-8"
 			use:tocCrawler={{

@@ -167,12 +167,12 @@
 	<div class="flex flex-row gap-[2%] ltr:mr-[2%] rtl:ml-[2%]">
 		<!-- Parameters input section -->
 		<div class="basis-1/2">
-			<div class="flex flex-col gap-4">
+			<div class="flex flex-col gap-y-4">
 				<h5 class="h5">{$t('common.newSimulation')}</h5>
 
 				<hr class="!border-t-2" />
 
-				<div class="grid grid-cols-[--input-grid-cols] items-center">
+				<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]">
 					<label for="project-name">{$t('common.projectName')}</label>
 					<input
 						class="input"
@@ -181,20 +181,18 @@
 						type="text"
 						bind:value={simulation.name}
 					/>
-				</div>
 
-				<div class="grid grid-cols-[--input-grid-cols] items-center">
 					<label for="location">{$t('common.Location')}</label>
 					<select class="select" bind:value={simulation.location}>
-						<option value="alpine">{$t('common.Alpine/Davos')}</option>
-						<option value="cold">{$t('common.Cold/EdmontonAirport')}</option>
-						<option value="dry">{$t('common.Dry/Cairo')}</option>
-						<option value="hot">{$t('common.Hot/AbuDhabiAirport')}</option>
-						<option value="mediterranean">{$t('common.Mediterranean/RomeAirportCiampino')}</option>
-						<option value="subtropic">{$t('common.Subtropic/ChennaiAirport')}</option>
-						<option value="temperate">{$t('common.Temperate/LondonCityCenter')}</option>
-						<option value="tropical">{$t('common.Tropical/NewOrleansAirport')}</option>
-						<option value="wet">{$t('common.Wet/ManausCityCenter')}</option>
+						<option value="alpine">{$t('common.Alpine|Davos')}</option>
+						<option value="cold">{$t('common.Cold|EdmontonAirport')}</option>
+						<option value="dry">{$t('common.Dry|Cairo')}</option>
+						<option value="hot">{$t('common.Hot|AbuDhabiAirport')}</option>
+						<option value="mediterranean">{$t('common.Mediterranean|RomeAirportCiampino')}</option>
+						<option value="subtropic">{$t('common.Subtropic|ChennaiAirport')}</option>
+						<option value="temperate">{$t('common.Temperate|LondonCityCenter')}</option>
+						<option value="tropical">{$t('common.Tropical|NewOrleansAirport')}</option>
+						<option value="wet">{$t('common.Wet|ManausCityCenter')}</option>
 					</select>
 				</div>
 

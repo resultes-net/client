@@ -1,6 +1,6 @@
 
 import type { ParametersOutput } from '$lib/openapi/generated/model/parametersOutput';
-import { tryGetJson } from 'src/authAjax';
+import { tryGetJson, type FetchFunction } from 'src/authAjax';
 import { loadMoreResults } from './displayResults';
 import { createBtesDisplayResults } from './displayResults/createBtesDisplayResults';
 import { createPtesDisplayResults } from './displayResults/createPtesDisplayResults';
@@ -9,19 +9,18 @@ import type { DisplayResult } from './displayResults/displayResults';
 import { createBtesKpis } from './tabbedKpisTables/createBtesKpis';
 import { createPtesKpis } from './tabbedKpisTables/createPtesKpis';
 import { createTtesKpis } from './tabbedKpisTables/createTtesKpis';
+import type { KpisBase } from './tabbedKpisTables/kpis';
 
 export const load = async ({ parent, params, url, fetch }) => {
-    const { variation } = await parent();
+    const { simulation, variation } = await parent();
 
     const redirectTo = `${url.pathname}${url.search}`
     const parameters = await tryGetJson<ParametersOutput>({ endPoint: `/simulations/${params.simulationId}/parameters`, redirectTo, httpVerb: 'GET', fetchFunction: fetch });
 
-    const systemType = parameters.values.type;
-
     const shallDownload = url.searchParams.get("download") === '';
 
     if (variation.state !== 'done') {
-        return { systemType, parameters, variation, kpis: null, displayResults: null, shallDownload }
+        return { simulation, parameters, variation, kpis: null, displayResults: null, shallDownload }
     }
 
     const { displayResults, kpis: kpisPromise } = getDisplayResultsAndKpis(variation.id, parameters, redirectTo, fetch);
@@ -33,12 +32,12 @@ export const load = async ({ parent, params, url, fetch }) => {
 
 
 
-    return { systemType: parameters.values.type, parameters, variation, kpis, displayResults, shallDownload }
+    return { simulation, parameters, variation, kpis, displayResults, shallDownload }
 }
 
 function getDisplayResultsAndKpis(variationId: string, parameters: ParametersOutput, redirectTo: string, fetchFunction: FetchFunction): {
     displayResults: DisplayResult[],
-    kpis: Promise<Kpis | null>
+    kpis: Promise<KpisBase | null>
 } {
     const systemType = parameters.values.type;
 

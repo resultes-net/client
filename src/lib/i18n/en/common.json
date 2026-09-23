@@ -102,13 +102,14 @@
     "Temperature": "Temperature",
     "Financials": "Financials",
     "Thousand": "Thousand",
-    "Alpine/Davos": "Alpine / Davos",
-    "Cold/EdmontonAirport": "Cold / Edmonton Airport",
-    "Dry/Cairo": "Dry / Cairo",
-    "Hot/AbuDhabiAirport": "Hot / Abu Dhabi Airport",
-    "Mediterranean/RomeAirportCiampino": "Mediterranean / Rome Airport Ciampino",
-    "Subtropic/ChennaiAirport": "Subtropic / Chennai Airport",
-    "Temperate/LondonCityCenter": "Temperate / London City Center",
-    "Tropical/NewOrleansAirport": "Tropical / New Orleans Airport",
-    "Wet/ManausCityCenter": "Wet / Manaus City Center"
+    "Alpine|Davos": "Alpine | Davos",
+    "Cold|EdmontonAirport": "Cold | Edmonton Airport",
+    "Dry|Cairo": "Dry | Cairo",
+    "Hot|AbuDhabiAirport": "Hot | Abu Dhabi Airport",
+    "Mediterranean|RomeAirportCiampino": "Mediterranean | Rome Airport Ciampino",
+    "Subtropic|ChennaiAirport": "Subtropic | Chennai Airport",
+    "Temperate|LondonCityCenter": "Temperate | London City Center",
+    "Tropical|NewOrleansAirport": "Tropical | New Orleans Airport",
+    "Wet|ManausCityCenter": "Wet | Manaus City Center",
+    "<empty>": "<empty>"
 }
