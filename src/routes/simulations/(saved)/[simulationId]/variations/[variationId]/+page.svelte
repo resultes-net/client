@@ -126,36 +126,36 @@
 		modalStore.trigger(modal);
 	}
 
-	function getLocationName(location: Location): string {
+	function getLocationName(location: Location, trans: typeof $t): string {
 		switch (location) {
 			case 'Berlin':
-				return $t('common.Berlin');
+				return trans('common.Berlin');
 			case 'Brussels':
-				return $t('common.Brussels');
+				return trans('common.Brussels');
 			case 'Copenhagen':
-				return $t('common.Copenhagen');
+				return trans('common.Copenhagen');
 			case 'Madrid':
-				return $t('common.Madrid');
+				return trans('common.Madrid');
 			case 'Zurich':
-				return $t('common.Zurich');
+				return trans('common.Zurich');
 			case 'alpine':
-				return $t('common.Alpine|Davos');
+				return trans('common.Alpine|Davos');
 			case 'cold':
-				return $t('common.Cold|EdmontonAirport');
+				return trans('common.Cold|EdmontonAirport');
 			case 'dry':
-				return $t('common.Dry|Cairo');
+				return trans('common.Dry|Cairo');
 			case 'hot':
-				return $t('common.Hot|AbuDhabiAirport');
+				return trans('common.Hot|AbuDhabiAirport');
 			case 'mediterranean':
-				return $t('common.Mediterranean|RomeAirportCiampino');
+				return trans('common.Mediterranean|RomeAirportCiampino');
 			case 'subtropic':
-				return $t('common.Subtropic|ChennaiAirport');
+				return trans('common.Subtropic|ChennaiAirport');
 			case 'temperate':
-				return $t('common.Temperate|LondonCityCenter');
+				return trans('common.Temperate|LondonCityCenter');
 			case 'tropical':
-				return $t('common.NewOrleansAirport');
+				return trans('common.NewOrleansAirport');
 			case 'wet':
-				return $t('common.Wet|ManausCityCenter');
+				return trans('common.Wet|ManausCityCenter');
 			default:
 				return `ERROR: Unknown location '${location}'`;
 		}
@@ -227,7 +227,7 @@
 			<label class="font-semibold" for="project-name">{$t('common.projectName')}</label>
 			<span>{simulation.name || `${$t('common.<empty>')}`}</span>
 			<label class="font-semibold" for="location">{$t('common.Location')}</label>
-			<span>{getLocationName(simulation.location)}</span>
+			<span>{getLocationName(simulation.location, $t)}</span>
 		</div>
 
 		<div
