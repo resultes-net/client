@@ -116,6 +116,20 @@ const config = ({
             loader: async () => (
                 await import('./de-CH/kpis.json')
             ).default,
+        },
+        {
+            locale: 'en',
+            key: 'logos',
+            loader: async () => (
+                await import('./en/logos.json')
+            ).default,
+        },
+        {
+            locale: 'de-CH',
+            key: 'logos',
+            loader: async () => (
+                await import('./de-CH/logos.json')
+            ).default,
         }
     ]
 });
