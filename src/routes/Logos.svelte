@@ -93,6 +93,6 @@
 		</span>
 	</div>
 	<span class="mt-14">
-		{$t('logos.ResulTESis')} <a href="https://github.com/resultes-net" class="anchor">{$t('logos.openSource')}</a>
+		{$t('logos.ResulTESis')} <a href="https://github.com/resultes-net" class="anchor">{$t('logos.openSource')}.</a>
 	</span>
 </div>
