@@ -36,12 +36,18 @@
 		</a>
 	</div>
 	<span class="text-lg mt-10">{$t('logos.RunningOn')}</span>
-	<a class="mt-2 ml-12" href="https://www.trnsys.com">
-		<div class="flex flex-row">
-			<span class="self-center family-[TitilliumMedium] text-[#d7e5ee] text-[50px]">TRNSYS</span>
-			<img class="ml-1" alt={$t('logos.TRNSYSLogo')} src={trnsysLogo} width="80" />
+	<div class="mt-2 ml-12 flex flex-row">
+		<a href="https://www.trnsys.com">
+			<div class="flex flex-row">
+				<span class="self-center family-[TitilliumMedium] text-[#d7e5ee] text-[50px]">TRNSYS</span>
+				<img class="ml-1" alt={$t('logos.TRNSYSLogo')} src={trnsysLogo} width="80" />
+			</div>
+		</a>
+		<div class="flex flex-row ml-4 self-end">
+			<span>{$t('common.and')}</span>
+			<a href="https://github.com/SPF-OST/pytrnsys_gui" class="ml-2 anchor italic">pytrnsys</a>
 		</div>
-	</a>
+	</div>
 	<span class="text-lg mt-10">{$t('logos.UsesDataFrom')}</span>
 	<div class="mt-2 ml-12 flex flex-row">
 		<a class="self-end" href="https://meteonorm.com/">
@@ -86,4 +92,7 @@
 			</a>
 		</span>
 	</div>
+	<span class="mt-14">
+		{$t('logos.ResulTESis')} <a href="https://github.com/resultes-net" class="anchor">{$t('logos.openSource')}</a>
+	</span>
 </div>

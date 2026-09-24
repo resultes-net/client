@@ -111,5 +111,6 @@
     "Temperate|LondonCityCenter": "Gemässigt | London Stadtzentrum",
     "Tropical|NewOrleansAirport": "Tropisch | New Orleans Flughafen",
     "Wet|ManausCityCenter": "Nass | Manaus Stadtzentrum",
-    "<empty>": "<leer>"
+    "<empty>": "<leer>",
+    "and": "und"
 }
