@@ -59,7 +59,7 @@
 			<img class="ml-14" alt={$t('logos.SolitesLogo')} src={solarKeyMarkLogo} width="250" />
 		</a>
 	</div>
-	<span class="text-lg mt-10">{$t('logos.FundedBy')}</span>
+	<span class="text-lg mt-10">{$t('logos.Supportedby')}</span>
 	<div class="flex flex-col w-fit mt-2 mb-2 ml-12">
 		<a href="https://www.bfe.admin.ch" class="flex flex-row items-start">
 			<img
