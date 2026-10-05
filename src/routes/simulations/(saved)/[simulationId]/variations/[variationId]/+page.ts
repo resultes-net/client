@@ -1,5 +1,6 @@
 
 import type { ParametersOutput } from '$lib/openapi/generated/model/parametersOutput';
+import { getWeatherData } from '$lib/weatherData';
 import { tryGetJson, type FetchFunction } from 'src/authAjax';
 import { loadMoreResults } from './displayResults';
 import { createBtesDisplayResults } from './displayResults/createBtesDisplayResults';
@@ -15,12 +16,15 @@ export const load = async ({ parent, params, url, fetch }) => {
     const { simulation, variation } = await parent();
 
     const redirectTo = `${url.pathname}${url.search}`
-    const parameters = await tryGetJson<ParametersOutput>({ endPoint: `/simulations/${params.simulationId}/parameters`, redirectTo, httpVerb: 'GET', fetchFunction: fetch });
+    const [parameters, weatherData] = await Promise.all([
+        tryGetJson<ParametersOutput>({ endPoint: `/simulations/${params.simulationId}/parameters`, redirectTo, httpVerb: 'GET', fetchFunction: fetch }),
+        getWeatherData({ weatherDataId: simulation.weather_data_id, redirectTo, fetchFunction: fetch })
+    ]);
 
     const shallDownload = url.searchParams.get("download") === '';
 
     if (variation.state !== 'done') {
-        return { simulation, parameters, variation, kpis: null, displayResults: null, shallDownload }
+        return { simulation, weatherData, parameters, variation, kpis: null, displayResults: null, shallDownload }
     }
 
     const { displayResults, kpis: kpisPromise } = getDisplayResultsAndKpis(variation.id, parameters, redirectTo, fetch);
@@ -32,7 +36,7 @@ export const load = async ({ parent, params, url, fetch }) => {
 
 
 
-    return { simulation, parameters, variation, kpis, displayResults, shallDownload }
+    return { simulation, weatherData, parameters, variation, kpis, displayResults, shallDownload }
 }
 
 function getDisplayResultsAndKpis(variationId: string, parameters: ParametersOutput, redirectTo: string, fetchFunction: FetchFunction): {

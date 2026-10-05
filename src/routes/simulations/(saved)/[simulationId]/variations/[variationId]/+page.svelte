@@ -22,7 +22,7 @@
 
 	import { gotoLoginWithRedirect } from '$lib/components/goto';
 	import { UnauthorizedError } from 'src/ajax';
-	import type { Location } from 'src/lib/openapi/generated/model/location';
+	import { getWeatherDataDisplayName } from '$lib/weatherData';
 	import type { PageData } from './$types.js';
 	import { loadMoreResults } from './displayResults';
 	import DownladAllResults from './DownloadAllResults.svelte';
@@ -32,6 +32,7 @@
 	export let data;
 
 	$: simulation = data.simulation;
+	$: weatherData = data.weatherData;
 	$: parameters = data.parameters;
 	$: variation = data.variation;
 	$: variationId = variation.id;
@@ -126,41 +127,6 @@
 		modalStore.trigger(modal);
 	}
 
-	function getLocationName(location: Location, trans: typeof $t): string {
-		switch (location) {
-			case 'Berlin':
-				return trans('common.Berlin');
-			case 'Brussels':
-				return trans('common.Brussels');
-			case 'Copenhagen':
-				return trans('common.Copenhagen');
-			case 'Madrid':
-				return trans('common.Madrid');
-			case 'Zurich':
-				return trans('common.Zurich');
-			case 'alpine':
-				return trans('common.Alpine|Davos');
-			case 'cold':
-				return trans('common.Cold|EdmontonAirport');
-			case 'dry':
-				return trans('common.Dry|Cairo');
-			case 'hot':
-				return trans('common.Hot|AbuDhabiAirport');
-			case 'mediterranean':
-				return trans('common.Mediterranean|RomeAirportCiampino');
-			case 'subtropic':
-				return trans('common.Subtropic|ChennaiAirport');
-			case 'temperate':
-				return trans('common.Temperate|LondonCityCenter');
-			case 'tropical':
-				return trans('common.Tropical|NewOrleansAirport');
-			case 'wet':
-				return trans('common.Wet|ManausCityCenter');
-			default:
-				return `ERROR: Unknown location '${location}'`;
-		}
-	}
-
 	let isDestroyed = false;
 	function invalidateVariationLoop() {
 		if (isDestroyed || variation.state === 'done' || variation.state === 'error') {
@@ -226,8 +192,8 @@
 		<div class="grid grid-cols-[8rem_auto] items-center gap-y-2 mt-4">
 			<label class="font-semibold" for="project-name">{$t('common.projectName')}</label>
 			<span>{simulation.name || `${$t('common.<empty>')}`}</span>
-			<label class="font-semibold" for="location">{$t('common.Location')}</label>
-			<span>{getLocationName(simulation.location, $t)}</span>
+			<label class="font-semibold" for="weather-data">{$t('common.WeatherData')}</label>
+			<span id="weather-data">{getWeatherDataDisplayName(weatherData, $t)}</span>
 		</div>
 
 		<div

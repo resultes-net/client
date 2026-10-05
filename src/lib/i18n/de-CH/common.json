@@ -53,10 +53,6 @@
     "HourlyDemand": "Stündlicher Wärmebedarf",
     "LoadDurationCurve": "Lastdauerlinie",
     "Location": "Standort",
-    "Berlin": "Berlin",
-    "Brussels": "Brüssel",
-    "Copenhagen": "Kopenhagen",
-    "Madrid": "Madrid",
     "Zurich": "Zürich",
     "Control": "Regelung",
     "Hi": "Hallo",
@@ -112,5 +108,14 @@
     "Tropical|NewOrleansAirport": "Tropisch | New Orleans Flughafen",
     "Wet|ManausCityCenter": "Nass | Manaus Stadtzentrum",
     "<empty>": "<leer>",
-    "and": "und"
+    "and": "und",
+    "WeatherData": "Wetterdaten",
+    "SharedWeatherData": "Allgemein",
+    "MyWeatherData": "Meine Wetterdaten",
+    "UploadWeatherDataTm2": "Wetterdaten hochladen (TM2-Datei)",
+    "WeatherDataName": "Name",
+    "InvalidWeatherDataName": "Bitte einen Namen eingeben.",
+    "Upload": "Hochladen",
+    "Cancel": "Abbrechen",
+    "Loading": "Wird geladen…"
 }

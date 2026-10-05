@@ -16,12 +16,13 @@
 </script>
 
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
 	import { popup, type PopupSettings, Tab, TabGroup } from '@skeletonlabs/skeleton';
-
-	import { Location } from '$lib/openapi/generated/model/location';
+	import { Folder } from 'lucide-svelte';
 
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
 	import { t } from '$lib/i18n/translations';
@@ -34,6 +35,17 @@
 	import WasteHeatRecoverySource from '$lib/components/parameters/wasteHeatRecoverySource.svelte';
 	import { default as WhrSourceProfile } from '$lib/components/parameters/wasteHeatRecoverySource/profile.svelte';
 	import type { CreateSimulation } from '$lib/openapi/generated/model/createSimulation';
+	import type { GetWeatherData } from '$lib/openapi/generated/model/getWeatherData';
+	import {
+		createWeatherDataNameFromFileName,
+		DEFAULT_WEATHER_DATA_ID,
+		getAllWeatherData,
+		getWeatherDataDisplayName,
+		isShared,
+		isValidWeatherDataName,
+		uploadWeatherData,
+		UploadWeatherDataError
+	} from '$lib/weatherData';
 	import { tryGetJson, UnauthorizedError } from 'src/authAjax';
 	import type { Type } from '../openapi/generated/model/type';
 	import { gotoLoginWithRedirect } from './goto';
@@ -43,7 +55,7 @@
 	export let parameters;
 	const simulation: CreateSimulation = {
 		name: '',
-		location: Location.Alpine,
+		weather_data_id: DEFAULT_WEATHER_DATA_ID,
 		type: systemType,
 		parameters: { values: parameters }
 	};
@@ -67,7 +79,79 @@
 		}
 	};
 	let areAllParametersValid: boolean;
-	$: areAllParametersValid = areParametersValid.all();
+	$: areAllParametersValid = areParametersValid.all() && isWeatherDataSelected;
+
+	let allWeatherData: GetWeatherData[] | null = null;
+	$: sharedWeatherData = (allWeatherData ?? []).filter(isShared);
+	$: userWeatherData = (allWeatherData ?? []).filter((w) => !isShared(w));
+	$: isWeatherDataSelected =
+		allWeatherData?.some((w) => w.id === simulation.weather_data_id) ?? false;
+
+	onMount(async () => {
+		allWeatherData = await getAllWeatherData({ redirectTo: $page.url.pathname });
+	});
+
+	let weatherDataFile: File | null = null;
+	let weatherDataName = '';
+	let isUploadingWeatherData = false;
+	let uploadWeatherDataErrorMessage: string | null = null;
+	$: isWeatherDataNameValid = isValidWeatherDataName(weatherDataName);
+
+	function onWeatherDataFileChanged(e: Event): void {
+		const inputElement = e.target as HTMLInputElement;
+		const file = inputElement.files?.[0] ?? null;
+
+		// Allow choosing the same file again (e.g. after fixing it).
+		inputElement.value = '';
+
+		if (file === null) {
+			return;
+		}
+
+		weatherDataFile = file;
+		weatherDataName = createWeatherDataNameFromFileName(file.name);
+		uploadWeatherDataErrorMessage = null;
+	}
+
+	function onCancelWeatherDataUpload(): void {
+		weatherDataFile = null;
+		weatherDataName = '';
+		uploadWeatherDataErrorMessage = null;
+	}
+
+	async function onUploadWeatherData(): Promise<void> {
+		if (weatherDataFile === null) {
+			return;
+		}
+
+		isUploadingWeatherData = true;
+		uploadWeatherDataErrorMessage = null;
+
+		try {
+			const weatherData = await uploadWeatherData(weatherDataName, weatherDataFile);
+
+			allWeatherData = [...(allWeatherData ?? []), weatherData].sort((a, b) =>
+				a.name.localeCompare(b.name)
+			);
+			simulation.weather_data_id = weatherData.id;
+
+			onCancelWeatherDataUpload();
+		} catch (exception) {
+			if (exception instanceof UnauthorizedError) {
+				gotoLoginWithRedirect($page.url);
+				return;
+			}
+
+			if (exception instanceof UploadWeatherDataError) {
+				uploadWeatherDataErrorMessage = exception.message;
+				return;
+			}
+
+			throw exception;
+		} finally {
+			isUploadingWeatherData = false;
+		}
+	}
 
 	let collectorIsShowIam = false;
 
@@ -182,18 +266,81 @@
 						bind:value={simulation.name}
 					/>
 
-					<label for="location">{$t('common.Location')}</label>
-					<select class="select" bind:value={simulation.location}>
-						<option value="alpine">{$t('common.Alpine|Davos')}</option>
-						<option value="cold">{$t('common.Cold|EdmontonAirport')}</option>
-						<option value="dry">{$t('common.Dry|Cairo')}</option>
-						<option value="hot">{$t('common.Hot|AbuDhabiAirport')}</option>
-						<option value="mediterranean">{$t('common.Mediterranean|RomeAirportCiampino')}</option>
-						<option value="subtropic">{$t('common.Subtropic|ChennaiAirport')}</option>
-						<option value="temperate">{$t('common.Temperate|LondonCityCenter')}</option>
-						<option value="tropical">{$t('common.Tropical|NewOrleansAirport')}</option>
-						<option value="wet">{$t('common.Wet|ManausCityCenter')}</option>
-					</select>
+					<label for="weather-data">{$t('common.WeatherData')}</label>
+					<div class="input-group input-group-divider grid grid-cols-[1fr_auto] items-center">
+						<select
+							class="select"
+							id="weather-data"
+							disabled={allWeatherData === null}
+							bind:value={simulation.weather_data_id}
+						>
+							{#if allWeatherData === null}
+								<option value={simulation.weather_data_id}>{$t('common.Loading')}</option>
+							{:else}
+								<optgroup label={$t('common.SharedWeatherData')}>
+									{#each sharedWeatherData as weatherData (weatherData.id)}
+										<option value={weatherData.id}
+											>{getWeatherDataDisplayName(weatherData, $t)}</option
+										>
+									{/each}
+								</optgroup>
+								{#if userWeatherData.length > 0}
+									<optgroup label={$t('common.MyWeatherData')}>
+										{#each userWeatherData as weatherData (weatherData.id)}
+											<option value={weatherData.id}
+												>{getWeatherDataDisplayName(weatherData, $t)}</option
+											>
+										{/each}
+									</optgroup>
+								{/if}
+							{/if}
+						</select>
+						<label class="label" title={$t('common.UploadWeatherDataTm2')}>
+							<span class="btn variant-filled-primary"><Folder /></span>
+							<input
+								id="weather-data-file"
+								type="file"
+								accept=".tm2"
+								hidden
+								aria-label={$t('common.UploadWeatherDataTm2')}
+								on:change={onWeatherDataFileChanged}
+							/>
+						</label>
+					</div>
+
+					{#if weatherDataFile !== null}
+						<label for="weather-data-name">{$t('common.WeatherDataName')}</label>
+						<div class="flex flex-col gap-y-1">
+							<div class="input-group input-group-divider grid grid-cols-[1fr_auto_auto]">
+								<input
+									class="input"
+									class:input-error={!isWeatherDataNameValid}
+									id="weather-data-name"
+									type="text"
+									maxlength="128"
+									bind:value={weatherDataName}
+								/>
+								<button
+									type="button"
+									class="variant-filled-primary"
+									disabled={!isWeatherDataNameValid || isUploadingWeatherData}
+									on:click={onUploadWeatherData}>{$t('common.Upload')}</button
+								>
+								<button
+									type="button"
+									disabled={isUploadingWeatherData}
+									on:click={onCancelWeatherDataUpload}>{$t('common.Cancel')}</button
+								>
+							</div>
+							<span class="text-xs">{weatherDataFile.name}</span>
+							{#if !isWeatherDataNameValid}
+								<span class="text-xs text-error-500">{$t('common.InvalidWeatherDataName')}</span>
+							{/if}
+							{#if uploadWeatherDataErrorMessage !== null}
+								<span class="text-xs text-error-500">{uploadWeatherDataErrorMessage}</span>
+							{/if}
+						</div>
+					{/if}
 				</div>
 
 				<div class="flex pt-8">

@@ -53,10 +53,6 @@
     "HourlyDemand": "Hourly demand",
     "LoadDurationCurve": "Load duration curve",
     "Location": "Location",
-    "Berlin": "Berlin",
-    "Brussels": "Brussels",
-    "Copenhagen": "Copenhagen",
-    "Madrid": "Madrid",
     "Zurich": "Zurich",
     "Control": "Control",
     "Hi": "Hi",
@@ -112,5 +108,14 @@
     "Tropical|NewOrleansAirport": "Tropical | New Orleans Airport",
     "Wet|ManausCityCenter": "Wet | Manaus City Center",
     "<empty>": "<empty>",
-    "and": "and"
+    "and": "and",
+    "WeatherData": "Weather data",
+    "SharedWeatherData": "Shared",
+    "MyWeatherData": "My weather data",
+    "UploadWeatherDataTm2": "Upload weather data (TM2 file)",
+    "WeatherDataName": "Name",
+    "InvalidWeatherDataName": "Please enter a name.",
+    "Upload": "Upload",
+    "Cancel": "Cancel",
+    "Loading": "Loading…"
 }
