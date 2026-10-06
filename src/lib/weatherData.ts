@@ -5,24 +5,25 @@ import { tryGetJson, type FetchFunction } from 'src/authAjax';
 
 type Translate = (key: string) => string;
 
-export const DEFAULT_WEATHER_DATA_ID = 'alpine';
+// Alpine.
+export const DEFAULT_WEATHER_DATA_ID = 'c8a15e846e';
 
 // Must agree with `WeatherDataName` in `pydantic-models`.
 const WEATHER_DATA_NAME_MAX_LENGTH = 128;
 
-// The shared weather data have translated display names. Their IDs are the lower-cased former
-// `Location` enum names.
+// The shared weather data have translated display names. Their IDs are hard-coded in the server's
+// migrations.
 const SHARED_WEATHER_DATA_TRANSLATION_KEYS: Record<string, string> = {
-	zurich: 'common.Zurich',
-	alpine: 'common.Alpine|Davos',
-	cold: 'common.Cold|EdmontonAirport',
-	dry: 'common.Dry|Cairo',
-	hot: 'common.Hot|AbuDhabiAirport',
-	mediterranean: 'common.Mediterranean|RomeAirportCiampino',
-	subtropic: 'common.Subtropic|ChennaiAirport',
-	temperate: 'common.Temperate|LondonCityCenter',
-	tropical: 'common.Tropical|NewOrleansAirport',
-	wet: 'common.Wet|ManausCityCenter'
+	bc75a61bfd: 'common.Zurich',
+	c8a15e846e: 'common.Alpine|Davos',
+	'7634132ef1': 'common.Cold|EdmontonAirport',
+	'0875a01ccb': 'common.Dry|Cairo',
+	'9c92f5554e': 'common.Hot|AbuDhabiAirport',
+	'48a257e131': 'common.Mediterranean|RomeAirportCiampino',
+	'6c78e63690': 'common.Subtropic|ChennaiAirport',
+	'37b95b4de7': 'common.Temperate|LondonCityCenter',
+	'4541d24b4b': 'common.Tropical|NewOrleansAirport',
+	d05b0a7a3a: 'common.Wet|ManausCityCenter'
 };
 
 export function isShared(weatherData: GetWeatherData): boolean {
