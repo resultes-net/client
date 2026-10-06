@@ -85,8 +85,8 @@
 	}
 </script>
 
-<form class="card p-4 w-modal shadow-xl flex flex-col gap-y-4" on:submit|preventDefault={onSubmit}>
-	<header class="text-2xl font-bold">{$t('common.UploadWeatherDataTm2')}</header>
+<form class="card p-4 w-80 flex flex-col gap-y-2" on:submit|preventDefault={onSubmit}>
+	<header>{$t('common.UploadWeatherDataTm2')}</header>
 
 	<label class="label">
 		<span>{$t('common.WeatherDataName')}</span>
@@ -114,11 +114,11 @@
 		{/if}
 	</div>
 
-	<footer class="flex justify-end gap-x-2">
-		<button type="button" class="btn variant-ghost-surface" disabled={isUploading} on:click={close}
+	<footer class="flex justify-end gap-x-2 mt-2">
+		<button type="button" class="btn btn-sm variant-ghost-surface" disabled={isUploading} on:click={close}
 			>{$t('common.Cancel')}</button
 		>
-		<button type="submit" class="btn variant-filled-primary" disabled={!isNameValid || isUploading}
+		<button type="submit" class="btn btn-sm variant-filled-primary" disabled={!isNameValid || isUploading}
 			>{$t('common.Upload')}</button
 		>
 	</footer>
