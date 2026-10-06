@@ -21,7 +21,14 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
-	import { popup, type PopupSettings, Tab, TabGroup } from '@skeletonlabs/skeleton';
+	import {
+		getModalStore,
+		popup,
+		type ModalSettings,
+		type PopupSettings,
+		Tab,
+		TabGroup
+	} from '@skeletonlabs/skeleton';
 	import { Folder } from 'lucide-svelte';
 
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
@@ -36,15 +43,12 @@
 	import { default as WhrSourceProfile } from '$lib/components/parameters/wasteHeatRecoverySource/profile.svelte';
 	import type { CreateSimulation } from '$lib/openapi/generated/model/createSimulation';
 	import type { GetWeatherData } from '$lib/openapi/generated/model/getWeatherData';
+	import UploadWeatherData from '$lib/components/uploadWeatherData.svelte';
 	import {
-		createWeatherDataNameFromFileName,
 		DEFAULT_WEATHER_DATA_ID,
 		getAllWeatherData,
 		getWeatherDataDisplayName,
-		isShared,
-		isValidWeatherDataName,
-		uploadWeatherData,
-		UploadWeatherDataError
+		isShared
 	} from '$lib/weatherData';
 	import { tryGetJson, UnauthorizedError } from 'src/authAjax';
 	import type { Type } from '../openapi/generated/model/type';
@@ -91,11 +95,7 @@
 		allWeatherData = await getAllWeatherData({ redirectTo: $page.url.pathname });
 	});
 
-	let weatherDataFile: File | null = null;
-	let weatherDataName = '';
-	let isUploadingWeatherData = false;
-	let uploadWeatherDataErrorMessage: string | null = null;
-	$: isWeatherDataNameValid = isValidWeatherDataName(weatherDataName);
+	const modalStore = getModalStore();
 
 	function onWeatherDataFileChanged(e: Event): void {
 		const inputElement = e.target as HTMLInputElement;
@@ -108,49 +108,21 @@
 			return;
 		}
 
-		weatherDataFile = file;
-		weatherDataName = createWeatherDataNameFromFileName(file.name);
-		uploadWeatherDataErrorMessage = null;
+		const modal: ModalSettings = {
+			type: 'component',
+			component: {
+				ref: UploadWeatherData,
+				props: { file, onUploaded: onWeatherDataUploaded }
+			}
+		};
+		modalStore.trigger(modal);
 	}
 
-	function onCancelWeatherDataUpload(): void {
-		weatherDataFile = null;
-		weatherDataName = '';
-		uploadWeatherDataErrorMessage = null;
-	}
-
-	async function onUploadWeatherData(): Promise<void> {
-		if (weatherDataFile === null) {
-			return;
-		}
-
-		isUploadingWeatherData = true;
-		uploadWeatherDataErrorMessage = null;
-
-		try {
-			const weatherData = await uploadWeatherData(weatherDataName, weatherDataFile);
-
-			allWeatherData = [...(allWeatherData ?? []), weatherData].sort((a, b) =>
-				a.name.localeCompare(b.name)
-			);
-			simulation.weather_data_id = weatherData.id;
-
-			onCancelWeatherDataUpload();
-		} catch (exception) {
-			if (exception instanceof UnauthorizedError) {
-				gotoLoginWithRedirect($page.url);
-				return;
-			}
-
-			if (exception instanceof UploadWeatherDataError) {
-				uploadWeatherDataErrorMessage = exception.message;
-				return;
-			}
-
-			throw exception;
-		} finally {
-			isUploadingWeatherData = false;
-		}
+	function onWeatherDataUploaded(weatherData: GetWeatherData): void {
+		allWeatherData = [...(allWeatherData ?? []), weatherData].sort((a, b) =>
+			a.name.localeCompare(b.name)
+		);
+		simulation.weather_data_id = weatherData.id;
 	}
 
 	let collectorIsShowIam = false;
@@ -307,40 +279,6 @@
 							/>
 						</label>
 					</div>
-
-					{#if weatherDataFile !== null}
-						<label for="weather-data-name">{$t('common.WeatherDataName')}</label>
-						<div class="flex flex-col gap-y-1">
-							<div class="input-group input-group-divider grid grid-cols-[1fr_auto_auto]">
-								<input
-									class="input"
-									class:input-error={!isWeatherDataNameValid}
-									id="weather-data-name"
-									type="text"
-									maxlength="128"
-									bind:value={weatherDataName}
-								/>
-								<button
-									type="button"
-									class="variant-filled-primary"
-									disabled={!isWeatherDataNameValid || isUploadingWeatherData}
-									on:click={onUploadWeatherData}>{$t('common.Upload')}</button
-								>
-								<button
-									type="button"
-									disabled={isUploadingWeatherData}
-									on:click={onCancelWeatherDataUpload}>{$t('common.Cancel')}</button
-								>
-							</div>
-							<span class="text-xs">{weatherDataFile.name}</span>
-							{#if !isWeatherDataNameValid}
-								<span class="text-xs text-error-500">{$t('common.InvalidWeatherDataName')}</span>
-							{/if}
-							{#if uploadWeatherDataErrorMessage !== null}
-								<span class="text-xs text-error-500">{uploadWeatherDataErrorMessage}</span>
-							{/if}
-						</div>
-					{/if}
 				</div>
 
 				<div class="flex pt-8">

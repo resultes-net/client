@@ -113,6 +113,7 @@
     "SharedWeatherData": "Allgemein",
     "MyWeatherData": "Meine Wetterdaten",
     "UploadWeatherDataTm2": "Wetterdaten hochladen (TM2-Datei)",
+    "UploadWeatherDataFailed": "Das Hochladen ist fehlgeschlagen. Bitte später erneut versuchen.",
     "WeatherDataName": "Name",
     "InvalidWeatherDataName": "Bitte einen Namen eingeben.",
     "Upload": "Hochladen",

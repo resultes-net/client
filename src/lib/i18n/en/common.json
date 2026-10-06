@@ -113,6 +113,7 @@
     "SharedWeatherData": "Shared",
     "MyWeatherData": "My weather data",
     "UploadWeatherDataTm2": "Upload weather data (TM2 file)",
+    "UploadWeatherDataFailed": "The upload failed. Please try again later.",
     "WeatherDataName": "Name",
     "InvalidWeatherDataName": "Please enter a name.",
     "Upload": "Upload",
