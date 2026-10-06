@@ -13,6 +13,7 @@
 		uploadWeatherData,
 		UploadWeatherDataError
 	} from '$lib/weatherData';
+	import { FetchError } from 'src/ajax';
 	import { UnauthorizedError } from 'src/authAjax';
 	import { gotoLoginWithRedirect } from './goto';
 
@@ -24,6 +25,7 @@
 	let name = createWeatherDataNameFromFileName(file.name);
 	let isUploading = false;
 	let errorMessage: string | null = null;
+	let errorDetails: string | null = null;
 	let isDestroyed = false;
 	let nameInput: HTMLInputElement;
 
@@ -51,6 +53,7 @@
 
 		isUploading = true;
 		errorMessage = null;
+		errorDetails = null;
 
 		try {
 			const weatherData = await uploadWeatherData(name, file);
@@ -71,6 +74,10 @@
 
 			console.error(exception);
 			errorMessage = $t('common.UploadWeatherDataFailed');
+			errorDetails =
+				exception instanceof FetchError
+					? `HTTP ${exception.errorCode}: ${exception.message}`
+					: String(exception);
 		} finally {
 			isUploading = false;
 		}
@@ -100,6 +107,9 @@
 		{/if}
 		{#if errorMessage !== null}
 			<span class="text-xs text-error-500">{errorMessage}</span>
+		{/if}
+		{#if errorDetails !== null}
+			<span class="text-xs opacity-60 break-words">{$t('common.Details')}: {errorDetails}</span>
 		{/if}
 	</div>
 
