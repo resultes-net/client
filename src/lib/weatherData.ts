@@ -112,7 +112,7 @@ export async function uploadWeatherData(name: string, file: File): Promise<GetWe
 	}
 }
 
-function getErrorDetail(responseText: string): string {
+export function getErrorDetail(responseText: string): string {
 	try {
 		const detail = JSON.parse(responseText).detail;
 

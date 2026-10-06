@@ -9,6 +9,7 @@
 	import type { GetWeatherData } from '$lib/openapi/generated/model/getWeatherData';
 	import {
 		createWeatherDataNameFromFileName,
+		getErrorDetail,
 		isValidWeatherDataName,
 		uploadWeatherData,
 		UploadWeatherDataError
@@ -76,7 +77,7 @@
 			errorMessage = $t('common.UploadWeatherDataFailed');
 			errorDetails =
 				exception instanceof FetchError
-					? `HTTP ${exception.errorCode}: ${exception.message}`
+					? `HTTP ${exception.errorCode}: ${getErrorDetail(exception.message)}`
 					: String(exception);
 		} finally {
 			isUploading = false;
