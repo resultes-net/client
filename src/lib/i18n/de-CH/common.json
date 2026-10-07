@@ -86,7 +86,7 @@
     "Boiler": "Boiler",
     "DistrictHeatingNetwork": "Fernwärmenetz",
     "Losses": "Verluste",
-    "PowerOutput": "Leistungsabgabe",
+    "EnergyOutput": "Energieabgabe",
     "CollectorField": "Kollektorfeld",
     "(First)TimeOfMaximumEnergyDemand": "Zeitpunkt des (frühsten) maximalen Energiebedarfs",
     "(First)TimeOfMinimumEnergyDemand": "Zeitpunkt des (frühsten) minimalen Energiebedarfs",

@@ -5,7 +5,7 @@ export interface KpisBase {
 	collectorField: CollectorField,
 	storage: Storage,
 	districtHeatingLosses_GWh: number,
-	boilerPower_GWh: number,
+	boilerEnergy_GWh: number,
 	// `null` for results that were processed before the financial KPIs were introduced.
 	financial: FinancialKpis | null,
 }
@@ -18,8 +18,8 @@ export interface Demand {
 
 export interface CollectorField {
 	specificTotalIrradiation_MWh_per_m2: number,
-	outputPower_GWh: number,
-	specificOutputPower_MWh_per_m2: number,
+	outputEnergy_GWh: number,
+	specificOutputEnergy_MWh_per_m2: number,
 	efficiency_1: number,
 	nStagnationDays_1: number,
 }
@@ -34,9 +34,9 @@ export interface Storage {
 }
 
 export interface HeatPump {
-	evaporatorPower_GWh: number,
-	condenserPower_GWh: number,
-	compressorPower_GWh: number,
+	evaporatorEnergy_GWh: number,
+	condenserEnergy_GWh: number,
+	compressorEnergy_GWh: number,
 	performanceFactor_1: number,
 }
 

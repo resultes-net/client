@@ -86,7 +86,7 @@
     "Boiler": "Boiler",
     "DistrictHeatingNetwork": "District heating network",
     "Losses": "Losses",
-    "PowerOutput": "Power output",
+    "EnergyOutput": "Energy output",
     "CollectorField": "Collector field",
     "(First)TimeOfMaximumEnergyDemand": "(First) time of maximum energy demand",
     "(First)TimeOfMinimumEnergyDemand": "(First) time of minimum energy demand",

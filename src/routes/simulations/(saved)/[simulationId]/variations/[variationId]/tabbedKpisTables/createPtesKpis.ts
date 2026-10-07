@@ -57,8 +57,8 @@ export async function createPtesKpis(
             },
             collectorField: {
                 specificTotalIrradiation_MWh_per_m2: outputs.IT_kW_m2 / 1e3,
-                outputPower_GWh: outputs.CollP_kW_calc_Tot / 1e6,
-                specificOutputPower_MWh_per_m2: outputs.Q_kW_m2 / 1e3,
+                outputEnergy_GWh: outputs.CollP_kW_calc_Tot / 1e6,
+                specificOutputEnergy_MWh_per_m2: outputs.Q_kW_m2 / 1e3,
                 efficiency_1: outputs.Q_kW_m2 / outputs.IT_kW_m2,
                 nStagnationDays_1: outputs.SolarControlStagDays,
             },
@@ -71,12 +71,12 @@ export async function createPtesKpis(
                 nChargingCycles_1: outputs.pitStoreNCycles
             },
             heatPump: {
-                evaporatorPower_GWh: outputs.HpQEvap_kW_Tot / 1e6,
-                compressorPower_GWh: outputs.HpPelComp_kW_Tot / 1e6,
-                condenserPower_GWh: outputs.HpQCond_kW_Tot / 1e6,
+                evaporatorEnergy_GWh: outputs.HpQEvap_kW_Tot / 1e6,
+                compressorEnergy_GWh: outputs.HpPelComp_kW_Tot / 1e6,
+                condenserEnergy_GWh: outputs.HpQCond_kW_Tot / 1e6,
                 performanceFactor_1: outputs.HpCOP,
             },
-            boilerPower_GWh: outputs.BolrPOut_kW_Tot / 1e6,
+            boilerEnergy_GWh: outputs.BolrPOut_kW_Tot / 1e6,
             districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3,
             financial: createFinancialKpis(
                 outputs, parameters.financial.cost_region, outputs.pitStoreQDisharge_Tot, true

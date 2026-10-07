@@ -11,9 +11,9 @@
 
 	function getRelativeToDemandAndLossesParam(absolute: number): { value: string } {
 		const totalEnergyInput_GWh =
-			kpis.boilerPower_GWh +
-			kpis.collectorField.outputPower_GWh +
-			(kpis.type === 'ptes' || kpis.type === 'btes' ? kpis.heatPump.compressorPower_GWh : 0);
+			kpis.boilerEnergy_GWh +
+			kpis.collectorField.outputEnergy_GWh +
+			(kpis.type === 'ptes' || kpis.type === 'btes' ? kpis.heatPump.compressorEnergy_GWh : 0);
 		const relative_percent = (absolute / totalEnergyInput_GWh) * 100;
 		const value = relative_percent.toFixed(2);
 		return { value };
@@ -89,8 +89,8 @@
 								<td></td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.SpecificCollectorPowerOutput')}</td>
-								<td>{collectorField.specificOutputPower_MWh_per_m2.toFixed(2)}</td>
+								<td>{$t('kpis.SpecificCollectorEnergyOutput')}</td>
+								<td>{collectorField.specificOutputEnergy_MWh_per_m2.toFixed(2)}</td>
 								<td>MWh m<sup>-2</sup></td>
 								<td></td>
 							</tr>
@@ -101,26 +101,26 @@
 								<td></td>
 							</tr>
 							<tr>
-								<td>{$t('common.PowerOutput')}</td>
-								<td>{collectorField.outputPower_GWh.toFixed(2)}</td>
+								<td>{$t('common.EnergyOutput')}</td>
+								<td>{collectorField.outputEnergy_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
 									{$t(
 										'kpis.percentageOfEnergyInputs',
-										getRelativeToDemandAndLossesParam(collectorField.outputPower_GWh)
+										getRelativeToDemandAndLossesParam(collectorField.outputEnergy_GWh)
 									)}
 								</td>
 							</tr>
 						{:else if activeParametersTab === 'storage'}
 							{@const storage = kpis.storage}
 							<tr>
-								<td>{$t('kpis.ChargingPower')}</td>
+								<td>{$t('kpis.ChargedEnergy')}</td>
 								<td>{storage.charged_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td></td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.DischargingPower')}</td>
+								<td>{$t('kpis.DischargedEnergy')}</td>
 								<td>{storage.discharged_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
@@ -167,30 +167,30 @@
 						{:else if activeParametersTab === 'heatPump'}
 							{@const heatPump = kpis.heatPump}
 							<tr>
-								<td>{$t('kpis.EvaporatorPower')}</td>
-								<td>{heatPump.evaporatorPower_GWh.toFixed(2)}</td>
+								<td>{$t('kpis.EvaporatorEnergy')}</td>
+								<td>{heatPump.evaporatorEnergy_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td></td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.CompressorPower')}</td>
-								<td>{heatPump.compressorPower_GWh.toFixed(2)}</td>
+								<td>{$t('kpis.CompressorEnergy')}</td>
+								<td>{heatPump.compressorEnergy_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
 									{$t(
 										'kpis.percentageOfEnergyInputs',
-										getRelativeToDemandAndLossesParam(heatPump.compressorPower_GWh)
+										getRelativeToDemandAndLossesParam(heatPump.compressorEnergy_GWh)
 									)}
 								</td>
 							</tr>
 							<tr>
-								<td>{$t('kpis.CondenserPower')}</td>
-								<td>{heatPump.condenserPower_GWh.toFixed(2)}</td>
+								<td>{$t('kpis.CondenserEnergy')}</td>
+								<td>{heatPump.condenserEnergy_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
 									{$t(
 										'kpis.percentageOfEnergyInputs',
-										getRelativeToDemandAndLossesParam(heatPump.condenserPower_GWh)
+										getRelativeToDemandAndLossesParam(heatPump.condenserEnergy_GWh)
 									)}
 								</td>
 							</tr>
@@ -202,13 +202,13 @@
 							</tr>
 						{:else if activeParametersTab === 'boiler'}
 							<tr>
-								<td>{$t('common.PowerOutput')}</td>
-								<td>{kpis.boilerPower_GWh.toFixed(2)}</td>
+								<td>{$t('common.EnergyOutput')}</td>
+								<td>{kpis.boilerEnergy_GWh.toFixed(2)}</td>
 								<td>GWh</td>
 								<td>
 									{$t(
 										'kpis.percentageOfEnergyInputs',
-										getRelativeToDemandAndLossesParam(kpis.boilerPower_GWh)
+										getRelativeToDemandAndLossesParam(kpis.boilerEnergy_GWh)
 									)}
 								</td>
 							</tr>

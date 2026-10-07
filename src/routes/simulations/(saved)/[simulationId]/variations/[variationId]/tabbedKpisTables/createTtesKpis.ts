@@ -48,8 +48,8 @@ export async function createTtesKpis(
             },
             collectorField: {
                 specificTotalIrradiation_MWh_per_m2: outputs.IT_kW_m2 / 1e3,
-                outputPower_GWh: outputs.CollP_kW_calc_Tot / 1e6,
-                specificOutputPower_MWh_per_m2: outputs.Q_kW_m2 / 1e3,
+                outputEnergy_GWh: outputs.CollP_kW_calc_Tot / 1e6,
+                specificOutputEnergy_MWh_per_m2: outputs.Q_kW_m2 / 1e3,
                 efficiency_1: outputs.Q_kW_m2 / outputs.IT_kW_m2,
                 nStagnationDays_1: outputs.SolarControlStagDays,
             },
@@ -61,7 +61,7 @@ export async function createTtesKpis(
                 roundTripEfficiency_1: outputs.TesQCharge_Tot === 0 ? Infinity : outputs.TesEff,
                 nChargingCycles_1: outputs.TesNCycles
             },
-            boilerPower_GWh: outputs.BolrPOut_kW_Tot / 1e6,
+            boilerEnergy_GWh: outputs.BolrPOut_kW_Tot / 1e6,
             districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3,
             financial: createFinancialKpis(
                 outputs, parameters.financial.cost_region, outputs.TesQDisharge_Tot, false
