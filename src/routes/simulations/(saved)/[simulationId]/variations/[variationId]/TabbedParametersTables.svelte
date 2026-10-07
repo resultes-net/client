@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { formatNumber } from '$lib/formatNumber';
+	import { locale } from '$lib/i18n/translations';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 
 	import { t } from '$lib/i18n/translations';
@@ -46,7 +48,7 @@
 						{#if activeParametersTab === 'demand'}
 							<tr>
 								<td>{$t('common.yearlyHeatDemand')}</td>
-								<td>{yearlyHeatDemandGWh.toFixed(1)}</td>
+								<td>{formatNumber(yearlyHeatDemandGWh, $locale, 1)}</td>
 								<td>GWh</td>
 								<td />
 							</tr>
@@ -54,7 +56,7 @@
 							{@const collector = parameters.values.collector_field}
 							<tr>
 								<td>{$t('common.collectorArea')}</td>
-								<td>{collector.area.value}</td>
+								<td>{formatNumber(collector.area.value, $locale)}</td>
 								{#if collector.area.scaling == 'absolute_m2'}
 									<td>
 										m<sup>2</sup>
@@ -65,7 +67,7 @@
 										m<sup>2</sup> MWh<sup>-1</sup>
 									</td>
 									<td
-										>{collectorFieldAreaM2.toFixed(0)}
+										>{formatNumber(collectorFieldAreaM2, $locale, 0)}
 										m<sup>2</sup>
 									</td>
 								{:else}
@@ -74,49 +76,69 @@
 							</tr>
 							<tr>
 								<td>{$t('common.inclination')}</td>
-								<td>{collector.inclination_deg}</td>
+								<td>{formatNumber(collector.inclination_deg, $locale)}</td>
 								<td>°</td>
 								<td />
 							</tr>
 							<tr>
 								<td>{$t('common.orientation')}</td>
-								<td>{collector.orientation_east_west_deg}</td>
+								<td>{formatNumber(collector.orientation_east_west_deg, $locale)}</td>
 								<td>°</td>
 								<td />
 							</tr>
 							<tr>
 								<td>{$t('common.perfCoeffA0')}</td>
-								<td>{collector.performance_coefficients.a0_1}</td>
+								<td>{formatNumber(collector.performance_coefficients.a0_1, $locale)}</td>
 								<td>-</td>
 								<td />
 							</tr>
 							<tr>
 								<td>{$t('common.perfCoeffA1')}</td>
-								<td>{collector.performance_coefficients.a1_kW_per_m2_per_K}</td>
+								<td
+									>{formatNumber(
+										collector.performance_coefficients.a1_kW_per_m2_per_K,
+										$locale
+									)}</td
+								>
 								<td><span>kW m<sup>-2</sup>K<sup>-1</sup></span></td>
 								<td />
 							</tr>
 							<tr>
 								<td>{$t('common.perfCoeffA2')}</td>
-								<td>{collector.performance_coefficients.a2_kW_per_m2_per_K2}</td>
+								<td
+									>{formatNumber(
+										collector.performance_coefficients.a2_kW_per_m2_per_K2,
+										$locale
+									)}</td
+								>
 								<td><span>kW m<sup>-2</sup>K<sup>-2</sup></span></td>
 								<td />
 							</tr>
 							<tr>
 								<td>{$t('common.perfCoeffA3')}</td>
-								<td>{collector.performance_coefficients.a3_kJ_per_m3_per_K}</td>
+								<td
+									>{formatNumber(
+										collector.performance_coefficients.a3_kJ_per_m3_per_K,
+										$locale
+									)}</td
+								>
 								<td><span>kJ m<sup>-3</sup>K<sup>-1</sup></span></td>
 								<td />
 							</tr>
 							<tr>
 								<td>{$t('common.perfCoeffA4')}</td>
-								<td>{collector.performance_coefficients.a4_1}</td>
+								<td>{formatNumber(collector.performance_coefficients.a4_1, $locale)}</td>
 								<td>-</td>
 								<td />
 							</tr>
 							<tr>
 								<td>{$t('common.perfCoeffA5')}</td>
-								<td>{collector.performance_coefficients.a5_kJ_per_m2_per_K}</td>
+								<td
+									>{formatNumber(
+										collector.performance_coefficients.a5_kJ_per_m2_per_K,
+										$locale
+									)}</td
+								>
 								<td><span>kJ m<sup>-2</sup>K<sup>-1</sup></span></td>
 								<td />
 							</tr>
@@ -146,19 +168,29 @@
 						{:else if activeParametersTab === 'control'}
 							<tr>
 								<td>{$t('common.demandSetpointTemperature')}</td>
-								<td>{parameters.values.control.demand_temperature_setpoint_degC}</td>
+								<td
+									>{formatNumber(
+										parameters.values.control.demand_temperature_setpoint_degC,
+										$locale
+									)}</td
+								>
 								<td>°C</td>
 								<td />
 							</tr>
 							<tr>
 								<td>{$t('common.DemandDeltaT')}</td>
-								<td>{parameters.values.control.demand_delta_T_degC}</td>
+								<td>{formatNumber(parameters.values.control.demand_delta_T_degC, $locale)}</td>
 								<td>°C</td>
 								<td />
 							</tr>
 							<tr>
 								<td>{$t('common.maximumStorageTemperature')}</td>
-								<td>{parameters.values.control.storage_temperature_maximum_degC}</td>
+								<td
+									>{formatNumber(
+										parameters.values.control.storage_temperature_maximum_degC,
+										$locale
+									)}</td
+								>
 								<td>°C</td>
 								<td />
 							</tr>

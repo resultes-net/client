@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { formatNumber } from '$lib/formatNumber';
+	import { locale } from '$lib/i18n/translations';
 	import { t } from '$lib/i18n/translations';
 	import type { BtesStorage } from '$lib/openapi/generated/model/btesStorage';
 	import { getNBoreholes, getVolumeM3 } from '$lib/parameters/btes/toAbsolute';
@@ -28,11 +30,11 @@
 	<td>{$t('btes.NumberOfBoreholes')}</td>
 	<td>
 		{#if nBorholesScale === 'absolute_1'}
-			{scaledNBoreholes}
+			{formatNumber(scaledNBoreholes, $locale)}
 		{:else if nBorholesScale === 'relative_to_collector_area_1_per_m2'}
-			{scaledNBoreholes} m<sup>-2</sup>
+			{formatNumber(scaledNBoreholes, $locale)} m<sup>-2</sup>
 		{:else if nBorholesScale === 'relative_to_demand_1_per_MWh'}
-			{scaledNBoreholes} MWh<sup>-1</sup>
+			{formatNumber(scaledNBoreholes, $locale)} MWh<sup>-1</sup>
 		{:else}
 			ERROR: Unknown number of boreholes scale: `{nBorholesScale}`.
 		{/if}
@@ -40,20 +42,20 @@
 	<td>-</td>
 	<td>
 		{#if nBorholesScale !== 'absolute_1'}
-			{nBoreholes} {$t('btes.Boreholes')} |
+			{formatNumber(nBoreholes, $locale, 0)} {$t('btes.Boreholes')} |
 		{/if}
-		{volume.toFixed(0)} m<sup>3</sup>
+		{formatNumber(volume, $locale, 0)} m<sup>3</sup>
 	</td>
 </tr>
 <tr>
 	<td>{$t('btes.BoreholeSpacing')}</td>
-	<td>{parameters.borehole_spacing_m}</td>
+	<td>{formatNumber(parameters.borehole_spacing_m, $locale)}</td>
 	<td>m</td>
 	<td />
 </tr>
 <tr>
 	<td>{$t('btes.BoreholeDepth')}</td>
-	<td>{parameters.borehole_depth_m}</td>
+	<td>{formatNumber(parameters.borehole_depth_m, $locale)}</td>
 	<td>m</td>
 	<td />
 </tr>
@@ -81,13 +83,13 @@
 {/if}
 <tr>
 	<td>{$t('btes.FluidToGroundResistance')}</td>
-	<td>{heatExchanger.fluid_to_ground_resistance_m_K_per_W}</td>
+	<td>{formatNumber(heatExchanger.fluid_to_ground_resistance_m_K_per_W, $locale)}</td>
 	<td>m KW<sup>-1</sup></td>
 	<td />
 </tr>
 <tr>
 	<td>{$t('btes.PipeToPipeResistance')}</td>
-	<td>{heatExchanger.pipe_to_pipe_resistance_m_K_per_W}</td>
+	<td>{formatNumber(heatExchanger.pipe_to_pipe_resistance_m_K_per_W, $locale)}</td>
 	<td>m KW<sup>-1</sup></td>
 	<td />
 </tr>

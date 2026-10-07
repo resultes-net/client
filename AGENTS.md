@@ -16,6 +16,8 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
   hidden in pre-design but keep their values.
 - The KPIs come from the post-processing's scalar outputs, the variation's `results/output.json`, read by
   `create[T|P|B]tesKpis.ts` and shown in `TabbedKpisTables.svelte`. Compute KPIs in the post-processing (`systems`), not here.
+- Show numbers on the results page (KPIs and parameters tables) with `formatNumber` from `src/lib/formatNumber.ts` and
+  `$locale` (thousands separators in the user's language), not with `toFixed`. Show costs with `formatMoney` (k€/M€).
 
 ## Weather data
 Simulations reference weather data by `weather_data_id` (entries of `GET /weather-data`; shared entries have `user_id`

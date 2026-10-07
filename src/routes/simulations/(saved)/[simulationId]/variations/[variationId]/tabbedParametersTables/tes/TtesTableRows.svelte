@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { formatNumber } from '$lib/formatNumber';
+	import { locale } from '$lib/i18n/translations';
 	import type { TtesStorage } from '$lib/openapi/generated/model/ttesStorage';
 	import PortHeightsRows from './PortHeightsRows.svelte';
 	import VolumeRows from './VolumeRows.svelte';
@@ -23,13 +25,13 @@
 <PortHeightsRows parameters={parameters.ports_relative_heights_1} />
 <tr>
 	<td>{$t('ttes.HeightToDiameterRatio')}</td>
-	<td>{parameters.height_to_diameter_ratio_1}</td>
+	<td>{formatNumber(parameters.height_to_diameter_ratio_1, $locale)}</td>
 	<td>-</td>
-	<td>{height.toFixed(2)} m : {diameter.toFixed(2)} m</td>
+	<td>{formatNumber(height, $locale, 2)} m : {formatNumber(diameter, $locale, 2)} m</td>
 </tr>
 <tr>
 	<td>{$t('ttes.InsulationThickness')}</td>
-	<td>{parameters.insulation_thickness_cm}</td>
+	<td>{formatNumber(parameters.insulation_thickness_cm, $locale)}</td>
 	<td>cm</td>
 	<td />
 </tr>
