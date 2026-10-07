@@ -29,8 +29,8 @@
 	<Tab bind:group={activeParametersTab} name="collector" value="collector"
 		>{$t('common.CollectorField')}</Tab
 	>
-	<Tab bind:group={activeParametersTab} name="demand" value="storage">{$t('common.storage')}</Tab>
-	<Tab bind:group={activeParametersTab} name="demand" value="control">{$t('common.Control')}</Tab>
+	<Tab bind:group={activeParametersTab} name="storage" value="storage">{$t('common.storage')}</Tab>
+	<Tab bind:group={activeParametersTab} name="control" value="control">{$t('common.Control')}</Tab>
 
 	<svelte:fragment slot="panel">
 		<div class="ltr:ml-[1%] rtl:mr-[1%]">
