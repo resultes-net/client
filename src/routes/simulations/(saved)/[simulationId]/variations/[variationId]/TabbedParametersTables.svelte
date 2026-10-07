@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { formatNumber } from '$lib/formatNumber';
-	import { locale } from '$lib/i18n/translations';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 
-	import { t } from '$lib/i18n/translations';
+	import { locale, t } from '$lib/i18n/translations';
 	import type { ParametersOutput } from '$lib/openapi/generated/model/parametersOutput';
 	import { COST_REGIONS } from '$lib/parameters/financial';
 	import { getAbsoluteAreaM2, getYearlyHeatDemandMWh } from '$lib/parameters/toAbsolute';
