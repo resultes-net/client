@@ -5,6 +5,7 @@
 
 	import { t } from '$lib/i18n/translations';
 	import type { ParametersOutput } from '$lib/openapi/generated/model/parametersOutput';
+	import { COST_REGIONS } from '$lib/parameters/financial';
 	import { getAbsoluteAreaM2, getYearlyHeatDemandMWh } from '$lib/parameters/toAbsolute';
 	import BtesTableRows from './tabbedParametersTables/tes/BtesTableRows.svelte';
 	import PtesTableRows from './tabbedParametersTables/tes/PtesTableRows.svelte';
@@ -20,7 +21,7 @@
 		yearlyHeatDemandMWh
 	);
 
-	type ActiveParamtersTab = 'demand' | 'collector' | 'storage' | 'control';
+	type ActiveParamtersTab = 'demand' | 'collector' | 'storage' | 'control' | 'financial';
 	let activeParametersTab: ActiveParamtersTab = 'demand';
 </script>
 
@@ -31,6 +32,9 @@
 	>
 	<Tab bind:group={activeParametersTab} name="storage" value="storage">{$t('common.storage')}</Tab>
 	<Tab bind:group={activeParametersTab} name="control" value="control">{$t('common.Control')}</Tab>
+	<Tab bind:group={activeParametersTab} name="financial" value="financial"
+		>{$t('common.Financials')}</Tab
+	>
 
 	<svelte:fragment slot="panel">
 		<div class="ltr:ml-[1%] rtl:mr-[1%]">
@@ -192,6 +196,96 @@
 									)}</td
 								>
 								<td>°C</td>
+								<td />
+							</tr>
+						{:else if activeParametersTab === 'financial'}
+							{@const financial = parameters.values.financial}
+							{@const currency = COST_REGIONS[financial.cost_region].currencySymbol}
+							{@const hasHeatPump = parameters.values.type !== 'ttes'}
+							<tr>
+								<td>{$t('common.CostRegion')}</td>
+								<td
+									>{financial.cost_region === 'ch'
+										? $t('common.CostRegionCh')
+										: $t('common.CostRegionEu')}</td
+								>
+								<td />
+								<td />
+							</tr>
+							<tr>
+								<td>{$t('common.RealDiscountRate')}</td>
+								<td>{formatNumber(financial.real_discount_rate_1, $locale)}</td>
+								<td>a<sup>-1</sup></td>
+								<td />
+							</tr>
+							<tr>
+								<td>{$t('common.FuelPrice')}</td>
+								<td>{formatNumber(financial.fuel_price_per_kWh, $locale)}</td>
+								<td>{currency} kWh<sup>-1</sup></td>
+								<td />
+							</tr>
+							{#if hasHeatPump}
+								<tr>
+									<td>{$t('common.ElectricityPrice')}</td>
+									<td>{formatNumber(financial.electricity_price_per_kWh, $locale)}</td>
+									<td>{currency} kWh<sup>-1</sup></td>
+									<td />
+								</tr>
+							{/if}
+							<tr>
+								<td>{$t('common.Lifetime')}</td>
+								<td>{formatNumber(financial.lifetime_a, $locale)}</td>
+								<td>a</td>
+								<td />
+							</tr>
+							<tr>
+								<td>{$t('common.MaintenanceRate')}</td>
+								<td>{formatNumber(financial.maintenance_rate_1, $locale)}</td>
+								<td>a<sup>-1</sup></td>
+								<td />
+							</tr>
+							<tr>
+								<td>{$t('common.BoilerEfficiency')}</td>
+								<td>{formatNumber(financial.boiler_efficiency_1, $locale)}</td>
+								<td>-</td>
+								<td />
+							</tr>
+							<tr>
+								<td>{$t('common.CoefficientA')}</td>
+								<td>{formatNumber(financial.storage_cost.a, $locale, 2)}</td>
+								<td>{currency} m<sup>-3</sup></td>
+								<td>{$t('common.StorageCostCurve')}</td>
+							</tr>
+							<tr>
+								<td>{$t('common.ExponentB')}</td>
+								<td>{formatNumber(financial.storage_cost.b, $locale)}</td>
+								<td>-</td>
+								<td />
+							</tr>
+							<tr>
+								<td>{$t('common.CoefficientA')}</td>
+								<td>{formatNumber(financial.collector_field_cost.a, $locale, 2)}</td>
+								<td>{currency} m<sup>-2</sup></td>
+								<td>{$t('common.CollectorFieldCostCurve')}</td>
+							</tr>
+							<tr>
+								<td>{$t('common.ExponentB')}</td>
+								<td>{formatNumber(financial.collector_field_cost.b, $locale)}</td>
+								<td>-</td>
+								<td />
+							</tr>
+							{#if hasHeatPump}
+								<tr>
+									<td>{$t('common.HeatPumpCost')}</td>
+									<td>{formatNumber(financial.heat_pump_cost_per_kW, $locale, 2)}</td>
+									<td>{currency} kW<sub>th</sub><sup>-1</sup></td>
+									<td />
+								</tr>
+							{/if}
+							<tr>
+								<td>{$t('common.BoilerCost')}</td>
+								<td>{formatNumber(financial.boiler_cost_per_kW, $locale, 2)}</td>
+								<td>{currency} kW<sub>th</sub><sup>-1</sup></td>
 								<td />
 							</tr>
 						{:else}
