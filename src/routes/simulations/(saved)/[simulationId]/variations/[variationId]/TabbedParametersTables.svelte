@@ -250,28 +250,24 @@
 								<td />
 							</tr>
 							<tr>
-								<td>{$t('common.CoefficientA')}</td>
-								<td>{formatNumber(financial.storage_cost.a, $locale, 2)}</td>
+								<td>{$t('common.SpecificStorageCost')}</td>
+								<td>
+									{formatNumber(financial.storage_cost.a, $locale, 2)} · V<sup
+										>{formatNumber(financial.storage_cost.b, $locale)}</sup
+									>
+								</td>
 								<td>{currency} m<sup>-3</sup></td>
-								<td>{$t('common.StorageCostCurve')}</td>
+								<td>{$t('common.StorageCostCurveVariable')}</td>
 							</tr>
 							<tr>
-								<td>{$t('common.ExponentB')}</td>
-								<td>{formatNumber(financial.storage_cost.b, $locale)}</td>
-								<td>-</td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.CoefficientA')}</td>
-								<td>{formatNumber(financial.collector_field_cost.a, $locale, 2)}</td>
+								<td>{$t('common.SpecificCollectorFieldCost')}</td>
+								<td>
+									{formatNumber(financial.collector_field_cost.a, $locale, 2)} · A<sup
+										>{formatNumber(financial.collector_field_cost.b, $locale)}</sup
+									>
+								</td>
 								<td>{currency} m<sup>-2</sup></td>
-								<td>{$t('common.CollectorFieldCostCurve')}</td>
-							</tr>
-							<tr>
-								<td>{$t('common.ExponentB')}</td>
-								<td>{formatNumber(financial.collector_field_cost.b, $locale)}</td>
-								<td>-</td>
-								<td />
+								<td>{$t('common.CollectorFieldCostCurveVariable')}</td>
 							</tr>
 							{#if hasHeatPump}
 								<tr>

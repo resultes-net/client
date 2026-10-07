@@ -135,6 +135,10 @@
     "CollectorFieldCostCurve": "Specific collector field cost = a · A^b, with A the aperture area in m²",
     "CoefficientA": "Coefficient a",
     "ExponentB": "Exponent b",
+    "SpecificStorageCost": "Specific storage cost",
+    "StorageCostCurveVariable": "V: storage volume in m³ water equivalent",
+    "SpecificCollectorFieldCost": "Specific collector field cost",
+    "CollectorFieldCostCurveVariable": "A: aperture area in m²",
     "HeatPumpCost": "Heat pump cost",
     "BoilerCost": "Boiler cost"
 }

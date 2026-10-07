@@ -135,6 +135,10 @@
     "CollectorFieldCostCurve": "Spezifische Kollektorfeldkosten = a · A^b, mit A der Aperturfläche in m²",
     "CoefficientA": "Koeffizient a",
     "ExponentB": "Exponent b",
+    "SpecificStorageCost": "Spezifische Speicherkosten",
+    "StorageCostCurveVariable": "V: Speichervolumen in m³ Wasseräquivalent",
+    "SpecificCollectorFieldCost": "Spezifische Kollektorfeldkosten",
+    "CollectorFieldCostCurveVariable": "A: Aperturfläche in m²",
     "HeatPumpCost": "Wärmepumpenkosten",
     "BoilerCost": "Kesselkosten"
 }
