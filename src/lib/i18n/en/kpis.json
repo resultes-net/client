@@ -20,7 +20,7 @@
     "HeatDemandIncludingNetworkLosses": "Heat demand (including network losses)",
     "StorageAbsoluteInvestmentCost": "Absolute investment cost of storage",
     "StorageSpecificInvestmentCost": "Specific investment cost of storage",
-    "PerMWhDischarged": "Per MWh discharged",
+    "PerMWhDischargedPerYear": "Per MWh discharged per year",
     "LevelizedCostOfHeat": "Levelized cost of heat (LCOH)",
     "Annuity": "Annuity (yearly costs)",
     "CollectorFieldInvestmentCost": "Investment cost of collector field",

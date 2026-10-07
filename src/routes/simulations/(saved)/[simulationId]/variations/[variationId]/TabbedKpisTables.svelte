@@ -273,7 +273,7 @@
 									<td>{$t('kpis.StorageSpecificInvestmentCost')}</td>
 									<td>{formatNumber(investmentCost.storagePerDischarged_per_MWh, $locale, 0)}</td>
 									<td>{currency} MWh<sup>-1</sup></td>
-									<td>{$t('kpis.PerMWhDischarged')}</td>
+									<td>{$t('kpis.PerMWhDischargedPerYear')}</td>
 								</tr>
 								{#if investmentCost.heatPump !== null}
 									<tr>

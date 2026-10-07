@@ -20,7 +20,7 @@
     "HeatDemandIncludingNetworkLosses": "Wärmebedarf (inkl. Verluste im Fernwärmenetz)",
     "StorageAbsoluteInvestmentCost": "Absolute Speicher-Investitionskosten",
     "StorageSpecificInvestmentCost": "Spezifische Speicher-Investitionskosten",
-    "PerMWhDischarged": "Pro entladende MWh",
+    "PerMWhDischargedPerYear": "Pro jährlich entladene MWh",
     "LevelizedCostOfHeat": "Wärmegestehungskosten (LCOH)",
     "Annuity": "Annuität (jährliche Kosten)",
     "CollectorFieldInvestmentCost": "Investitionskosten des Kollektorfelds",
