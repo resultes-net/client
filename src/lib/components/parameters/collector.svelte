@@ -341,7 +341,7 @@ ${values}
 			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 				<input
 					class="input"
-					id="perf-coeff-a2"
+					id="perf-coeff-a3"
 					title={$t('common.perfCoeffA3')}
 					type="number"
 					bind:value={parameters.performance_coefficients.a3_kJ_per_m3_per_K}
@@ -357,7 +357,7 @@ ${values}
 			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 				<input
 					class="input"
-					id="perf-coeff-a2"
+					id="perf-coeff-a4"
 					title={$t('common.perfCoeffA4')}
 					type="number"
 					bind:value={parameters.performance_coefficients.a4_1}
@@ -371,7 +371,7 @@ ${values}
 			<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 				<input
 					class="input"
-					id="perf-coeff-a2"
+					id="perf-coeff-a5"
 					title={$t('common.perfCoeffA5')}
 					type="number"
 					bind:value={parameters.performance_coefficients.a5_kJ_per_m2_per_K}
