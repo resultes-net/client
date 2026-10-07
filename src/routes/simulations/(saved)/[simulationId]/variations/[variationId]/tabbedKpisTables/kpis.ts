@@ -51,6 +51,8 @@ export interface FinancialKpis {
 export interface InvestmentCost {
 	collectorField: number,
 	storage: number,
+	// The whole investment per MWh discharged in one year: not comparable with the LCOH, which spreads the investment over
+	// the calculation period.
 	storagePerDischarged_per_MWh: number,
 	boiler: number,
 	// `null` for systems without a heat pump.
