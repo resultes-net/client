@@ -10,6 +10,7 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
   generated files by hand.
 - Translations live in `src/lib/i18n`.
 - `npx svelte-check` isn't clean on `main`: to check a change, compare the error count before and after it.
+- Run Prettier only on the Svelte/TS files you change. The i18n JSON files aren't Prettier-formatted: don't reformat them.
 
 ## Parameters and KPIs
 - The project phase (`pre-design`/`design`, `src/lib/components/parameters/phase.ts`) is UI-only. Design-only fields are
