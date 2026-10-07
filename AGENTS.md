@@ -9,6 +9,13 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
   server API changes: move the `openapi-schema` submodule to the new commit, then run `npm run api:gen-model`. Never edit
   generated files by hand.
 - Translations live in `src/lib/i18n`.
+- `npx svelte-check` isn't clean on `main`: to check a change, compare the error count before and after it.
+
+## Parameters and KPIs
+- The project phase (`pre-design`/`design`, `src/lib/components/parameters/phase.ts`) is UI-only. Design-only fields are
+  hidden in pre-design but keep their values.
+- The KPIs come from the post-processing's scalar outputs, the variation's `results/output.json`, read by
+  `create[T|P|B]tesKpis.ts` and shown in `TabbedKpisTables.svelte`. Compute KPIs in the post-processing (`systems`), not here.
 
 ## Weather data
 Simulations reference weather data by `weather_data_id` (entries of `GET /weather-data`; shared entries have `user_id`
