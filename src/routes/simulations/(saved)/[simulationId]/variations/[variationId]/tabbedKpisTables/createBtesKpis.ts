@@ -100,8 +100,8 @@ export async function createBtesKpis(
 
 function getStorageInvestmentCosts(parameters: BtesParametersOutput, outputs: Outputs): StorageInvestmentCost {
     const volumeM3 = getVolumeM3FromParameters(parameters);
-    const cpRatio = _CP_BTES_KJ_PER_M3_K / _CP_WATER_KJ_PER_M3_K;
-    const volumeWaterEquivalentM3 = volumeM3 / cpRatio;
+    const heatCapacityKJPerK = volumeM3 * _CP_BTES_KJ_PER_M3_K;
+    const volumeWaterEquivalentM3 = heatCapacityKJPerK / _CP_WATER_KJ_PER_M3_K;
     const perVolumeWaterEquivalentEuroPerM3 = 472.54 * volumeWaterEquivalentM3 ** -0.225
     const absolute_Euro = perVolumeWaterEquivalentEuroPerM3 * volumeWaterEquivalentM3;
     const dischargedMWh = outputs.BoHxQDischar_kW_Tot / 1e3;
