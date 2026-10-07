@@ -42,7 +42,7 @@
 
 	function onLocaleChanged(event: Event): void {
 		const newLocale = (event.currentTarget! as HTMLSelectElement).value;
-		document.cookie = `lang=${newLocale}`;
+		document.cookie = `lang=${newLocale}; path=/; max-age=31536000`;
 	}
 </script>
 
