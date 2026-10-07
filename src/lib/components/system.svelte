@@ -12,7 +12,8 @@
 		| 'collector'
 		| 'wasteHeatRecovery'
 		| 'storage'
-		| 'control';
+		| 'control'
+		| 'financial';
 </script>
 
 <script lang="ts">
@@ -38,11 +39,13 @@
 
 	import Collector from '$lib/components/parameters/collector.svelte';
 	import Demand from '$lib/components/parameters/demand.svelte';
+	import Financial from '$lib/components/parameters/financial.svelte';
 	import { default as CollectorProfile } from '$lib/components/parameters/demand/profile.svelte';
 	import WasteHeatRecoverySource from '$lib/components/parameters/wasteHeatRecoverySource.svelte';
 	import { default as WhrSourceProfile } from '$lib/components/parameters/wasteHeatRecoverySource/profile.svelte';
 	import type { CreateSimulation } from '$lib/openapi/generated/model/createSimulation';
 	import type { GetWeatherData } from '$lib/openapi/generated/model/getWeatherData';
+	import type { CostRegionSwitch } from '$lib/parameters/financial';
 	import UploadWeatherData from '$lib/components/uploadWeatherData.svelte';
 	import {
 		DEFAULT_WEATHER_DATA_ID,
@@ -75,10 +78,16 @@
 		wasteHeatRecovery: true,
 		storage: true,
 		control: true,
+		financial: true,
 
 		all(): boolean {
 			return (
-				this.demand && this.collector && this.wasteHeatRecovery && this.storage && this.control
+				this.demand &&
+				this.collector &&
+				this.wasteHeatRecovery &&
+				this.storage &&
+				this.control &&
+				this.financial
 			);
 		}
 	};
@@ -126,6 +135,8 @@
 	}
 
 	let collectorIsShowIam = false;
+
+	let lastCostRegionSwitch: CostRegionSwitch | null = null;
 
 	let collectorFieldAreaM2: number;
 	$: {
@@ -327,6 +338,12 @@
 								config={{ shallWarn: !areParametersValid.control, errorMessage: null }}
 							/>
 						</Tab>
+						<Tab bind:group={activeParametersTab} name="financial" value="financial">
+							<TextWithWarning
+								text={$t('common.Financials')}
+								config={{ shallWarn: !areParametersValid.financial, errorMessage: null }}
+							/>
+						</Tab>
 
 						<svelte:fragment slot="panel">
 							<div class="ltr:ml-[1%] rtl:mr-[1%]">
@@ -356,6 +373,13 @@
 									<slot name="storage">ERROR: no storage slot provided.</slot>
 								{:else if activeParametersTab === 'control'}
 									<slot name="control">ERROR: no control slot provided.</slot>
+								{:else if activeParametersTab === 'financial'}
+									<Financial
+										bind:parameters={parameters.financial}
+										bind:lastCostRegionSwitch
+										{projectPhase}
+										{systemType}
+									/>
 								{:else}
 									ERROR: Unknown tab `{activeParametersTab}`.
 								{/if}

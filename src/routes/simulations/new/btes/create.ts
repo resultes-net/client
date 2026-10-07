@@ -2,6 +2,7 @@ import { createDefaultCollectorField } from "$lib/parameters/createDefaultCollec
 import { createDefaultControl } from "$lib/parameters/createDefaultControl";
 import { createDefaultDemand } from "$lib/parameters/createDefaultDemand";
 import { createDefaultWasteHeatRecoverySource } from "$lib/parameters/createDefaultWasteHeatRecoverySource";
+import { createDefaultFinancial } from "$lib/parameters/financial";
 import type { BtesParametersInput } from "src/lib/openapi/generated/model/btesParametersInput";
 import { createDoubleUDefault } from "src/lib/parameters/btes/heatExchangers";
 
@@ -21,7 +22,8 @@ export function createDefaultParameters() {
             borehole_spacing_m: 3.0,
             heat_exchanger: createDoubleUDefault()
         },
-        control: createDefaultControl({ storage_temperature_maximum_degC: 95 })
+        control: createDefaultControl({ storage_temperature_maximum_degC: 95 }),
+        financial: createDefaultFinancial("btes"),
     };
 
     return defaultParameters;

@@ -3,6 +3,7 @@ import { createDefaultCollectorField } from "$lib/parameters/createDefaultCollec
 import { createDefaultControl } from "$lib/parameters/createDefaultControl";
 import { createDefaultDemand } from "$lib/parameters/createDefaultDemand";
 import { createDefaultWasteHeatRecoverySource } from "$lib/parameters/createDefaultWasteHeatRecoverySource";
+import { createDefaultFinancial } from "$lib/parameters/financial";
 
 
 export function createDefaultParameters(): PtesParametersInput {
@@ -23,7 +24,8 @@ export function createDefaultParameters(): PtesParametersInput {
                 bottom: 0.05,
             }
         },
-        control: createDefaultControl( { storage_temperature_maximum_degC: 85 })
+        control: createDefaultControl( { storage_temperature_maximum_degC: 85 }),
+        financial: createDefaultFinancial("ptes"),
     };
 
     return defaultParameters;

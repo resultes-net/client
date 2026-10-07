@@ -3,6 +3,7 @@ import { createDefaultCollectorField } from "$lib/parameters/createDefaultCollec
 import { createDefaultControl } from "$lib/parameters/createDefaultControl";
 import { createDefaultDemand } from "$lib/parameters/createDefaultDemand";
 import { createDefaultWasteHeatRecoverySource } from "$lib/parameters/createDefaultWasteHeatRecoverySource";
+import { createDefaultFinancial } from "$lib/parameters/financial";
 
 export function createDefaultParameters(): TtesParametersInput {
     const defaultParameters: TtesParametersInput = {
@@ -24,7 +25,8 @@ export function createDefaultParameters(): TtesParametersInput {
             },
             height_to_diameter_ratio_1: 5,
         },
-        control: createDefaultControl( { storage_temperature_maximum_degC: 98 })
+        control: createDefaultControl( { storage_temperature_maximum_degC: 98 }),
+        financial: createDefaultFinancial("ttes"),
     };
 
     return defaultParameters;
