@@ -1,8 +1,6 @@
 import type { Demand } from "../openapi/generated/model/demand";
-import type { PtesParametersOutput } from "../openapi/generated/model/ptesParametersOutput";
 import type { ScaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh as Area } from "../openapi/generated/model/scaledValueLiteralAbsoluteM2RelativeToDemandM2PerMWh";
 import type { ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2 as Volume } from "../openapi/generated/model/scaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2";
-import type { TtesParametersOutput } from "../openapi/generated/model/ttesParametersOutput";
 
 export function getYearlyHeatDemandMWh(demand: Demand): number {
     const yearlyHeatDemandMWh = demand.hourly_heat_demand_MW.reduce(
@@ -35,11 +33,4 @@ export function getAbsoluteVolumeM3(volume: Volume, yearlyHeatDemandMWh: number,
     const absoluteVolumeM3 = scaledVolume * scalingFactor;
 
     return absoluteVolumeM3;
-}
-
-export function getAbsoluteVolumeFromTtesOrPtesParameters(parameters: TtesParametersOutput | PtesParametersOutput): number {
-    const yearlyHeatDemandMWh = getYearlyHeatDemandMWh(parameters.demand);
-    const collectorFieldAreaM2 = getAbsoluteAreaM2(parameters.collector_field.area, yearlyHeatDemandMWh);
-    const volumeM3 = getAbsoluteVolumeM3(parameters.storage.volume, yearlyHeatDemandMWh, collectorFieldAreaM2);
-    return volumeM3;
 }

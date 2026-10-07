@@ -1,10 +1,13 @@
+import type { CostRegion } from '$lib/parameters/financial';
+
 export interface KpisBase {
 	demand: Demand,
 	collectorField: CollectorField,
 	storage: Storage,
 	districtHeatingLosses_GWh: number,
 	boilerPower_GWh: number,
-	investmentCost: InvestmentCost,
+	// `null` for results that were processed before the financial KPIs were introduced.
+	financial: FinancialKpis | null,
 }
 
 export interface Demand {
@@ -37,11 +40,20 @@ export interface HeatPump {
 	performanceFactor_1: number,
 }
 
-export interface InvestmentCost {
-	storage: StorageInvestmentCost
+// In the cost region's currency.
+export interface FinancialKpis {
+	costRegion: CostRegion,
+	levelizedCostOfHeat_per_kWh: number,
+	annuity_per_a: number,
+	investmentCost: InvestmentCost,
 }
 
-export interface StorageInvestmentCost {
-	absolute_Euro: number,
-	perDischarged_Euro_per_MWh: number,
+export interface InvestmentCost {
+	collectorField: number,
+	storage: number,
+	storagePerDischarged_per_MWh: number,
+	boiler: number,
+	// `null` for systems without a heat pump.
+	heatPump: number | null,
+	total: number,
 }

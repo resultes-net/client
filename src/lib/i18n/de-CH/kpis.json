@@ -20,5 +20,12 @@
     "HeatDemandIncludingNetworkLosses": "Wärmebedarf (inkl. Verluste im Fernwärmenetz)",
     "StorageAbsoluteInvestmentCost": "Absolute Speicher-Investitionskosten",
     "StorageSpecificInvestmentCost": "Spezifische Speicher-Investitionskosten",
-    "PerMWhDischarged": "Pro entladende MWh"
+    "PerMWhDischarged": "Pro entladende MWh",
+    "LevelizedCostOfHeat": "Wärmegestehungskosten (LCOH)",
+    "Annuity": "Annuität (jährliche Kosten)",
+    "CollectorFieldInvestmentCost": "Investitionskosten des Kollektorfelds",
+    "HeatPumpInvestmentCost": "Investitionskosten der Wärmepumpe",
+    "BoilerInvestmentCost": "Investitionskosten des Kessels",
+    "TotalInvestmentCost": "Gesamte Investitionskosten",
+    "FinancialKPIsNotAvailable": "Nicht verfügbar: Die Resultate der Simulation wurden ausgewertet, bevor es die Finanz-KPIs gab. Die Simulation erneut ausführen, um sie zu erhalten."
 }

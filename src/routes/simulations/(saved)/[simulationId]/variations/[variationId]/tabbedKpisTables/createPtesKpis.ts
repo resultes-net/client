@@ -1,11 +1,11 @@
 import type { PtesParametersOutput } from '$lib/openapi/generated/model/ptesParametersOutput';
-import { getAbsoluteVolumeFromTtesOrPtesParameters } from '$lib/parameters/toAbsolute';
 import { FetchError, UnauthorizedError, type FetchFunction } from 'src/ajax';
 import { tryGetJson } from 'src/authAjax';
-import type { HeatPump, KpisBase, StorageInvestmentCost } from './kpis';
+import { createFinancialKpis, type FinancialOutputs } from './createFinancialKpis';
+import type { HeatPump, KpisBase } from './kpis';
 
 
-interface Outputs {
+interface Outputs extends Partial<FinancialOutputs> {
     IT_kW_m2: number,
     CollP_kW_calc_Tot: number,
     Q_kW_m2: number,
@@ -78,9 +78,9 @@ export async function createPtesKpis(
             },
             boilerPower_GWh: outputs.BolrPOut_kW_Tot / 1e6,
             districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3,
-            investmentCost: {
-                storage: getStorageInvestmentCosts(parameters, outputs)
-            }
+            financial: createFinancialKpis(
+                outputs, parameters.financial.cost_region, outputs.pitStoreQDisharge_Tot, true
+            )
         };
 
         return kpis;
@@ -91,14 +91,4 @@ export async function createPtesKpis(
 
         throw exception;
     }
-}
-
-function getStorageInvestmentCosts(parameters: PtesParametersOutput, outputs: Outputs): StorageInvestmentCost {
-    const volumeM3 = getAbsoluteVolumeFromTtesOrPtesParameters(parameters);
-    const perVolumeWaterEquivalentEuroPerM3 = 19142 * volumeM3 ** -0.539
-    const absolute_Euro = perVolumeWaterEquivalentEuroPerM3 * volumeM3;
-    const dischargedMWh = outputs.pitStoreQDisharge_Tot / 1e3;
-    const perDischarged_Euro_per_MWh = absolute_Euro / dischargedMWh;
-
-    return { absolute_Euro, perDischarged_Euro_per_MWh };
 }

@@ -2,6 +2,7 @@
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 
 	import { t } from '$lib/i18n/translations';
+	import { COST_REGIONS } from '$lib/parameters/financial';
 	import type { BtesKpis } from './tabbedKpisTables/createBtesKpis';
 	import type { PtesKpis } from './tabbedKpisTables/createPtesKpis';
 	import type { TtesKpis } from './tabbedKpisTables/createTtesKpis';
@@ -224,20 +225,67 @@
 								</td>
 							</tr>
 						{:else if activeParametersTab === 'financial'}
-							{@const storage = kpis.investmentCost.storage}
-							{@const absolute_kEuro = storage.absolute_Euro / 1000}
-							<tr>
-								<td>{$t('kpis.StorageAbsoluteInvestmentCost')}</td>
-								<td>{absolute_kEuro.toFixed(0)}</td>
-								<td>{$t('common.Thousand')} €</td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>{$t('kpis.StorageSpecificInvestmentCost')}</td>
-								<td>{storage.perDischarged_Euro_per_MWh.toFixed(0)}</td>
-								<td>€ MWh<sup>-1</sup></td>
-								<td>{$t('kpis.PerMWhDischarged')}</td>
-							</tr>
+							{#if kpis.financial === null}
+								<tr>
+									<td colspan="4" class="!whitespace-normal">
+										{$t('kpis.FinancialKPIsNotAvailable')}
+									</td>
+								</tr>
+							{:else}
+								{@const financial = kpis.financial}
+								{@const investmentCost = financial.investmentCost}
+								{@const currency = COST_REGIONS[financial.costRegion].currencySymbol}
+								<tr>
+									<td>{$t('kpis.LevelizedCostOfHeat')}</td>
+									<td>{(financial.levelizedCostOfHeat_per_kWh * 1000).toFixed(2)}</td>
+									<td>{currency} MWh<sup>-1</sup></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.Annuity')}</td>
+									<td>{(financial.annuity_per_a / 1000).toFixed(0)}</td>
+									<td>{$t('common.Thousand')} {currency} a<sup>-1</sup></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.CollectorFieldInvestmentCost')}</td>
+									<td>{(investmentCost.collectorField / 1000).toFixed(0)}</td>
+									<td>{$t('common.Thousand')} {currency}</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.StorageAbsoluteInvestmentCost')}</td>
+									<td>{(investmentCost.storage / 1000).toFixed(0)}</td>
+									<td>{$t('common.Thousand')} {currency}</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.StorageSpecificInvestmentCost')}</td>
+									<td>{investmentCost.storagePerDischarged_per_MWh.toFixed(0)}</td>
+									<td>{currency} MWh<sup>-1</sup></td>
+									<td>{$t('kpis.PerMWhDischarged')}</td>
+								</tr>
+								{#if investmentCost.heatPump !== null}
+									<tr>
+										<td>{$t('kpis.HeatPumpInvestmentCost')}</td>
+										<td>{(investmentCost.heatPump / 1000).toFixed(0)}</td>
+										<td>{$t('common.Thousand')} {currency}</td>
+										<td></td>
+									</tr>
+								{/if}
+								<tr>
+									<td>{$t('kpis.BoilerInvestmentCost')}</td>
+									<td>{(investmentCost.boiler / 1000).toFixed(0)}</td>
+									<td>{$t('common.Thousand')} {currency}</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.TotalInvestmentCost')}</td>
+									<td>{(investmentCost.total / 1000).toFixed(0)}</td>
+									<td>{$t('common.Thousand')} {currency}</td>
+									<td></td>
+								</tr>
+							{/if}
 						{:else}
 							ERROR: Unknown tab `{activeParametersTab}`.
 						{/if}

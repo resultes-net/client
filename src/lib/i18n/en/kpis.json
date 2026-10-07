@@ -20,5 +20,12 @@
     "HeatDemandIncludingNetworkLosses": "Heat demand (including network losses)",
     "StorageAbsoluteInvestmentCost": "Absolute investment cost of storage",
     "StorageSpecificInvestmentCost": "Specific investment cost of storage",
-    "PerMWhDischarged": "Per MWh discharged"
+    "PerMWhDischarged": "Per MWh discharged",
+    "LevelizedCostOfHeat": "Levelized cost of heat (LCOH)",
+    "Annuity": "Annuity (yearly costs)",
+    "CollectorFieldInvestmentCost": "Investment cost of collector field",
+    "HeatPumpInvestmentCost": "Investment cost of heat pump",
+    "BoilerInvestmentCost": "Investment cost of boiler",
+    "TotalInvestmentCost": "Total investment cost",
+    "FinancialKPIsNotAvailable": "Not available: the simulation's results were processed before the financial KPIs were introduced. Run the simulation again to get them."
 }
