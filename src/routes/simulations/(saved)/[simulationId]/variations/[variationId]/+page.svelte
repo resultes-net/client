@@ -201,7 +201,7 @@
 			use:tocCrawler={{
 				mode: 'generate',
 				scrollTarget: '#page',
-				key: [variation.state, kpis, displayResults]
+				key: [variation.state, kpis, displayResults, $t]
 			}}
 		>
 			<h5 class="h5">{$t('common.Parameters')}</h5>
