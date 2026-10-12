@@ -5,78 +5,85 @@ import { createFinancialKpis, type FinancialOutputs } from './createFinancialKpi
 import { createSizes, type SizesOutputs } from './createSizes';
 import type { KpisBase } from './kpis';
 
-
 // Backwards compatibility: remove after 2027-04. `Partial` for results processed before these outputs were introduced.
 interface Outputs extends Partial<FinancialOutputs>, Partial<SizesOutputs> {
-    IT_kW_m2: number,
-    CollP_kW_calc_Tot: number,
-    Q_kW_m2: number,
-    TesQCharge_Tot: number,
-    TesQDisharge_Tot: number,
-    QLoss_Tes1_Tot: number,
-    QDistrict_MW: number,
-    QAcum_Tes1_Tot: number,
-    BolrPOut_kW_Tot: number,
-    QDemand_kW_Tot: number,
-    SolarControlStagDays: number,
-    TesEff: number,
-    TesNCycles: number,
-    QSnkTIn_Avg: number,
-    QSnkTOut_Avg: number,
+	IT_kW_m2: number;
+	CollP_kW_calc_Tot: number;
+	Q_kW_m2: number;
+	TesQCharge_Tot: number;
+	TesQDisharge_Tot: number;
+	QLoss_Tes1_Tot: number;
+	QDistrict_MW: number;
+	QAcum_Tes1_Tot: number;
+	BolrPOut_kW_Tot: number;
+	QDemand_kW_Tot: number;
+	SolarControlStagDays: number;
+	TesEff: number;
+	TesNCycles: number;
+	QSnkTIn_Avg: number;
+	QSnkTOut_Avg: number;
 }
 
 export interface TtesKpis extends KpisBase {
-    type: 'ttes',
+	type: 'ttes';
 }
 
 export async function createTtesKpis(
-    variationId: string,
-    parameters: TtesParametersOutput,
-    redirectTo: string,
-    fetchFunction: FetchFunction)
-    : Promise<TtesKpis | null> {
-    const endPoint = `/variations/${variationId}/results/output.json`;
+	variationId: string,
+	parameters: TtesParametersOutput,
+	redirectTo: string,
+	fetchFunction: FetchFunction
+): Promise<TtesKpis | null> {
+	const endPoint = `/variations/${variationId}/results/output.json`;
 
-    try {
-        const outputsArray = await tryGetJson<Outputs[]>({ endPoint, redirectTo, httpVerb: 'GET', fetchFunction });
-        const outputs = outputsArray[0];
+	try {
+		const outputsArray = await tryGetJson<Outputs[]>({
+			endPoint,
+			redirectTo,
+			httpVerb: 'GET',
+			fetchFunction
+		});
+		const outputs = outputsArray[0];
 
-        const kpis: TtesKpis = {
-            type: 'ttes',
-            demand: {
-                demand_GWh: outputs.QDemand_kW_Tot / 1e6,
-                averageSupplyTemp_degC: outputs.QSnkTIn_Avg,
-                averageReturnTemp_degC: outputs.QSnkTOut_Avg,
-            },
-            collectorField: {
-                specificTotalIrradiation_MWh_per_m2: outputs.IT_kW_m2 / 1e3,
-                outputEnergy_GWh: outputs.CollP_kW_calc_Tot / 1e6,
-                specificOutputEnergy_MWh_per_m2: outputs.Q_kW_m2 / 1e3,
-                efficiency_1: outputs.Q_kW_m2 / outputs.IT_kW_m2,
-                nStagnationDays_1: outputs.SolarControlStagDays,
-            },
-            storage: {
-                charged_GWh: outputs.TesQCharge_Tot / 1e6,
-                discharged_GWh: outputs.TesQDisharge_Tot / 1e6,
-                losses_GWh: outputs.QLoss_Tes1_Tot / 1e6,
-                netHeatGain_GWh: outputs.QAcum_Tes1_Tot / 1e6,
-                roundTripEfficiency_1: outputs.TesQCharge_Tot === 0 ? Infinity : outputs.TesEff,
-                nChargingCycles_1: outputs.TesNCycles
-            },
-            boilerEnergy_GWh: outputs.BolrPOut_kW_Tot / 1e6,
-            districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3,
-            financial: createFinancialKpis(
-                outputs, parameters.financial.cost_region, outputs.TesQDisharge_Tot, false
-            ),
-            sizes: createSizes(outputs, false)
-        };
+		const kpis: TtesKpis = {
+			type: 'ttes',
+			demand: {
+				demand_GWh: outputs.QDemand_kW_Tot / 1e6,
+				averageSupplyTemp_degC: outputs.QSnkTIn_Avg,
+				averageReturnTemp_degC: outputs.QSnkTOut_Avg
+			},
+			collectorField: {
+				specificTotalIrradiation_MWh_per_m2: outputs.IT_kW_m2 / 1e3,
+				outputEnergy_GWh: outputs.CollP_kW_calc_Tot / 1e6,
+				specificOutputEnergy_MWh_per_m2: outputs.Q_kW_m2 / 1e3,
+				efficiency_1: outputs.Q_kW_m2 / outputs.IT_kW_m2,
+				nStagnationDays_1: outputs.SolarControlStagDays
+			},
+			storage: {
+				charged_GWh: outputs.TesQCharge_Tot / 1e6,
+				discharged_GWh: outputs.TesQDisharge_Tot / 1e6,
+				losses_GWh: outputs.QLoss_Tes1_Tot / 1e6,
+				netHeatGain_GWh: outputs.QAcum_Tes1_Tot / 1e6,
+				roundTripEfficiency_1: outputs.TesQCharge_Tot === 0 ? Infinity : outputs.TesEff,
+				nChargingCycles_1: outputs.TesNCycles
+			},
+			boilerEnergy_GWh: outputs.BolrPOut_kW_Tot / 1e6,
+			districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3,
+			financial: createFinancialKpis(
+				outputs,
+				parameters.financial.cost_region,
+				outputs.TesQDisharge_Tot,
+				false
+			),
+			sizes: createSizes(outputs, false)
+		};
 
-        return kpis;
-    } catch (exception) {
-        if (exception instanceof FetchError && !(exception instanceof UnauthorizedError)) {
-            return null;
-        }
+		return kpis;
+	} catch (exception) {
+		if (exception instanceof FetchError && !(exception instanceof UnauthorizedError)) {
+			return null;
+		}
 
-        throw exception;
-    }
+		throw exception;
+	}
 }
