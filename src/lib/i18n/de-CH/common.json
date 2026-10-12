@@ -138,5 +138,7 @@
     "SpecificCollectorFieldCost": "Spezifische Kollektorfeldkosten",
     "CollectorFieldCostCurveVariable": "A: Aperturfläche in m²",
     "HeatPumpCost": "Wärmepumpenkosten",
-    "BoilerCost": "Kesselkosten"
+    "BoilerCost": "Kesselkosten",
+    "ScrollTabsLeft": "Tabs nach links scrollen",
+    "ScrollTabsRight": "Tabs nach rechts scrollen"
 }

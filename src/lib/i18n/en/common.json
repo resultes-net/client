@@ -138,5 +138,7 @@
     "SpecificCollectorFieldCost": "Specific collector field cost",
     "CollectorFieldCostCurveVariable": "A: aperture area in m²",
     "HeatPumpCost": "Heat pump cost",
-    "BoilerCost": "Boiler cost"
+    "BoilerCost": "Boiler cost",
+    "ScrollTabsLeft": "Scroll tabs left",
+    "ScrollTabsRight": "Scroll tabs right"
 }

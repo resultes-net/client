@@ -27,11 +27,11 @@
 		popup,
 		type ModalSettings,
 		type PopupSettings,
-		Tab,
-		TabGroup
+		Tab
 	} from '@skeletonlabs/skeleton';
 	import { Folder } from 'lucide-svelte';
 
+	import ScrollableTabGroup from '$lib/components/scrollableTabGroup.svelte';
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
 	import { t } from '$lib/i18n/translations';
 
@@ -303,7 +303,7 @@
 				<hr class="!border-t-2" />
 
 				<div class="flex flex-col">
-					<TabGroup>
+					<ScrollableTabGroup>
 						<Tab bind:group={activeParametersTab} name="demand" value="demand">
 							<TextWithWarning
 								text={$t('common.demand')}
@@ -385,7 +385,7 @@
 								{/if}
 							</div>
 						</svelte:fragment>
-					</TabGroup>
+					</ScrollableTabGroup>
 				</div>
 				<div class="flex flex-col mt-2 gap-y-1 ml-auto">
 					<button

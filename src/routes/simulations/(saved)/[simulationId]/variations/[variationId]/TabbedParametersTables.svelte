@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { formatNumber } from '$lib/formatNumber';
-	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
+	import { Tab } from '@skeletonlabs/skeleton';
 
+	import ScrollableTabGroup from '$lib/components/scrollableTabGroup.svelte';
 	import { locale, t } from '$lib/i18n/translations';
 	import type { ParametersOutput } from '$lib/openapi/generated/model/parametersOutput';
 	import { COST_REGIONS } from '$lib/parameters/financial';
@@ -24,7 +25,7 @@
 	let activeParametersTab: ActiveParamtersTab = 'demand';
 </script>
 
-<TabGroup>
+<ScrollableTabGroup>
 	<Tab bind:group={activeParametersTab} name="demand" value="demand">{$t('common.demand')}</Tab>
 	<Tab bind:group={activeParametersTab} name="collector" value="collector"
 		>{$t('common.CollectorField')}</Tab
@@ -291,4 +292,4 @@
 			</div>
 		</div>
 	</svelte:fragment>
-</TabGroup>
+</ScrollableTabGroup>
