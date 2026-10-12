@@ -152,10 +152,13 @@
 
 {#if projectPhase === 'design'}
 	<h7 class="h7">{$t('common.InvestmentCosts')}</h7>
-	<!-- One grid per group, so that the groups are evenly spaced whether or not they have a cost curve note. -->
-	<div class="flex flex-col gap-3 border rounded-lg border-surface-300-600-token m-2 p-2">
-		<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]">
-			<p class="col-span-2 text-sm">
+	<div
+		class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] border rounded-lg border-surface-300-600-token m-2 p-2"
+	>
+		<div
+			class="col-span-2 grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] mb-4"
+		>
+			<p class="col-span-2 text-sm mb-1">
 				{$t('common.SpecificStorageCost')} = a · V<sup>b</sup>,
 				{$t('common.StorageCostCurveVariable')}
 			</p>
@@ -180,8 +183,10 @@
 			</NumberRow>
 		</div>
 
-		<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]">
-			<p class="col-span-2 text-sm">
+		<div
+			class="col-span-2 grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] mb-4"
+		>
+			<p class="col-span-2 text-sm mb-1">
 				{$t('common.SpecificCollectorFieldCost')} = a · A<sup>b</sup>,
 				{$t('common.CollectorFieldCostCurveVariable')}
 			</p>
@@ -206,29 +211,27 @@
 			</NumberRow>
 		</div>
 
-		<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]">
-			{#if hasHeatPump}
-				<NumberRow
-					id="heat-pump-cost"
-					label={$t('common.HeatPumpCost')}
-					bind:value={parameters.heat_pump_cost_per_kW}
-					min={0}
-					max={1e5}
-					displayDecimals={2}
-				>
-					<svelte:fragment slot="unit">{currency} kW<sub>th</sub><sup>-1</sup></svelte:fragment>
-				</NumberRow>
-			{/if}
+		{#if hasHeatPump}
 			<NumberRow
-				id="boiler-cost"
-				label={$t('common.BoilerCost')}
-				bind:value={parameters.boiler_cost_per_kW}
+				id="heat-pump-cost"
+				label={$t('common.HeatPumpCost')}
+				bind:value={parameters.heat_pump_cost_per_kW}
 				min={0}
 				max={1e5}
 				displayDecimals={2}
 			>
 				<svelte:fragment slot="unit">{currency} kW<sub>th</sub><sup>-1</sup></svelte:fragment>
 			</NumberRow>
-		</div>
+		{/if}
+		<NumberRow
+			id="boiler-cost"
+			label={$t('common.BoilerCost')}
+			bind:value={parameters.boiler_cost_per_kW}
+			min={0}
+			max={1e5}
+			displayDecimals={2}
+		>
+			<svelte:fragment slot="unit">{currency} kW<sub>th</sub><sup>-1</sup></svelte:fragment>
+		</NumberRow>
 	</div>
 {/if}
