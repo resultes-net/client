@@ -12,6 +12,13 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
 - For integration tests or screenshots, install the browser once with `npm run playwright:install` (Chromium, matching
   the Playwright version in `package-lock.json`, into `~/.cache/ms-playwright`). In CI, use
   `npx playwright install --with-deps chromium` instead, which also installs the system libraries (needs root or sudo).
+- To use the UI against dev (e.g. for screenshots), log in as `resultes-test-user`. Its password is in
+  `$RESULTES_TEST_USER_PASSWORD` (set in the user's shell profile, never committed).
+  For screenshots, `.env.development` proxies the API to dev through
+  `kubectl port-forward -n server service/external-server 8080:80`. With Playwright:
+  1. Wait for `networkidle` before filling in the login form. Otherwise the form submits before the page is hydrated, and
+     the browser just reloads `/login`.
+  2. Click the parameter tabs via their `label` (e.g. `label:has(input[value="financial"])`): the `input` is hidden.
 - `npx svelte-check` isn't clean on `main`: to check a change, compare the error count before and after it.
 - Run Prettier only on the Svelte/TS files you change. The i18n JSON files aren't Prettier-formatted: don't reformat them.
 
