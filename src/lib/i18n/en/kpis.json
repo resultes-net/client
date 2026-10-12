@@ -27,5 +27,8 @@
     "HeatPumpInvestmentCost": "Investment cost of heat pump",
     "BoilerInvestmentCost": "Investment cost of boiler",
     "TotalInvestmentCost": "Total investment cost",
+    "MaxHourlyAveragePower": "Max. hourly average power",
+    "ApertureArea": "Aperture area",
+    "WaterEquivalentVolume": "Water-equivalent volume",
     "FinancialKPIsNotAvailable": "Not available: the simulation's results were processed before the financial KPIs were introduced. Run the simulation again to get them."
 }

@@ -2,10 +2,12 @@ import type { PtesParametersOutput } from '$lib/openapi/generated/model/ptesPara
 import { FetchError, UnauthorizedError, type FetchFunction } from 'src/ajax';
 import { tryGetJson } from 'src/authAjax';
 import { createFinancialKpis, type FinancialOutputs } from './createFinancialKpis';
+import { createSizes, type SizesOutputs } from './createSizes';
 import type { HeatPump, KpisBase } from './kpis';
 
 
-interface Outputs extends Partial<FinancialOutputs> {
+// Backwards compatibility: remove after 2027-04. `Partial` for results processed before these outputs were introduced.
+interface Outputs extends Partial<FinancialOutputs>, Partial<SizesOutputs> {
     IT_kW_m2: number,
     CollP_kW_calc_Tot: number,
     Q_kW_m2: number,
@@ -80,7 +82,8 @@ export async function createPtesKpis(
             districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3,
             financial: createFinancialKpis(
                 outputs, parameters.financial.cost_region, outputs.pitStoreQDisharge_Tot, true
-            )
+            ),
+            sizes: createSizes(outputs, true)
         };
 
         return kpis;

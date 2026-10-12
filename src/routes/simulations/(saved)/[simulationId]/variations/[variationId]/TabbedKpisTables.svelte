@@ -21,6 +21,22 @@
 		return { value };
 	}
 
+	// The quantities the investment costs are based on, for the "Notes" column of the financial KPIs. Built here rather than
+	// in the cells: the notes are in separate rows, so this way one check of `kpis.sizes` covers them all.
+	$: investmentCostNotes =
+		// Backwards compatibility: remove after 2027-04. Empty notes for results processed before the sizes were introduced.
+		kpis.sizes === null
+			? { collectorField: '', storage: '', boiler: '', heatPump: '' }
+			: {
+					collectorField: `${$t('kpis.ApertureArea')}: ${formatNumber(kpis.sizes.collectorApertureArea_m2, $locale, 0)} m²`,
+					storage: `${$t('kpis.WaterEquivalentVolume')}: ${formatNumber(kpis.sizes.storageVolumeWaterEquivalent_m3, $locale, 0)} m³`,
+					boiler: `${$t('kpis.MaxHourlyAveragePower')}: ${formatNumber(kpis.sizes.boilerCapacity_MW, $locale, 2)} MW`,
+					heatPump:
+						kpis.sizes.heatPumpCapacity_MW === null
+							? ''
+							: `${$t('kpis.MaxHourlyAveragePower')}: ${formatNumber(kpis.sizes.heatPumpCapacity_MW, $locale, 2)} MW`
+				};
+
 	type ActiveParamtersTab = 'demand' | 'collector' | 'storage' | 'heatPump' | 'boiler' | 'district';
 	let activeParametersTab: ActiveParamtersTab = 'demand';
 </script>
@@ -208,6 +224,15 @@
 								<td>-</td>
 								<td></td>
 							</tr>
+							<!-- Backwards compatibility: remove after 2027-04. `kpis.sizes !== null`: no capacity for results processed before the sizes were introduced. -->
+							{#if kpis.sizes !== null && kpis.sizes.heatPumpCapacity_MW !== null}
+								<tr>
+									<td>{$t('kpis.MaxHourlyAveragePower')}</td>
+									<td>{formatNumber(kpis.sizes.heatPumpCapacity_MW, $locale, 2)}</td>
+									<td>MW</td>
+									<td></td>
+								</tr>
+							{/if}
 						{:else if activeParametersTab === 'boiler'}
 							<tr>
 								<td>{$t('common.EnergyOutput')}</td>
@@ -220,6 +245,15 @@
 									)}
 								</td>
 							</tr>
+							<!-- Backwards compatibility: remove after 2027-04. No capacity for results processed before the sizes were introduced. -->
+							{#if kpis.sizes !== null}
+								<tr>
+									<td>{$t('kpis.MaxHourlyAveragePower')}</td>
+									<td>{formatNumber(kpis.sizes.boilerCapacity_MW, $locale, 2)}</td>
+									<td>MW</td>
+									<td></td>
+								</tr>
+							{/if}
 						{:else if activeParametersTab === 'district'}
 							<tr>
 								<td>{$t('common.Losses')}</td>
@@ -233,6 +267,7 @@
 								</td>
 							</tr>
 						{:else if activeParametersTab === 'financial'}
+							<!-- Backwards compatibility: remove after 2027-04. Results processed before the financial KPIs were introduced. -->
 							{#if kpis.financial === null}
 								<tr>
 									<td colspan="4" class="!whitespace-normal">
@@ -262,13 +297,13 @@
 									<td>{$t('kpis.CollectorFieldInvestmentCost')}</td>
 									<td>{formatMoney(investmentCost.collectorField, currency, $locale).value}</td>
 									<td>{formatMoney(investmentCost.collectorField, currency, $locale).unit}</td>
-									<td></td>
+									<td>{investmentCostNotes.collectorField}</td>
 								</tr>
 								<tr>
 									<td>{$t('kpis.StorageAbsoluteInvestmentCost')}</td>
 									<td>{formatMoney(investmentCost.storage, currency, $locale).value}</td>
 									<td>{formatMoney(investmentCost.storage, currency, $locale).unit}</td>
-									<td></td>
+									<td>{investmentCostNotes.storage}</td>
 								</tr>
 								<tr>
 									<td>{$t('kpis.StorageSpecificInvestmentCost')}</td>
@@ -281,14 +316,14 @@
 										<td>{$t('kpis.HeatPumpInvestmentCost')}</td>
 										<td>{formatMoney(investmentCost.heatPump, currency, $locale).value}</td>
 										<td>{formatMoney(investmentCost.heatPump, currency, $locale).unit}</td>
-										<td></td>
+										<td>{investmentCostNotes.heatPump}</td>
 									</tr>
 								{/if}
 								<tr>
 									<td>{$t('kpis.BoilerInvestmentCost')}</td>
 									<td>{formatMoney(investmentCost.boiler, currency, $locale).value}</td>
 									<td>{formatMoney(investmentCost.boiler, currency, $locale).unit}</td>
-									<td></td>
+									<td>{investmentCostNotes.boiler}</td>
 								</tr>
 								<tr>
 									<td>{$t('kpis.TotalInvestmentCost')}</td>

@@ -6,8 +6,10 @@ export interface KpisBase {
 	storage: Storage,
 	districtHeatingLosses_GWh: number,
 	boilerEnergy_GWh: number,
-	// `null` for results that were processed before the financial KPIs were introduced.
+	// Backwards compatibility: remove after 2027-04. `null` for results processed before the financial KPIs were introduced.
 	financial: FinancialKpis | null,
+	// Backwards compatibility: remove after 2027-04. `null` for results processed before these outputs were introduced.
+	sizes: Sizes | null,
 }
 
 export interface Demand {
@@ -38,6 +40,16 @@ export interface HeatPump {
 	condenserEnergy_GWh: number,
 	compressorEnergy_GWh: number,
 	performanceFactor_1: number,
+}
+
+// The quantities the investment costs are based on.
+export interface Sizes {
+	collectorApertureArea_m2: number,
+	storageVolumeWaterEquivalent_m3: number,
+	// The maximum of the hourly averages.
+	boilerCapacity_MW: number,
+	// `null` for systems without a heat pump. The maximum of the hourly averages.
+	heatPumpCapacity_MW: number | null,
 }
 
 // In the cost region's currency.

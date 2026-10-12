@@ -27,5 +27,8 @@
     "HeatPumpInvestmentCost": "Investitionskosten der Wärmepumpe",
     "BoilerInvestmentCost": "Investitionskosten des Kessels",
     "TotalInvestmentCost": "Gesamte Investitionskosten",
+    "MaxHourlyAveragePower": "Max. stündlich gemittelte Leistung",
+    "ApertureArea": "Aperturfläche",
+    "WaterEquivalentVolume": "Wasseräquivalentes Volumen",
     "FinancialKPIsNotAvailable": "Nicht verfügbar: Die Resultate der Simulation wurden ausgewertet, bevor es die Finanz-KPIs gab. Die Simulation erneut ausführen, um sie zu erhalten."
 }

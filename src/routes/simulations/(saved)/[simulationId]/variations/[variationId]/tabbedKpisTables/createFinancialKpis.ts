@@ -23,8 +23,8 @@ const _FINANCIAL_OUTPUT_NAMES: (keyof FinancialOutputs)[] = [
 ];
 
 /**
- * Returns `null` for results that were processed before the financial outputs were introduced.
- * (The TTES' prototype wrote some of them, but in mixed currencies, and not `I_boiler` and `I_hp`.)
+ * Backwards compatibility: remove after 2027-04. Returns `null` for results processed before the financial outputs were
+ * introduced. (The TTES' prototype wrote some of them, but in mixed currencies, and not `I_boiler` and `I_hp`.)
  */
 export function createFinancialKpis(
     outputs: Partial<FinancialOutputs>,
@@ -53,6 +53,7 @@ export function createFinancialKpis(
     };
 }
 
+// Backwards compatibility: remove after 2027-04. Results processed before the financial outputs were introduced.
 function _hasAllFinancialOutputs(outputs: Partial<FinancialOutputs>): outputs is FinancialOutputs {
     return _FINANCIAL_OUTPUT_NAMES.every((name) => typeof outputs[name] === 'number');
 }
