@@ -35,3 +35,9 @@ Simulations reference weather data by `weather_data_id` (entries of `GET /weathe
 `null`, users can upload TM2 files via `POST /weather-data`, single entries come from `GET /weather-data/{id}`). Helpers
 for fetching, uploading and display names (shared entries get translated names keyed by their ID) live in
 `src/lib/weatherData.ts`.
+
+## Layout
+- Check layout changes in German as well as in English. Flex items are sized at least to their content's min-content
+  width, and a text's min-content width is its longest word. German labels are often single words (e.g.
+  "Fernwärmenetz"), so a German tab row can make its column, or the whole page, wider than the window, while the
+  English one wraps in theory and lets the column shrink.
