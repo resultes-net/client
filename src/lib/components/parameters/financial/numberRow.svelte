@@ -49,6 +49,7 @@
 		on:change={onChanged}
 	/>
 	<div class="!px-0">
-		<span class="flex flex-grow justify-center text-sm"><slot name="unit" /></span>
+		<!-- Not `flex`: that would turn `sup` and `sub` into flex items at the top of the box. -->
+		<span class="flex-grow text-center"><slot name="unit" /></span>
 	</div>
 </div>

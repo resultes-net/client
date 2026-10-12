@@ -131,8 +131,6 @@
     "MaintenanceRate": "Maintenance rate (share of investment)",
     "BoilerEfficiency": "Boiler efficiency",
     "InvestmentCosts": "Investment costs",
-    "StorageCostCurve": "Specific storage cost = a · V^b, with V the storage volume in m³ water equivalent",
-    "CollectorFieldCostCurve": "Specific collector field cost = a · A^b, with A the aperture area in m²",
     "CoefficientA": "Coefficient a",
     "ExponentB": "Exponent b",
     "SpecificStorageCost": "Specific storage cost",

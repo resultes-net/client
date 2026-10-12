@@ -131,8 +131,6 @@
     "MaintenanceRate": "Wartungskosten (Anteil der Investition)",
     "BoilerEfficiency": "Kesselwirkungsgrad",
     "InvestmentCosts": "Investitionskosten",
-    "StorageCostCurve": "Spezifische Speicherkosten = a · V^b, mit V dem Speichervolumen in m³ Wasseräquivalent",
-    "CollectorFieldCostCurve": "Spezifische Kollektorfeldkosten = a · A^b, mit A der Aperturfläche in m²",
     "CoefficientA": "Koeffizient a",
     "ExponentB": "Exponent b",
     "SpecificStorageCost": "Spezifische Speicherkosten",

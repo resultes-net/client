@@ -57,106 +57,108 @@
 	</div>
 </div>
 
-<div class="m-2 p-2">
-	<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]">
-		<label for="cost-region">{$t('common.CostRegion')}</label>
-		<select
-			class="select"
-			id="cost-region"
-			value={parameters.cost_region}
-			on:change={onCostRegionChanged}
+<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y] m-2 p-2">
+	<label for="cost-region">{$t('common.CostRegion')}</label>
+	<select
+		class="select"
+		id="cost-region"
+		value={parameters.cost_region}
+		on:change={onCostRegionChanged}
+	>
+		<option value="eu">{$t('common.CostRegionEu')}</option>
+		<option value="ch">{$t('common.CostRegionCh')}</option>
+	</select>
+
+	{#if isShowEnergyPricesResetNotice}
+		<p class="col-span-2 text-sm variant-soft-warning p-2 rounded">
+			{$t('common.EnergyPricesWereReset')}
+		</p>
+	{/if}
+
+	<NumberRow
+		id="real-discount-rate"
+		label={$t('common.RealDiscountRate')}
+		bind:value={parameters.real_discount_rate_1}
+		min={-0.1}
+		max={0.3}
+	>
+		<button
+			slot="info"
+			type="button"
+			class="btn-icon btn-icon-sm [&>*]:pointer-events-none"
+			aria-label={$t('common.RealDiscountRateInfo')}
+			use:popup={realDiscountRateInfoPopupSettings}
 		>
-			<option value="eu">{$t('common.CostRegionEu')}</option>
-			<option value="ch">{$t('common.CostRegionCh')}</option>
-		</select>
+			<Info size="16" />
+		</button>
+		<svelte:fragment slot="unit">a<sup>-1</sup></svelte:fragment>
+	</NumberRow>
 
-		{#if isShowEnergyPricesResetNotice}
-			<p class="col-span-2 text-sm variant-soft-warning p-2 rounded">
-				{$t('common.EnergyPricesWereReset')}
-			</p>
-		{/if}
+	<NumberRow
+		id="fuel-price"
+		label={$t('common.FuelPrice')}
+		bind:value={parameters.fuel_price_per_kWh}
+		min={0}
+		max={10}
+	>
+		<svelte:fragment slot="unit">{currency} kWh<sup>-1</sup></svelte:fragment>
+	</NumberRow>
 
+	{#if hasHeatPump}
 		<NumberRow
-			id="real-discount-rate"
-			label={$t('common.RealDiscountRate')}
-			bind:value={parameters.real_discount_rate_1}
-			min={-0.1}
-			max={0.3}
-		>
-			<button
-				slot="info"
-				type="button"
-				class="btn-icon btn-icon-sm [&>*]:pointer-events-none"
-				aria-label={$t('common.RealDiscountRateInfo')}
-				use:popup={realDiscountRateInfoPopupSettings}
-			>
-				<Info size="16" />
-			</button>
-			<svelte:fragment slot="unit">a<sup>-1</sup></svelte:fragment>
-		</NumberRow>
-
-		<NumberRow
-			id="fuel-price"
-			label={$t('common.FuelPrice')}
-			bind:value={parameters.fuel_price_per_kWh}
+			id="electricity-price"
+			label={$t('common.ElectricityPrice')}
+			bind:value={parameters.electricity_price_per_kWh}
 			min={0}
 			max={10}
 		>
 			<svelte:fragment slot="unit">{currency} kWh<sup>-1</sup></svelte:fragment>
 		</NumberRow>
-
-		{#if hasHeatPump}
-			<NumberRow
-				id="electricity-price"
-				label={$t('common.ElectricityPrice')}
-				bind:value={parameters.electricity_price_per_kWh}
-				min={0}
-				max={10}
-			>
-				<svelte:fragment slot="unit">{currency} kWh<sup>-1</sup></svelte:fragment>
-			</NumberRow>
-		{/if}
-
-		{#if projectPhase === 'design'}
-			<NumberRow
-				id="lifetime"
-				label={$t('common.Lifetime')}
-				bind:value={parameters.lifetime_a}
-				min={1}
-				max={100}
-				isInteger
-			>
-				<svelte:fragment slot="unit">a</svelte:fragment>
-			</NumberRow>
-
-			<NumberRow
-				id="maintenance-rate"
-				label={$t('common.MaintenanceRate')}
-				bind:value={parameters.maintenance_rate_1}
-				min={0}
-				max={0.5}
-			>
-				<svelte:fragment slot="unit">a<sup>-1</sup></svelte:fragment>
-			</NumberRow>
-
-			<NumberRow
-				id="boiler-efficiency"
-				label={$t('common.BoilerEfficiency')}
-				bind:value={parameters.boiler_efficiency_1}
-				min={0.1}
-				max={1.2}
-			>
-				<svelte:fragment slot="unit">-</svelte:fragment>
-			</NumberRow>
-		{/if}
-	</div>
+	{/if}
 
 	{#if projectPhase === 'design'}
-		<h7 class="h7">{$t('common.InvestmentCosts')}</h7>
-		<div
-			class="grid grid-cols-[--input-grid-cols] border rounded-lg border-surface-300-600-token items-center gap-y-[--input-gap-y] m-2 p-2"
+		<NumberRow
+			id="lifetime"
+			label={$t('common.Lifetime')}
+			bind:value={parameters.lifetime_a}
+			min={1}
+			max={100}
+			isInteger
 		>
-			<p class="col-span-2 text-sm">{$t('common.StorageCostCurve')}</p>
+			<svelte:fragment slot="unit">a</svelte:fragment>
+		</NumberRow>
+
+		<NumberRow
+			id="maintenance-rate"
+			label={$t('common.MaintenanceRate')}
+			bind:value={parameters.maintenance_rate_1}
+			min={0}
+			max={0.5}
+		>
+			<svelte:fragment slot="unit">a<sup>-1</sup></svelte:fragment>
+		</NumberRow>
+
+		<NumberRow
+			id="boiler-efficiency"
+			label={$t('common.BoilerEfficiency')}
+			bind:value={parameters.boiler_efficiency_1}
+			min={0.1}
+			max={1.2}
+		>
+			<svelte:fragment slot="unit">-</svelte:fragment>
+		</NumberRow>
+	{/if}
+</div>
+
+{#if projectPhase === 'design'}
+	<h7 class="h7">{$t('common.InvestmentCosts')}</h7>
+	<!-- One grid per group, so that the groups are evenly spaced whether or not they have a cost curve note. -->
+	<div class="flex flex-col gap-3 border rounded-lg border-surface-300-600-token m-2 p-2">
+		<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]">
+			<p class="col-span-2 text-sm">
+				{$t('common.SpecificStorageCost')} = a · V<sup>b</sup>,
+				{$t('common.StorageCostCurveVariable')}
+			</p>
 			<NumberRow
 				id="storage-cost-a"
 				label={$t('common.CoefficientA')}
@@ -176,8 +178,13 @@
 			>
 				<svelte:fragment slot="unit">-</svelte:fragment>
 			</NumberRow>
+		</div>
 
-			<p class="col-span-2 text-sm pt-2">{$t('common.CollectorFieldCostCurve')}</p>
+		<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]">
+			<p class="col-span-2 text-sm">
+				{$t('common.SpecificCollectorFieldCost')} = a · A<sup>b</sup>,
+				{$t('common.CollectorFieldCostCurveVariable')}
+			</p>
 			<NumberRow
 				id="collector-field-cost-a"
 				label={$t('common.CoefficientA')}
@@ -197,8 +204,9 @@
 			>
 				<svelte:fragment slot="unit">-</svelte:fragment>
 			</NumberRow>
+		</div>
 
-			<div class="col-span-2 pt-2" />
+		<div class="grid grid-cols-[--input-grid-cols] items-center gap-y-[--input-gap-y]">
 			{#if hasHeatPump}
 				<NumberRow
 					id="heat-pump-cost"
@@ -222,5 +230,5 @@
 				<svelte:fragment slot="unit">{currency} kW<sub>th</sub><sup>-1</sup></svelte:fragment>
 			</NumberRow>
 		</div>
-	{/if}
-</div>
+	</div>
+{/if}
