@@ -9,6 +9,9 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
   server API changes: move the `openapi-schema` submodule to the new commit, then run `npm run api:gen-model`. Never edit
   generated files by hand.
 - Translations live in `src/lib/i18n`.
+- For integration tests or screenshots, install the browser once with `npm run playwright:install` (Chromium, matching
+  the Playwright version in `package-lock.json`, into `~/.cache/ms-playwright`). In CI, use
+  `npx playwright install --with-deps chromium` instead, which also installs the system libraries (needs root or sudo).
 - `npx svelte-check` isn't clean on `main`: to check a change, compare the error count before and after it.
 - Run Prettier only on the Svelte/TS files you change. The i18n JSON files aren't Prettier-formatted: don't reformat them.
 

@@ -12,6 +12,7 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
+		"playwright:install": "playwright install chromium",
 		"test:unit": "vitest",
 		"api:gen-model": "rm -rf src/lib/openapi/generated/* && openapi-generator-cli generate -i openapi-schema/external-server-openapi.json -o src/lib/openapi/generated -g typescript-angular --global-property models --skip-validate-spec"
 	},
