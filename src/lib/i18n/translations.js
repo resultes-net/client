@@ -2,7 +2,7 @@ import i18n from 'sveltekit-i18n';
 
 export const defaultLocale = 'de-CH';
 
-/** @type {import('sveltekit-i18n').Config} */
+/** @type {import('sveltekit-i18n').Config<Record<string, any>>} */
 const config = ({
     loaders: [
         {
