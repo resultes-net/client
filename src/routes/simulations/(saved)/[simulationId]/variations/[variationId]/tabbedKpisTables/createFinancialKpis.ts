@@ -1,7 +1,7 @@
 import type { CostRegion } from '$lib/parameters/financial';
 import type { FinancialKpis } from './kpis';
 
-// Written by the systems' post-processing (`lcoh`), in the cost region's currency.
+// Written by the systems' post-processing (`common/process/financial.py`), in the cost region's currency.
 export interface FinancialOutputs {
 	LCOH: number;
 	annuity: number;

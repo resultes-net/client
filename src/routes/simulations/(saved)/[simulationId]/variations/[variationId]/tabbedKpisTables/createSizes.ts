@@ -1,6 +1,6 @@
 import type { Sizes } from './kpis';
 
-// Written by the systems' post-processing (`lcoh`). `CollAcollAp` is a deck variable.
+// Written by the systems' post-processing (`common/process/financial.py`). `CollAcollAp` is a deck variable.
 export interface SizesOutputs {
 	CollAcollAp: number;
 	TesVolWaterEq_m3: number;
