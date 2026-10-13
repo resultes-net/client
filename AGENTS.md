@@ -21,6 +21,8 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
   2. Click the parameter tabs via their `label` (e.g. `label:has(input[value="financial"])`): the `input` is hidden.
 - `npx svelte-check` isn't clean on `main`: to check a change, compare the error count before and after it.
 - Run Prettier only on the Svelte/TS files you change. The i18n JSON files aren't Prettier-formatted: don't reformat them.
+  Some TS files aren't Prettier-formatted either: if a file you change wasn't clean before, reformat it in a separate
+  commit, not together with the change.
 
 ## Parameters and KPIs
 - The project phase (`pre-design`/`design`, `src/lib/components/parameters/phase.ts`) is UI-only. Design-only fields are
