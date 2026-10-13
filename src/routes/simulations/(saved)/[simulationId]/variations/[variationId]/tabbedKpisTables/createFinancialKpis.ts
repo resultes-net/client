@@ -1,5 +1,5 @@
 import type { CostRegion } from '$lib/parameters/financial';
-import type { FinancialKpis } from './kpis';
+import type { FinancialKpis, YearlyFuel } from './kpis';
 
 // Written by the systems' post-processing (`common/process/financial.py`), in the cost region's currency.
 export interface FinancialOutputs {
@@ -10,6 +10,10 @@ export interface FinancialOutputs {
 	I_boiler: number;
 	I_hp: number;
 	I_total: number;
+	// Backwards compatibility: remove after 2027-04. Optional for results processed before the fuel outputs were
+	// introduced.
+	FuelCost_per_a?: number;
+	FuelConsumption_kWh?: number;
 }
 
 const _FINANCIAL_OUTPUT_NAMES: (keyof FinancialOutputs)[] = [
@@ -49,7 +53,23 @@ export function createFinancialKpis(
 			boiler: outputs.I_boiler,
 			heatPump: hasHeatPump ? outputs.I_hp : null,
 			total: outputs.I_total
-		}
+		},
+		yearlyFuel: _createYearlyFuel(outputs)
+	};
+}
+
+/**
+ * Backwards compatibility: remove after 2027-04. Returns `null` for results processed before the fuel outputs were
+ * introduced.
+ */
+function _createYearlyFuel(outputs: FinancialOutputs): YearlyFuel | null {
+	if (outputs.FuelCost_per_a === undefined || outputs.FuelConsumption_kWh === undefined) {
+		return null;
+	}
+
+	return {
+		cost_per_a: outputs.FuelCost_per_a,
+		consumption_MWh: outputs.FuelConsumption_kWh / 1e3
 	};
 }
 

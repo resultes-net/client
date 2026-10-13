@@ -30,5 +30,7 @@
     "MaxHourlyAveragePower": "Max. stündlich gemittelte Leistung",
     "ApertureArea": "Aperturfläche",
     "WaterEquivalentVolume": "Wasseräquivalentes Volumen",
+    "YearlyFuelCost": "Jährliche Brennstoffkosten",
+    "FuelConsumption": "Brennstoffverbrauch",
     "FinancialKPIsNotAvailable": "Nicht verfügbar: Die Resultate der Simulation wurden ausgewertet, bevor es die Finanz-KPIs gab. Die Simulation erneut ausführen, um sie zu erhalten."
 }

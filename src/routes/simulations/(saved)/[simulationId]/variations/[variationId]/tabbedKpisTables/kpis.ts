@@ -58,6 +58,14 @@ export interface FinancialKpis {
 	levelizedCostOfHeat_per_kWh: number;
 	annuity_per_a: number;
 	investmentCost: InvestmentCost;
+	// Backwards compatibility: remove after 2027-04. `null` for results processed before these outputs were introduced.
+	yearlyFuel: YearlyFuel | null;
+}
+
+// The boiler's fuel.
+export interface YearlyFuel {
+	cost_per_a: number;
+	consumption_MWh: number;
 }
 
 export interface InvestmentCost {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatMoney, formatNumber } from './formatNumber';
+import { formatEnergy, formatMoney, formatNumber } from './formatNumber';
 
 describe('formatNumber', () => {
 	it('Adds thousands separators of the language', () => {
@@ -48,5 +48,22 @@ describe('formatMoney', () => {
 	it('Handles negative amounts', () => {
 		expect(formatMoney(-412000, '€', 'en').unit).toBe('k€');
 		expect(formatMoney(-24631000, '€', 'en')).toEqual({ value: '-24.63', unit: 'M€' });
+	});
+});
+
+describe('formatEnergy', () => {
+	it('Uses MWh without decimals below one GWh', () => {
+		expect(formatEnergy(412.4, 'en')).toEqual({ value: '412', unit: 'MWh' });
+		expect(formatEnergy(0, 'en')).toEqual({ value: '0', unit: 'MWh' });
+	});
+
+	it('Uses GWh with two decimals from one GWh', () => {
+		expect(formatEnergy(4444.4, 'en')).toEqual({ value: '4.44', unit: 'GWh' });
+		expect(formatEnergy(1234567, 'de-CH')).toEqual({ value: '1’234.57', unit: 'GWh' });
+	});
+
+	it('Decides the unit after rounding', () => {
+		expect(formatEnergy(999.7, 'en')).toEqual({ value: '1.00', unit: 'GWh' });
+		expect(formatEnergy(999.4, 'en')).toEqual({ value: '999', unit: 'MWh' });
 	});
 });

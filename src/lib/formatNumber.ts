@@ -35,3 +35,19 @@ export function formatMoney(
 	}
 	return { value: formatNumber(amount / 1e6, locale, 2), unit: `M${currencySymbol}` };
 }
+
+export interface FormattedEnergy {
+	value: string;
+	/** `MWh` or `GWh`. */
+	unit: string;
+}
+
+/**
+ * Formats an amount of energy as MWh (no decimals) below one GWh, as GWh (two decimals) from there, like `formatMoney`.
+ */
+export function formatEnergy(energy_MWh: number, locale: string): FormattedEnergy {
+	if (Math.round(Math.abs(energy_MWh)) < 1e3) {
+		return { value: formatNumber(energy_MWh, locale, 0), unit: 'MWh' };
+	}
+	return { value: formatNumber(energy_MWh / 1e3, locale, 2), unit: 'GWh' };
+}

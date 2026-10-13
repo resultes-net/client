@@ -30,5 +30,7 @@
     "MaxHourlyAveragePower": "Max. hourly average power",
     "ApertureArea": "Aperture area",
     "WaterEquivalentVolume": "Water-equivalent volume",
+    "YearlyFuelCost": "Yearly fuel cost",
+    "FuelConsumption": "Fuel consumption",
     "FinancialKPIsNotAvailable": "Not available: the simulation's results were processed before the financial KPIs were introduced. Run the simulation again to get them."
 }

@@ -2,7 +2,7 @@
 	import { Tab } from '@skeletonlabs/skeleton';
 
 	import ScrollableTabGroup from '$lib/components/scrollableTabGroup.svelte';
-	import { formatMoney, formatNumber } from '$lib/formatNumber';
+	import { formatEnergy, formatMoney, formatNumber } from '$lib/formatNumber';
 	import { locale, t } from '$lib/i18n/translations';
 	import { COST_REGIONS } from '$lib/parameters/financial';
 	import type { BtesKpis } from './tabbedKpisTables/createBtesKpis';
@@ -293,6 +293,27 @@
 									>
 									<td></td>
 								</tr>
+								<!-- Backwards compatibility: remove after 2027-04. No fuel cost for results processed before the fuel outputs were introduced. -->
+								{#if financial.yearlyFuel !== null}
+									{@const fuelCost = formatMoney(
+										financial.yearlyFuel.cost_per_a,
+										currency,
+										$locale
+									)}
+									{@const fuelConsumption = formatEnergy(
+										financial.yearlyFuel.consumption_MWh,
+										$locale
+									)}
+									<tr>
+										<td>{$t('kpis.YearlyFuelCost')}</td>
+										<td>{fuelCost.value}</td>
+										<td>{fuelCost.unit} a<sup>-1</sup></td>
+										<td>
+											{$t('kpis.FuelConsumption')}: {fuelConsumption.value}
+											{fuelConsumption.unit} a<sup>-1</sup>
+										</td>
+									</tr>
+								{/if}
 								<tr>
 									<td>{$t('kpis.CollectorFieldInvestmentCost')}</td>
 									<td>{formatMoney(investmentCost.collectorField, currency, $locale).value}</td>
