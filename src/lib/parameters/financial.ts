@@ -65,7 +65,7 @@ export function createDefaultFinancial(
         real_discount_rate_1: 0.03,
         fuel_price_per_kWh: region.defaultFuelPrice_per_kWh,
         electricity_price_per_kWh: region.defaultElectricityPrice_per_kWh,
-        lifetime_a: 30,
+        calculation_period_a: 30,
         maintenance_rate_1: 0.01,
         boiler_efficiency_1: 0.9,
         storage_cost: { a: storageCost.a * factor, b: storageCost.b },

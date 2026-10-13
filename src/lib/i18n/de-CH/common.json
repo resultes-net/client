@@ -127,7 +127,7 @@
     "RealDiscountRateInfo": "Alle Preise und Kosten sind in heutigem Geld, d. h. ohne Inflation. Ein nominaler Zinssatz n wird mit der Inflation π gemäss 1 + r = (1 + n) / (1 + π), d. h. r ≈ n − π, in einen realen Zinssatz r umgerechnet. Die Energiepreise werden als real konstant angenommen.",
     "FuelPrice": "Brennstoffpreis",
     "ElectricityPrice": "Strompreis",
-    "Lifetime": "Lebensdauer",
+    "CalculationPeriod": "Betrachtungszeitraum",
     "MaintenanceRate": "Wartungskosten (Anteil der Investition)",
     "BoilerEfficiency": "Kesselwirkungsgrad",
     "InvestmentCosts": "Investitionskosten",

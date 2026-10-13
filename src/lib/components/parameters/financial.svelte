@@ -118,9 +118,9 @@
 
 	{#if projectPhase === 'design'}
 		<NumberRow
-			id="lifetime"
-			label={$t('common.Lifetime')}
-			bind:value={parameters.lifetime_a}
+			id="calculation-period"
+			label={$t('common.CalculationPeriod')}
+			bind:value={parameters.calculation_period_a}
 			min={1}
 			max={100}
 			isInteger

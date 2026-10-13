@@ -49,7 +49,7 @@ describe('switching cost regions', () => {
         financial.storage_cost = { a: 500, b: -0.3 };
         financial.boiler_cost_per_kW = 300;
         financial.real_discount_rate_1 = 0.05;
-        financial.lifetime_a = 25;
+        financial.calculation_period_a = 25;
         financial.maintenance_rate_1 = 0.02;
         financial.boiler_efficiency_1 = 0.95;
         financial.collector_field_cost.b = -0.1;
@@ -61,7 +61,7 @@ describe('switching cost regions', () => {
         expect(financial.storage_cost.b).toBe(-0.3);
         expect(financial.collector_field_cost.b).toBe(-0.1);
         expect(financial.real_discount_rate_1).toBe(0.05);
-        expect(financial.lifetime_a).toBe(25);
+        expect(financial.calculation_period_a).toBe(25);
         expect(financial.maintenance_rate_1).toBe(0.02);
         expect(financial.boiler_efficiency_1).toBe(0.95);
     });

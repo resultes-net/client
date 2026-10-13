@@ -233,8 +233,8 @@
 								</tr>
 							{/if}
 							<tr>
-								<td>{$t('common.Lifetime')}</td>
-								<td>{formatNumber(financial.lifetime_a, $locale)}</td>
+								<td>{$t('common.CalculationPeriod')}</td>
+								<td>{formatNumber(financial.calculation_period_a, $locale)}</td>
 								<td>a</td>
 								<td />
 							</tr>

@@ -127,7 +127,7 @@
     "RealDiscountRateInfo": "All prices and costs are in today's money, i.e., without inflation. A nominal rate n converts to a real rate r with inflation π as 1 + r = (1 + n) / (1 + π), i.e., r ≈ n − π. Energy prices are assumed to stay constant in real terms.",
     "FuelPrice": "Fuel price",
     "ElectricityPrice": "Electricity price",
-    "Lifetime": "Lifetime",
+    "CalculationPeriod": "Calculation period",
     "MaintenanceRate": "Maintenance rate (share of investment)",
     "BoilerEfficiency": "Boiler efficiency",
     "InvestmentCosts": "Investment costs",
