@@ -15,5 +15,9 @@
     "SFOE": "SFOE",
     "UnderContractNr": "Under contract nr.",
     "ResulTESis": "ResulTES is",
-    "openSource": "open source"
+    "openSource": "open source",
+    "feedbackPrefix": "We're happy to receive",
+    "feedback": "feedback",
+    "gitHubAccount": "GitHub account",
+    "required": "required"
 }

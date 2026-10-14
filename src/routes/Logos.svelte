@@ -93,6 +93,22 @@
 		</span>
 	</div>
 	<span class="mt-14">
-		{$t('logos.ResulTESis')} <a href="https://github.com/resultes-net" class="anchor">{$t('logos.openSource')}.</a>
+		{$t('logos.ResulTESis')}
+		<a href="https://github.com/resultes-net" class="anchor" target="_blank" rel="noreferrer"
+			>{$t('logos.openSource')}</a
+		>.
+		{$t('logos.feedbackPrefix')}
+		<a
+			href="https://github.com/resultes-net/issues/discussions/new/choose"
+			class="anchor"
+			target="_blank"
+			rel="noreferrer">{$t('logos.feedback')}</a
+		>
+		<span class="text-xs"
+			>(<a href="https://github.com/signup" class="anchor" target="_blank" rel="noreferrer"
+				>{$t('logos.gitHubAccount')}</a
+			>
+			{$t('logos.required')})</span
+		>.
 	</span>
 </div>
