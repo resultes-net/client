@@ -6,6 +6,8 @@ export interface KpisBase {
 	storage: Storage;
 	districtHeatingLosses_GWh: number;
 	boilerEnergy_GWh: number;
+	// All energy inputs: collector field, boiler, waste-heat source (TTES and PTES) and compressor (PTES and BTES).
+	energyInputs_GWh: number;
 	// Backwards compatibility: remove after 2027-04. `null` for results processed before the financial KPIs were introduced,
 	// `LegacyFinancialKpis` for results processed before `OutputsVersion` was introduced (version 0).
 	financial: LegacyFinancialKpis | FinancialKpis | null;

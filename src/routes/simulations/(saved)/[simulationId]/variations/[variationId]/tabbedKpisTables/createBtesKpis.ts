@@ -10,6 +10,7 @@ interface Outputs extends Partial<FinancialOutputs>, Partial<SizesOutputs> {
 	IT_kW_m2: number;
 	CollP_kW_calc_Tot: number;
 	Q_kW_m2: number;
+	QSources: number;
 	BoHxQChar_kW_Tot: number;
 	BoHxQDischar_kW_Tot: number;
 	BoHxQLoss_kW_Tot: number;
@@ -82,6 +83,7 @@ export async function createBtesKpis(
 				performanceFactor_1: outputs.HpCOP
 			},
 			boilerEnergy_GWh: outputs.BolrPOut_kW_Tot / 1e6,
+			energyInputs_GWh: outputs.QSources / 1e6,
 			districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3,
 			financial: createFinancialKpis(
 				outputs,

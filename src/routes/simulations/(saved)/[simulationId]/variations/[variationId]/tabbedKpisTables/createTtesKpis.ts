@@ -10,6 +10,7 @@ interface Outputs extends Partial<FinancialOutputs>, Partial<SizesOutputs> {
 	IT_kW_m2: number;
 	CollP_kW_calc_Tot: number;
 	Q_kW_m2: number;
+	QSources: number;
 	TesQCharge_Tot: number;
 	TesQDisharge_Tot: number;
 	QLoss_Tes1_Tot: number;
@@ -68,6 +69,7 @@ export async function createTtesKpis(
 				nChargingCycles_1: outputs.TesNCycles
 			},
 			boilerEnergy_GWh: outputs.BolrPOut_kW_Tot / 1e6,
+			energyInputs_GWh: outputs.QSources / 1e6,
 			districtHeatingLosses_GWh: outputs.QDistrict_MW / 1e3,
 			financial: createFinancialKpis(
 				outputs,

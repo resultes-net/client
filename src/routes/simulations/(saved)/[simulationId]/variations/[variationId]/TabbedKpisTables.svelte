@@ -13,11 +13,7 @@
 	export let kpis: TtesKpis | PtesKpis | BtesKpis;
 
 	function getRelativeToDemandAndLossesParam(absolute: number, locale: string): { value: string } {
-		const totalEnergyInput_GWh =
-			kpis.boilerEnergy_GWh +
-			kpis.collectorField.outputEnergy_GWh +
-			(kpis.type === 'ptes' || kpis.type === 'btes' ? kpis.heatPump.compressorEnergy_GWh : 0);
-		const relative_percent = (absolute / totalEnergyInput_GWh) * 100;
+		const relative_percent = (absolute / kpis.energyInputs_GWh) * 100;
 		const value = formatNumber(relative_percent, locale, 2);
 		return { value };
 	}
