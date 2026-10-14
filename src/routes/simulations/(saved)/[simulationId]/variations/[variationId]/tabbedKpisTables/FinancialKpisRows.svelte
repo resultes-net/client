@@ -101,7 +101,7 @@
 	<td class="!ps-8">{$t('kpis.StorageSpecificInvestmentCost')}</td>
 	<td>{formatNumber(investmentCost.storage.specificCost_per_m3, $locale, 0)}</td>
 	<td>{currency} m<sup>-3</sup></td>
-	<td></td>
+	<td>{$t('kpis.PerM3WaterEquivalent')}</td>
 </tr>
 {#if investmentCost.heatPump !== null}
 	<tr>

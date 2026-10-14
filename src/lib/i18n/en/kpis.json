@@ -37,6 +37,7 @@
     "ElectricityCost": "Electricity cost (heat pump only)",
     "ElectricityConsumption": "Electricity consumption",
     "CollectorFieldSpecificInvestmentCost": "Specific investment cost of collector field",
+    "PerM3WaterEquivalent": "Per m³ water equivalent",
     "StorageInvestmentPerMWhDischarged": "Storage investment per MWh discharged",
     "PerYear": "Per year",
     "BoilerOnlyFuelCost": "Fuel cost of a boiler-only system",
