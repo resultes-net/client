@@ -34,6 +34,16 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
 - Show numbers on the results page (KPIs and parameters tables) with `formatNumber` from `src/lib/formatNumber.ts` and
   `$locale` (thousands separators in the user's language), not with `toFixed`. Show costs with `formatMoney` (k€/M€).
 
+### Output versions
+`output.json` has a version, `OutputsVersion` (written by `systems`' `common/process/outputs.py`, one for all three
+systems), so that old results can be told from new ones.
+- The `create*Kpis` functions decide by `OutputsVersion` (in `createFinancialKpis.ts` so far); missing means version 0.
+- Renames, unit changes and restructuring: write a migration function per version step (`vN → vN+1`) and chain them, so
+  that only the newest type and component exist. These can stay forever.
+- New quantities can't be migrated (KPIs are computed in `systems`, and old outputs lack the inputs): keep a type and a
+  component per version (e.g. `LegacyFinancialKpis` and `FinancialKpisRowsLegacy.svelte` for version 0), removable after
+  the period in https://github.com/resultes-net/issues/issues/50.
+
 ## Weather data
 Simulations reference weather data by `weather_data_id` (entries of `GET /weather-data`; shared entries have `user_id`
 `null`, users can upload TM2 files via `POST /weather-data`, single entries come from `GET /weather-data/{id}`). Helpers
