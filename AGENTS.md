@@ -21,7 +21,9 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
   2. Click the parameter tabs via their `label` (e.g. `label:has(input[value="financial"])`): the `input` is hidden.
      The parameters and the KPI tables both have a "financial" tab, so that selector matches both: `.last()` is the
      KPI table's.
-- `npx svelte-check` isn't clean on `main`: to check a change, compare the error count before and after it.
+- `npm run check` (`svelte-kit sync`, then `svelte-check`) already reports errors on `main`: to check a change, compare
+  the error count before and after it. Don't run `npx svelte-check` directly: without the sync, the generated env types
+  can be stale, which adds an error (`$env/static/public` in `src/ajax.ts`).
 - To compare the UI before and after a change (e.g. that old results still look the same), run the old commit from a
   `git worktree` next to the current checkout:
   1. Hard-link `node_modules` into it (`cp -al`): Vite refuses to serve files from a symlinked `node_modules`, since
