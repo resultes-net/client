@@ -22,6 +22,13 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
      The parameters and the KPI tables both have a "financial" tab, so that selector matches both: `.last()` is the
      KPI table's.
 - `npx svelte-check` isn't clean on `main`: to check a change, compare the error count before and after it.
+- To compare the UI before and after a change (e.g. that old results still look the same), run the old commit from a
+  `git worktree` next to the current checkout:
+  1. Hard-link `node_modules` into it (`cp -al`): Vite refuses to serve files from a symlinked `node_modules`, since
+     they resolve outside its allow list.
+  2. Copy `src/lib/openapi/generated/`: it's generated and not checked in.
+  3. Start it on another port, with the API on that port, e.g.
+     `PUBLIC_API_BASE_URI=http://localhost:5174/api npx vite dev --port 5174 --strictPort`.
 - Run Prettier only on the Svelte/TS files you change. The i18n JSON files aren't Prettier-formatted: don't reformat them.
   Some TS files aren't Prettier-formatted either: if a file you change wasn't clean before, reformat it in a separate
   commit, not together with the change.
