@@ -30,7 +30,16 @@
     "MaxHourlyAveragePower": "Max. stündlich gemittelte Leistung",
     "ApertureArea": "Aperturfläche",
     "WaterEquivalentVolume": "Wasseräquivalentes Volumen",
-    "YearlyFuelCost": "Jährliche Brennstoffkosten",
+    "FuelCost": "Brennstoffkosten",
     "FuelConsumption": "Brennstoffverbrauch",
+    "CapitalCost": "Kapitalkosten",
+    "MaintenanceCost": "Unterhaltskosten",
+    "ElectricityCost": "Stromkosten (nur Wärmepumpe)",
+    "ElectricityConsumption": "Stromverbrauch",
+    "CollectorFieldSpecificInvestmentCost": "Spezifische Investitionskosten des Kollektorfelds",
+    "StorageInvestmentPerMWhDischarged": "Speicherinvestition pro entladene MWh",
+    "PerYear": "Pro Jahr",
+    "BoilerOnlyFuelCost": "Brennstoffkosten eines reinen Kesselsystems",
+    "SameDemandAndBoilerEfficiency": "Gleicher Bedarf und Kesselwirkungsgrad",
     "FinancialKPIsNotAvailable": "Nicht verfügbar: Die Resultate der Simulation wurden ausgewertet, bevor es die Finanz-KPIs gab. Die Simulation erneut ausführen, um sie zu erhalten."
 }

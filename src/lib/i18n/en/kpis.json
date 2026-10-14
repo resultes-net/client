@@ -30,7 +30,16 @@
     "MaxHourlyAveragePower": "Max. hourly average power",
     "ApertureArea": "Aperture area",
     "WaterEquivalentVolume": "Water-equivalent volume",
-    "YearlyFuelCost": "Yearly fuel cost",
+    "FuelCost": "Fuel cost",
     "FuelConsumption": "Fuel consumption",
+    "CapitalCost": "Capital cost",
+    "MaintenanceCost": "Maintenance cost",
+    "ElectricityCost": "Electricity cost (heat pump only)",
+    "ElectricityConsumption": "Electricity consumption",
+    "CollectorFieldSpecificInvestmentCost": "Specific investment cost of collector field",
+    "StorageInvestmentPerMWhDischarged": "Storage investment per MWh discharged",
+    "PerYear": "Per year",
+    "BoilerOnlyFuelCost": "Fuel cost of a boiler-only system",
+    "SameDemandAndBoilerEfficiency": "Same demand and boiler efficiency",
     "FinancialKPIsNotAvailable": "Not available: the simulation's results were processed before the financial KPIs were introduced. Run the simulation again to get them."
 }
