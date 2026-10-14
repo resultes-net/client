@@ -111,7 +111,7 @@
 								<td>GWh</td>
 								<td>
 									{$t(
-										'kpis.percentageOfEnergyInputs',
+										'kpis.percentageOfEnergyInputsSolarFraction',
 										getRelativeToDemandAndLossesParam(collectorField.outputEnergy_GWh, $locale)
 									)}
 								</td>
