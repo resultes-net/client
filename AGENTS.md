@@ -9,6 +9,16 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
    server API changes: move the `openapi-schema` submodule to the new commit, then run `npm run api:gen-model`. Never edit
    generated files by hand.
 1. Translations live in `src/lib/i18n`.
+
+## Checks and formatting
+1. `npm run check` (`svelte-kit sync`, then `svelte-check`) already reports errors on `main`: to check a change, compare
+   the error count before and after it. Don't run `npx svelte-check` directly: without the sync, the generated env types
+   can be stale, which adds an error (`$env/static/public` in `src/ajax.ts`).
+1. Run Prettier only on the Svelte/TS files you change. The i18n JSON files aren't Prettier-formatted: don't reformat them.
+   Some TS files aren't Prettier-formatted either: if a file you change wasn't clean before, reformat it in a separate
+   commit, not together with the change.
+
+## Screenshots and comparing UI versions
 1. For integration tests or screenshots, install the browser once with `npm run playwright:install` (Chromium, matching
    the Playwright version in `package-lock.json`, into `~/.cache/ms-playwright`). In CI, use
    `npx playwright install --with-deps chromium` instead, which also installs the system libraries (needs root or sudo).
@@ -21,9 +31,6 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
    2. Click the parameter tabs via their `label` (e.g. `label:has(input[value="financial"])`): the `input` is hidden.
       The parameters and the KPI tables both have a "financial" tab, so that selector matches both: `.last()` is the
       KPI table's.
-1. `npm run check` (`svelte-kit sync`, then `svelte-check`) already reports errors on `main`: to check a change, compare
-   the error count before and after it. Don't run `npx svelte-check` directly: without the sync, the generated env types
-   can be stale, which adds an error (`$env/static/public` in `src/ajax.ts`).
 1. To compare the UI before and after a change (e.g. that old results still look the same), run the old commit from a
    `git worktree` next to the current checkout:
    1. Hard-link `node_modules` into it (`cp -al`): Vite refuses to serve files from a symlinked `node_modules`, since
@@ -31,9 +38,6 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
    2. Copy `src/lib/openapi/generated/`: it's generated and not checked in.
    3. Start it on another port, with the API on that port, e.g.
       `PUBLIC_API_BASE_URI=http://localhost:5174/api npx vite dev --port 5174 --strictPort`.
-1. Run Prettier only on the Svelte/TS files you change. The i18n JSON files aren't Prettier-formatted: don't reformat them.
-   Some TS files aren't Prettier-formatted either: if a file you change wasn't clean before, reformat it in a separate
-   commit, not together with the change.
 
 ## Parameters and KPIs
 1. The project phase (`pre-design`/`design`, `src/lib/components/parameters/phase.ts`) is UI-only. Design-only fields are
