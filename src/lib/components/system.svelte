@@ -323,13 +323,13 @@
 						>
 							<TextWithWarning
 								text={$t('common.WasteHeatRecoverySource')}
-								config={{ shallWarn: !areParametersValid.collector, errorMessage: null }}
+								config={{ shallWarn: !areParametersValid.wasteHeatRecovery, errorMessage: null }}
 							/>
 						</Tab>
 						<Tab bind:group={activeParametersTab} name="storage" value="storage">
 							<TextWithWarning
 								text={$t('common.storage')}
-								config={{ shallWarn: !areParametersValid.demand, errorMessage: null }}
+								config={{ shallWarn: !areParametersValid.storage, errorMessage: null }}
 							/>
 						</Tab>
 						<Tab bind:group={activeParametersTab} name="control" value="control">
