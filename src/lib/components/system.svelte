@@ -59,6 +59,9 @@
 
 	export let systemType: Type;
 
+	// BTES doesn't simulate a waste-heat recovery source.
+	const hasWasteHeatRecoverySource = systemType === 'ttes' || systemType === 'ptes';
+
 	export let parameters;
 	const simulation: CreateSimulation = {
 		name: '',
@@ -316,16 +319,18 @@
 								config={{ shallWarn: !areParametersValid.collector, errorMessage: null }}
 							/>
 						</Tab>
-						<Tab
-							bind:group={activeParametersTab}
-							name="wasteHeatRecovery"
-							value="wasteHeatRecovery"
-						>
-							<TextWithWarning
-								text={$t('common.WasteHeatRecoverySource')}
-								config={{ shallWarn: !areParametersValid.wasteHeatRecovery, errorMessage: null }}
-							/>
-						</Tab>
+						{#if hasWasteHeatRecoverySource}
+							<Tab
+								bind:group={activeParametersTab}
+								name="wasteHeatRecovery"
+								value="wasteHeatRecovery"
+							>
+								<TextWithWarning
+									text={$t('common.WasteHeatRecoverySource')}
+									config={{ shallWarn: !areParametersValid.wasteHeatRecovery, errorMessage: null }}
+								/>
+							</Tab>
+						{/if}
 						<Tab bind:group={activeParametersTab} name="storage" value="storage">
 							<TextWithWarning
 								text={$t('common.storage')}
