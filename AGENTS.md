@@ -27,7 +27,8 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
    For screenshots, `.env.development` proxies the API to dev through
    `kubectl port-forward -n server service/external-server 8080:80`. With Playwright:
    1. Wait for `networkidle` before filling in the login form. Otherwise the form submits before the page is hydrated, and
-      the browser just reloads `/login`.
+      the browser just reloads `/login`. After submitting, wait until the URL leaves `/login` (`page.waitForURL`) before
+      navigating: `networkidle` comes too early, and the next `goto` ends up on `/login?redirect=...`.
    2. Click the parameter tabs via their `label` (e.g. `label:has(input[value="financial"])`): the `input` is hidden.
       The parameters and the KPI tables both have a "financial" tab, so that selector matches both: `.last()` is the
       KPI table's.
