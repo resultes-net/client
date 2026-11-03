@@ -69,3 +69,8 @@ for fetching, uploading and display names (shared entries get translated names k
    width, and a text's min-content width is its longest word. German labels are often single words (e.g.
    "Fernwärmenetz"), so a German tab row can make its column, or the whole page, wider than the window, while the
    English one wraps in theory and lets the column shrink.
+
+## Svelte
+1. Don't wrap a component that takes slots (e.g. Skeleton's `TabGroup`) in a component that passes them on: Svelte 4
+   can drop updates of the passed-on slots when the parent updates twice in one flush (e.g. through a `bind:`). Put
+   helpers next to the component instead, as `src/lib/components/tabScrollArrows.svelte` does.
