@@ -9,6 +9,10 @@ https://github.com/resultes-net/issues/blob/main/AGENTS.md. This file only adds 
    server API changes: move the `openapi-schema` submodule to the new commit, then run `npm run api:gen-model`. Never edit
    generated files by hand.
 1. Translations live in `src/lib/i18n`.
+1. Only `/login` and `/register` are rendered on the server (`ssr = true` in
+   `src/routes/(auth)/(login-register)/+layout.ts`). Every other page needs a login, which is checked in the browser
+   (`src/routes/+layout.ts`), so the root layout sets `ssr = false`. A new page that doesn't need a login sets
+   `ssr = true` itself (in its `+page.ts` or a layout of its own).
 
 ## Checks and formatting
 1. `npm run check` (`svelte-kit sync`, then `svelte-check`) already reports errors on `main`: to check a change, compare
@@ -74,3 +78,6 @@ for fetching, uploading and display names (shared entries get translated names k
 1. Don't wrap a component that takes slots (e.g. Skeleton's `TabGroup`) in a component that passes them on: Svelte 4
    can drop updates of the passed-on slots when the parent updates twice in one flush (e.g. through a `bind:`). Put
    helpers next to the component instead, as `src/lib/components/tabScrollArrows.svelte` does.
+1. Put `use:portal` (`src/lib/portal.ts`) on every Skeleton `data-popup` element. A popup is positioned and sized by
+   its nearest positioned ancestor, even when it's written at the component's top level: e.g. the `relative` wrapper
+   around a tab panel squeezed the tooltips in it to a narrow column.
