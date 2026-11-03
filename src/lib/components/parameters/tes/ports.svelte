@@ -62,11 +62,11 @@
 			${errorMessage !== null ? 'border-warning-300-600-token' : 'border-surface-300-600-token'}
 			items-center gap-y-[--input-gap-y] m-2 p-2`}
 	>
-		<label for="height">{$t('common.top')}</label>
+		<label for="ports-top">{$t('common.top')}</label>
 		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 			<input
 				class="input"
-				id="height"
+				id="ports-top"
 				title={$t('common.top')}
 				type="number"
 				value={parameters.top * 100}
@@ -80,11 +80,11 @@
 			</div>
 		</div>
 
-		<label for="floor-area">{$t('common.middle')}</label>
+		<label for="ports-middle">{$t('common.middle')}</label>
 		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 			<input
 				class="input"
-				id="floor-area"
+				id="ports-middle"
 				title={$t('common.middle')}
 				type="number"
 				value={parameters.middle * 100}
@@ -98,11 +98,11 @@
 			</div>
 		</div>
 
-		<label for="floor-area">{$t('common.bottom')}</label>
+		<label for="ports-bottom">{$t('common.bottom')}</label>
 		<div class="input-group input-group-divider grid grid-cols-[--input-unit-grid-cols]">
 			<input
 				class="input"
-				id="floor-area"
+				id="ports-bottom"
 				title={$t('common.bottom')}
 				type="number"
 				value={parameters.bottom * 100}
