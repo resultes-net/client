@@ -19,7 +19,7 @@
 
 	export let data;
 	const variation = data.variation;
-	
+
 	const simulationId = $page.params.simulationId!;
 	const variationId = variation.id;
 

@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
 	export type Config = {
-		shallWarn: boolean,
-		errorMessage: string | null
+		shallWarn: boolean;
+		errorMessage: string | null;
 	};
 </script>
 
@@ -21,10 +21,14 @@
 </script>
 
 <div class="flex flex-row gap-x-1">
-    {text}
-    <div class="text-warning-300-600-token" hidden={!config.shallWarn} use:popup={warningMessagePopupSettings}>
-        <TriangleAlert />
-    </div>
+	{text}
+	<div
+		class="text-warning-300-600-token"
+		hidden={!config.shallWarn}
+		use:popup={warningMessagePopupSettings}
+	>
+		<TriangleAlert />
+	</div>
 </div>
 
 <div data-popup="warningMessagePopup">
