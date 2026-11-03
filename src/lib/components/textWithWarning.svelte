@@ -10,6 +10,8 @@
 
 	import { TriangleAlert } from 'lucide-svelte';
 
+	import { portal } from '$lib/portal';
+
 	export let text: string;
 	export let config: Config;
 
@@ -31,7 +33,7 @@
 	</div>
 </div>
 
-<div data-popup="warningMessagePopup">
+<div data-popup="warningMessagePopup" use:portal>
 	<div hidden={config.errorMessage === null} class="card p-4 variant-filled-warning z-50">
 		<p>config.errorMessasge ?? ''</p>
 		<div class="arrow variant-filled-warning" />

@@ -3,6 +3,7 @@
 	import { Info } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
+	import { portal } from '$lib/portal';
 
 	import type { Financial } from '$lib/openapi/generated/model/financial';
 	import type { Type } from '$lib/openapi/generated/model/type';
@@ -50,7 +51,7 @@
 	};
 </script>
 
-<div data-popup="realDiscountRateInfoPopup">
+<div data-popup="realDiscountRateInfoPopup" use:portal>
 	<div class="card p-4 variant-filled-secondary z-50 max-w-md">
 		<p>{$t('common.RealDiscountRateInfo')}</p>
 		<div class="arrow variant-filled-secondary" />

@@ -17,6 +17,7 @@
 	import { page } from '$app/stores';
 
 	import { t } from '$lib/i18n/translations';
+	import { portal } from '$lib/portal';
 
 	import { getBreadCrumbsStore } from '../../../breadCrumbs';
 
@@ -157,7 +158,7 @@
 	});
 </script>
 
-<div data-popup="variation-menu-drop-down">
+<div data-popup="variation-menu-drop-down" use:portal>
 	<div class="bg-secondary-50-900-token list-nav w-52 pt-2">
 		<div class="bg-secondary-50-900-token arrow" />
 		<ul>

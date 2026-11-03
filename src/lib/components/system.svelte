@@ -35,6 +35,7 @@
 	import TabScrollArrows from '$lib/components/tabScrollArrows.svelte';
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
 	import { t } from '$lib/i18n/translations';
+	import { portal } from '$lib/portal';
 
 	import { type Phase } from '$lib/components/parameters/phase';
 
@@ -417,7 +418,7 @@
 	</div>
 {/if}
 
-<div data-popup="submitButtonDisabledMessagePopup">
+<div data-popup="submitButtonDisabledMessagePopup" use:portal>
 	<div hidden={areAllParametersValid} class="card p-4 variant-filled-warning z-50">
 		<p>{$t('common.correctErrorsInParameters')}</p>
 		<div class="arrow variant-filled-warning" />

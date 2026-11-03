@@ -3,6 +3,7 @@
 	import { ChevronDown } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
+	import { portal } from '$lib/portal';
 
 	import {
 		ScaledValueLiteralAbsoluteM3RelativeToDemandM3PerMWhRelativeToCollectorAreaM3PerM2 as Size,
@@ -64,7 +65,7 @@
 	};
 </script>
 
-<div class="z-50 bg-surface-200-700-token-token" data-popup="size-combobox">
+<div class="z-50 bg-surface-200-700-token-token" data-popup="size-combobox" use:portal>
 	<ListBox
 		class="bg-surface-200-700-token border-[1px] border-primary-200-700-token"
 		rounded="rounded-none"

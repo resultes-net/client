@@ -5,6 +5,8 @@
 
 	import { EllipsisVertical } from 'lucide-svelte';
 
+	import { portal } from '$lib/portal';
+
 	import { getBlob, UnauthorizedError } from 'src/ajax';
 	import * as auth from 'src/auth';
 
@@ -101,7 +103,7 @@
 	});
 </script>
 
-<div data-popup="log-menu-drop-down">
+<div data-popup="log-menu-drop-down" use:portal>
 	{#if logFileStatus instanceof LogFileData}
 		<nav class="bg-secondary-50-900-token list-nav w-52 pt-2">
 			<div class="bg-secondary-50-900-token arrow" />

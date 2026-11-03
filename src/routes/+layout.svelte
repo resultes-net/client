@@ -14,6 +14,7 @@
 	import { CircleUserRound } from 'lucide-svelte';
 
 	import { locale, locales, t } from '$lib/i18n/translations';
+	import { portal } from '$lib/portal';
 
 	import * as auth from 'src/auth';
 	import { isAuthenticated } from 'src/auth';
@@ -48,7 +49,7 @@
 
 <Modal />
 
-<div data-popup="user-button-drop-down">
+<div data-popup="user-button-drop-down" use:portal>
 	<div class="bg-surface-50-900-token pt-1">
 		<div class="arrow bg-surface-50-900-token" />
 		<div class="ml-1">

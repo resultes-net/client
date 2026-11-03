@@ -3,6 +3,7 @@
 	import { ChevronDown } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
+	import { portal } from '$lib/portal';
 
 	import { ScaledValueLiteralAbsolute1RelativeToDemand1PerMWhRelativeToCollectorArea1PerM2 as NBoreholes } from '$lib/openapi/generated/model/scaledValueLiteralAbsolute1RelativeToDemand1PerMWhRelativeToCollectorArea1PerM2';
 
@@ -67,7 +68,7 @@
 	};
 </script>
 
-<div class="z-50 bg-surface-200-700-token-token" data-popup="n-boreholes-combobox">
+<div class="z-50 bg-surface-200-700-token-token" data-popup="n-boreholes-combobox" use:portal>
 	<ListBox
 		class="bg-surface-200-700-token border-[1px] border-primary-200-700-token"
 		rounded="rounded-none"

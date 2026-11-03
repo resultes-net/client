@@ -4,6 +4,7 @@
 	import { Folder, Info } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
+	import { portal } from '$lib/portal';
 
 	import type { WasteHeatRecoverySource } from '$lib/openapi/generated/model/wasteHeatRecoverySource';
 	import { createDefaultWasteHeatRecoverySource } from '$lib/parameters/createDefaultWasteHeatRecoverySource';
@@ -61,7 +62,7 @@
 	}
 </script>
 
-<div data-popup="profileInfoHoverPopup">
+<div data-popup="profileInfoHoverPopup" use:portal>
 	<div class="card p-4 variant-filled-secondary z-50">
 		<p class="mb-2">
 			A CSV file with one header row and two columns, giving - for each hour of the year - the mass
@@ -69,17 +70,6 @@
 			like this:
 		</p>
 		<pre>Mass flow rate [kg/h]	Temperature [C]
-100 35
-100 35
-100 35
-100 35
-100 35
-100 35
-100 35
-100 35
-100 35
-100 35
-100 35
 100 35
 100 35
 100 35

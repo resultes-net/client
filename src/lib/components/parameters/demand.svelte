@@ -4,6 +4,7 @@
 	import { Folder, Info } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
+	import { portal } from '$lib/portal';
 
 	import { type Demand } from '$lib/openapi/generated/model/demand';
 
@@ -71,7 +72,7 @@
 		parameters.scaling_factor;
 </script>
 
-<div data-popup="profileInfoHoverPopup">
+<div data-popup="profileInfoHoverPopup" use:portal>
 	<div class="card p-4 variant-filled-secondary z-50">
 		<p class="mb-2">
 			A CSV file with one header row and one column, giving - for each hour of the year - the heat
@@ -83,25 +84,12 @@
 2.30299662
 2.49666306
 3.17932872
-4.58532666
-6.12132444
-5.83399152
-5.63999178
-4.85765958
-4.35766032
-3.85666104
-3.52266156
-3.52032822
-3.35999508
-3.53332818
-3.72132792
-4.21499388
 ...</pre>
 		<div class="arrow variant-filled-secondary" />
 	</div>
 </div>
 
-<div data-popup="scalingFactorInfoHoverPopup">
+<div data-popup="scalingFactorInfoHoverPopup" use:portal>
 	<div class="card p-4 variant-filled-secondary z-50">
 		<p>Every hourly demand will be multiplied by this factor before being applied.</p>
 		<div class="arrow variant-filled-secondary" />

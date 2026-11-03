@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 
 	import { t } from '$lib/i18n/translations';
+	import { portal } from '$lib/portal';
 
 	import type { UserCreate } from '$lib/openapi/generated/model/userCreate';
 	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
@@ -59,7 +60,7 @@
 	}
 </script>
 
-<div data-popup="registrationCodeInfoPopup">
+<div data-popup="registrationCodeInfoPopup" use:portal>
 	<div class="card p-4 variant-filled-secondary relative z-50">
 		<div class="arrow variant-filled-secondary" />
 		<div class="whitespace-pre-line">{$t('auth.WriteToToAskForRegistrationCode')}</div>

@@ -5,6 +5,7 @@
 	import { TriangleAlert } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
+	import { portal } from '$lib/portal';
 	import { parseAndClampInputValue } from '$lib/utils';
 
 	import type { PtesPortRelativeHeights } from '$lib/openapi/generated/model/ptesPortRelativeHeights';
@@ -118,7 +119,7 @@
 	</div>
 </div>
 
-<div data-popup="validationeErrorMessagePopup">
+<div data-popup="validationeErrorMessagePopup" use:portal>
 	<div class="card p-4 variant-filled-warning z-50">
 		<p>{errorMessage}</p>
 		<div class="arrow variant-filled-warning" />

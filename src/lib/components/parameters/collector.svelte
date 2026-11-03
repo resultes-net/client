@@ -3,6 +3,7 @@
 	import { ChevronDown, Folder, Info } from 'lucide-svelte';
 
 	import { t } from '$lib/i18n/translations';
+	import { portal } from '$lib/portal';
 
 	import type { CollectorField } from '$lib/openapi/generated/model/collectorField';
 
@@ -161,7 +162,7 @@ ${values}
 		<pre class="pre">{serializeIam(parameters.iam)}</pre>
 	</div>
 {:else}
-	<div data-popup="iamInfoHoverPopup">
+	<div data-popup="iamInfoHoverPopup" use:portal>
 		<div class="card p-4 variant-filled-secondary z-50">
 			<p class="mb-2">
 				A CSV file with one header row and one, column giving - for each hour of the year - the heat
@@ -174,26 +175,16 @@ ${values}
 0.99
 0.98
 0.95
-0.88
-0.72
-0.36
-0
-1
-1
-0.99
-0.98
-0.95
-0.88
-0.72
-0.36
-0
-0.99
 ...</pre>
 			<div class="arrow variant-filled-secondary" />
 		</div>
 	</div>
 
-	<div class="z-50 bg-surface-200-700-token-token" data-popup="area-size-scaling-combobox">
+	<div
+		class="z-50 bg-surface-200-700-token-token"
+		data-popup="area-size-scaling-combobox"
+		use:portal
+	>
 		<ListBox
 			class="bg-surface-200-700-token border-[1px] border-primary-200-700-token"
 			rounded="rounded-none"
@@ -212,7 +203,11 @@ ${values}
 		</ListBox>
 	</div>
 
-	<div class="z-50 bg-surface-200-700-token-token" data-popup="nominal-massflow-scaling-combobox">
+	<div
+		class="z-50 bg-surface-200-700-token-token"
+		data-popup="nominal-massflow-scaling-combobox"
+		use:portal
+	>
 		<ListBox
 			class="bg-surface-200-700-token border-[1px] border-primary-200-700-token"
 			rounded="rounded-none"
