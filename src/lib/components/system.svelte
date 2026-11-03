@@ -27,11 +27,12 @@
 		popup,
 		type ModalSettings,
 		type PopupSettings,
-		Tab
+		Tab,
+		TabGroup
 	} from '@skeletonlabs/skeleton';
 	import { Folder } from 'lucide-svelte';
 
-	import ScrollableTabGroup from '$lib/components/scrollableTabGroup.svelte';
+	import TabScrollArrows from '$lib/components/tabScrollArrows.svelte';
 	import TextWithWarning from '$lib/components/textWithWarning.svelte';
 	import { t } from '$lib/i18n/translations';
 
@@ -71,6 +72,7 @@
 	};
 
 	let activeParametersTab: ActiveParamtersTab = 'demand';
+	let tabsContainer: HTMLDivElement | undefined;
 	let projectPhase: Phase = 'pre-design';
 
 	let yearlyHeatDemandGWh: number;
@@ -306,91 +308,98 @@
 				<hr class="!border-t-2" />
 
 				<div class="flex flex-col">
-					<ScrollableTabGroup>
-						<Tab bind:group={activeParametersTab} name="demand" value="demand">
-							<TextWithWarning
-								text={$t('common.demand')}
-								config={{ shallWarn: !areParametersValid.demand, errorMessage: null }}
-							/>
-						</Tab>
-						<Tab bind:group={activeParametersTab} name="collector" value="collector">
-							<TextWithWarning
-								text={$t('common.collector')}
-								config={{ shallWarn: !areParametersValid.collector, errorMessage: null }}
-							/>
-						</Tab>
-						{#if hasWasteHeatRecoverySource}
-							<Tab
-								bind:group={activeParametersTab}
-								name="wasteHeatRecovery"
-								value="wasteHeatRecovery"
-							>
+					<div class="relative" bind:this={tabsContainer}>
+						<TabGroup regionList="mx-5">
+							<Tab bind:group={activeParametersTab} name="demand" value="demand">
 								<TextWithWarning
-									text={$t('common.WasteHeatRecoverySource')}
-									config={{ shallWarn: !areParametersValid.wasteHeatRecovery, errorMessage: null }}
+									text={$t('common.demand')}
+									config={{ shallWarn: !areParametersValid.demand, errorMessage: null }}
 								/>
 							</Tab>
-						{/if}
-						<Tab bind:group={activeParametersTab} name="storage" value="storage">
-							<TextWithWarning
-								text={$t('common.storage')}
-								config={{ shallWarn: !areParametersValid.storage, errorMessage: null }}
-							/>
-						</Tab>
-						<Tab bind:group={activeParametersTab} name="control" value="control">
-							<TextWithWarning
-								text={$t('common.Control')}
-								config={{ shallWarn: !areParametersValid.control, errorMessage: null }}
-							/>
-						</Tab>
-						<Tab bind:group={activeParametersTab} name="financial" value="financial">
-							<TextWithWarning
-								text={$t('common.Financials')}
-								config={{ shallWarn: !areParametersValid.financial, errorMessage: null }}
-							/>
-						</Tab>
+							<Tab bind:group={activeParametersTab} name="collector" value="collector">
+								<TextWithWarning
+									text={$t('common.collector')}
+									config={{ shallWarn: !areParametersValid.collector, errorMessage: null }}
+								/>
+							</Tab>
+							{#if hasWasteHeatRecoverySource}
+								<Tab
+									bind:group={activeParametersTab}
+									name="wasteHeatRecovery"
+									value="wasteHeatRecovery"
+								>
+									<TextWithWarning
+										text={$t('common.WasteHeatRecoverySource')}
+										config={{
+											shallWarn: !areParametersValid.wasteHeatRecovery,
+											errorMessage: null
+										}}
+									/>
+								</Tab>
+							{/if}
+							<Tab bind:group={activeParametersTab} name="storage" value="storage">
+								<TextWithWarning
+									text={$t('common.storage')}
+									config={{ shallWarn: !areParametersValid.storage, errorMessage: null }}
+								/>
+							</Tab>
+							<Tab bind:group={activeParametersTab} name="control" value="control">
+								<TextWithWarning
+									text={$t('common.Control')}
+									config={{ shallWarn: !areParametersValid.control, errorMessage: null }}
+								/>
+							</Tab>
+							<Tab bind:group={activeParametersTab} name="financial" value="financial">
+								<TextWithWarning
+									text={$t('common.Financials')}
+									config={{ shallWarn: !areParametersValid.financial, errorMessage: null }}
+								/>
+							</Tab>
 
-						<svelte:fragment slot="panel">
-							<div class="ltr:ml-[1%] rtl:mr-[1%]">
-								{#if activeParametersTab === 'demand'}
-									<Demand
-										bind:parameters={parameters.demand}
-										onShowProfileDetails={onShowCollectorProfileDetails}
-										bind:yearlyHeatDemandGWh
-										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'demand')}
-									/>
-								{:else if activeParametersTab === 'collector'}
-									<Collector
-										{projectPhase}
-										bind:parameters={parameters.collector_field}
-										{yearlyHeatDemandGWh}
-										onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'collector')}
-										bind:isShowIam={collectorIsShowIam}
-									/>
-								{:else if activeParametersTab === 'wasteHeatRecovery'}
-									<WasteHeatRecoverySource
-										bind:parameters={parameters.waste_heat_recovery_source}
-										onAreParametersValidChanged={(v) =>
-											onAreParametersValidChanged(v, 'wasteHeatRecovery')}
-										onShowProfileDetails={onShowWhrSourceProfileDetails}
-									/>
-								{:else if activeParametersTab === 'storage'}
-									<slot name="storage">ERROR: no storage slot provided.</slot>
-								{:else if activeParametersTab === 'control'}
-									<slot name="control">ERROR: no control slot provided.</slot>
-								{:else if activeParametersTab === 'financial'}
-									<Financial
-										bind:parameters={parameters.financial}
-										bind:lastCostRegionSwitch
-										{projectPhase}
-										{systemType}
-									/>
-								{:else}
-									ERROR: Unknown tab `{activeParametersTab}`.
-								{/if}
-							</div>
-						</svelte:fragment>
-					</ScrollableTabGroup>
+							<svelte:fragment slot="panel">
+								<div class="ltr:ml-[1%] rtl:mr-[1%]">
+									{#if activeParametersTab === 'demand'}
+										<Demand
+											bind:parameters={parameters.demand}
+											onShowProfileDetails={onShowCollectorProfileDetails}
+											bind:yearlyHeatDemandGWh
+											onAreParametersValidChanged={(v) => onAreParametersValidChanged(v, 'demand')}
+										/>
+									{:else if activeParametersTab === 'collector'}
+										<Collector
+											{projectPhase}
+											bind:parameters={parameters.collector_field}
+											{yearlyHeatDemandGWh}
+											onAreParametersValidChanged={(v) =>
+												onAreParametersValidChanged(v, 'collector')}
+											bind:isShowIam={collectorIsShowIam}
+										/>
+									{:else if activeParametersTab === 'wasteHeatRecovery'}
+										<WasteHeatRecoverySource
+											bind:parameters={parameters.waste_heat_recovery_source}
+											onAreParametersValidChanged={(v) =>
+												onAreParametersValidChanged(v, 'wasteHeatRecovery')}
+											onShowProfileDetails={onShowWhrSourceProfileDetails}
+										/>
+									{:else if activeParametersTab === 'storage'}
+										<slot name="storage">ERROR: no storage slot provided.</slot>
+									{:else if activeParametersTab === 'control'}
+										<slot name="control">ERROR: no control slot provided.</slot>
+									{:else if activeParametersTab === 'financial'}
+										<Financial
+											bind:parameters={parameters.financial}
+											bind:lastCostRegionSwitch
+											{projectPhase}
+											{systemType}
+										/>
+									{:else}
+										ERROR: Unknown tab `{activeParametersTab}`.
+									{/if}
+								</div>
+							</svelte:fragment>
+						</TabGroup>
+						<TabScrollArrows container={tabsContainer} />
+					</div>
 				</div>
 				<div class="flex flex-col mt-2 gap-y-1 ml-auto">
 					<button

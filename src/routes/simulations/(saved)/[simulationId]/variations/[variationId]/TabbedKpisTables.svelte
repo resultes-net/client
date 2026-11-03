@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Tab } from '@skeletonlabs/skeleton';
+	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 
-	import ScrollableTabGroup from '$lib/components/scrollableTabGroup.svelte';
+	import TabScrollArrows from '$lib/components/tabScrollArrows.svelte';
 	import { formatNumber } from '$lib/formatNumber';
 	import { locale, t } from '$lib/i18n/translations';
 	import FinancialKpisRows from './tabbedKpisTables/FinancialKpisRows.svelte';
@@ -20,252 +20,258 @@
 
 	type ActiveParamtersTab = 'demand' | 'collector' | 'storage' | 'heatPump' | 'boiler' | 'district';
 	let activeParametersTab: ActiveParamtersTab = 'demand';
+	let tabsContainer: HTMLDivElement | undefined;
 </script>
 
-<ScrollableTabGroup>
-	<Tab bind:group={activeParametersTab} name="demand" value="demand">{$t('common.demand')}</Tab>
-	<Tab bind:group={activeParametersTab} name="collector" value="collector"
-		>{$t('common.CollectorField')}</Tab
-	>
-	<Tab bind:group={activeParametersTab} name="storage" value="storage">{$t('common.storage')}</Tab>
-	{#if kpis.type === 'ptes' || kpis.type === 'btes'}
-		<Tab bind:group={activeParametersTab} name="heatPump" value="heatPump"
-			>{$t('common.HeatPump')}</Tab
+<div class="relative" bind:this={tabsContainer}>
+	<TabGroup regionList="mx-5">
+		<Tab bind:group={activeParametersTab} name="demand" value="demand">{$t('common.demand')}</Tab>
+		<Tab bind:group={activeParametersTab} name="collector" value="collector"
+			>{$t('common.CollectorField')}</Tab
 		>
-	{/if}
-	<Tab bind:group={activeParametersTab} name="boiler" value="boiler">{$t('common.Boiler')}</Tab>
-	<Tab bind:group={activeParametersTab} name="district" value="district"
-		>{$t('common.DistrictHeatingNetwork')}</Tab
-	>
-	<Tab bind:group={activeParametersTab} name="financial" value="financial"
-		>{$t('common.Financials')}</Tab
-	>
+		<Tab bind:group={activeParametersTab} name="storage" value="storage">{$t('common.storage')}</Tab
+		>
+		{#if kpis.type === 'ptes' || kpis.type === 'btes'}
+			<Tab bind:group={activeParametersTab} name="heatPump" value="heatPump"
+				>{$t('common.HeatPump')}</Tab
+			>
+		{/if}
+		<Tab bind:group={activeParametersTab} name="boiler" value="boiler">{$t('common.Boiler')}</Tab>
+		<Tab bind:group={activeParametersTab} name="district" value="district"
+			>{$t('common.DistrictHeatingNetwork')}</Tab
+		>
+		<Tab bind:group={activeParametersTab} name="financial" value="financial"
+			>{$t('common.Financials')}</Tab
+		>
 
-	<svelte:fragment slot="panel">
-		<div class="ltr:ml-[1%] rtl:mr-[1%]">
-			<div class="table-container">
-				<table class="table table-hover [&_th]:text-nowrap [&_td]:text-nowrap">
-					<thead>
-						<tr>
-							<th>{$t('common.Description')}</th>
-							<th>{$t('common.Value')}</th>
-							<th>{$t('common.Unit')}</th>
-							<th>{$t('common.Notes')}</th>
-						</tr>
-					</thead>
-					<tbody>
-						{#if activeParametersTab === 'demand'}
-							{@const demand = kpis.demand}
+		<svelte:fragment slot="panel">
+			<div class="ltr:ml-[1%] rtl:mr-[1%]">
+				<div class="table-container">
+					<table class="table table-hover [&_th]:text-nowrap [&_td]:text-nowrap">
+						<thead>
 							<tr>
-								<td>{$t('kpis.HeatDemandIncludingNetworkLosses')}</td>
-								<td>{formatNumber(demand.demand_GWh, $locale, 2)}</td>
-								<td>GWh</td>
-								<td>
-									{$t(
-										'kpis.percentageOfEnergyInputs',
-										getRelativeToDemandAndLossesParam(demand.demand_GWh, $locale)
-									)}
-								</td>
+								<th>{$t('common.Description')}</th>
+								<th>{$t('common.Value')}</th>
+								<th>{$t('common.Unit')}</th>
+								<th>{$t('common.Notes')}</th>
 							</tr>
-							<tr>
-								<td>{$t('kpis.AverageSupplyTemperature')}</td>
-								<td>{formatNumber(demand.averageSupplyTemp_degC, $locale, 2)}</td>
-								<td>°C</td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>{$t('kpis.AverageReturnTemperature')}</td>
-								<td>{formatNumber(demand.averageReturnTemp_degC, $locale, 2)}</td>
-								<td>°C</td>
-								<td></td>
-							</tr>
-						{:else if activeParametersTab === 'collector'}
-							{@const collectorField = kpis.collectorField}
-							<tr>
-								<td>{$t('kpis.TotalSolarIrradiationOnCollector')}</td>
-								<td
-									>{formatNumber(
-										collectorField.specificTotalIrradiation_MWh_per_m2,
-										$locale,
-										2
-									)}</td
-								>
-								<td>MWh m<sup>-2</sup></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>{$t('kpis.SpecificCollectorEnergyOutput')}</td>
-								<td>{formatNumber(collectorField.specificOutputEnergy_MWh_per_m2, $locale, 2)}</td>
-								<td>MWh m<sup>-2</sup></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>{$t('kpis.Efficiency')}</td>
-								<td>{formatNumber(collectorField.efficiency_1, $locale, 2)}</td>
-								<td>-</td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>{$t('common.EnergyOutput')}</td>
-								<td>{formatNumber(collectorField.outputEnergy_GWh, $locale, 2)}</td>
-								<td>GWh</td>
-								<td>
-									{$t(
-										'kpis.percentageOfEnergyInputsSolarFraction',
-										getRelativeToDemandAndLossesParam(collectorField.outputEnergy_GWh, $locale)
-									)}
-								</td>
-							</tr>
-						{:else if activeParametersTab === 'storage'}
-							{@const storage = kpis.storage}
-							<tr>
-								<td>{$t('kpis.ChargedEnergy')}</td>
-								<td>{formatNumber(storage.charged_GWh, $locale, 2)}</td>
-								<td>GWh</td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>{$t('kpis.DischargedEnergy')}</td>
-								<td>{formatNumber(storage.discharged_GWh, $locale, 2)}</td>
-								<td>GWh</td>
-								<td>
-									{$t(
-										'kpis.percentageOfEnergyInputs',
-										getRelativeToDemandAndLossesParam(storage.discharged_GWh, $locale)
-									)}
-								</td>
-							</tr>
-							<tr>
-								<td>{$t('common.Losses')}</td>
-								<td>{formatNumber(storage.losses_GWh, $locale, 2)}</td>
-								<td>GWh</td>
-								<td>
-									{$t(
-										'kpis.percentageOfEnergyInputs',
-										getRelativeToDemandAndLossesParam(storage.losses_GWh, $locale)
-									)}
-								</td>
-							</tr>
-							<tr>
-								<td>{$t('kpis.NetHeatGain')}</td>
-								<td>{formatNumber(storage.netHeatGain_GWh, $locale, 2)}</td>
-								<td>GWh</td>
-								<td>
-									{$t(
-										'kpis.percentageOfEnergyInputs',
-										getRelativeToDemandAndLossesParam(storage.netHeatGain_GWh, $locale)
-									)}
-								</td>
-							</tr>
-							<tr>
-								<td>{$t('kpis.RoundTripEfficiency')}</td>
-								<td>{formatNumber(storage.roundTripEfficiency_1, $locale, 2)}</td>
-								<td>-</td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>{$t('kpis.NumberOfChargingDischargingCycles')}</td>
-								<td>{formatNumber(storage.nChargingCycles_1, $locale, 2)}</td>
-								<td>-</td>
-								<td></td>
-							</tr>
-						{:else if activeParametersTab === 'heatPump'}
-							{@const heatPump = kpis.heatPump}
-							<tr>
-								<td>{$t('kpis.EvaporatorEnergy')}</td>
-								<td>{formatNumber(heatPump.evaporatorEnergy_GWh, $locale, 2)}</td>
-								<td>GWh</td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>{$t('kpis.CompressorEnergy')}</td>
-								<td>{formatNumber(heatPump.compressorEnergy_GWh, $locale, 2)}</td>
-								<td>GWh</td>
-								<td>
-									{$t(
-										'kpis.percentageOfEnergyInputs',
-										getRelativeToDemandAndLossesParam(heatPump.compressorEnergy_GWh, $locale)
-									)}
-								</td>
-							</tr>
-							<tr>
-								<td>{$t('kpis.CondenserEnergy')}</td>
-								<td>{formatNumber(heatPump.condenserEnergy_GWh, $locale, 2)}</td>
-								<td>GWh</td>
-								<td>
-									{$t(
-										'kpis.percentageOfEnergyInputs',
-										getRelativeToDemandAndLossesParam(heatPump.condenserEnergy_GWh, $locale)
-									)}
-								</td>
-							</tr>
-							<tr>
-								<td>{$t('kpis.AnnualPerformanceFactor')}</td>
-								<td>{formatNumber(heatPump.performanceFactor_1, $locale, 2)}</td>
-								<td>-</td>
-								<td></td>
-							</tr>
-							<!-- Backwards compatibility: remove after 2027-04. `kpis.sizes !== null`: no capacity for results processed before the sizes were introduced. -->
-							{#if kpis.sizes !== null && kpis.sizes.heatPumpCapacity_MW !== null}
+						</thead>
+						<tbody>
+							{#if activeParametersTab === 'demand'}
+								{@const demand = kpis.demand}
 								<tr>
-									<td>{$t('kpis.MaxHourlyAveragePower')}</td>
-									<td>{formatNumber(kpis.sizes.heatPumpCapacity_MW, $locale, 2)}</td>
-									<td>MW</td>
-									<td></td>
-								</tr>
-							{/if}
-						{:else if activeParametersTab === 'boiler'}
-							<tr>
-								<td>{$t('common.EnergyOutput')}</td>
-								<td>{formatNumber(kpis.boilerEnergy_GWh, $locale, 2)}</td>
-								<td>GWh</td>
-								<td>
-									{$t(
-										'kpis.percentageOfEnergyInputs',
-										getRelativeToDemandAndLossesParam(kpis.boilerEnergy_GWh, $locale)
-									)}
-								</td>
-							</tr>
-							<!-- Backwards compatibility: remove after 2027-04. No capacity for results processed before the sizes were introduced. -->
-							{#if kpis.sizes !== null}
-								<tr>
-									<td>{$t('kpis.MaxHourlyAveragePower')}</td>
-									<td>{formatNumber(kpis.sizes.boilerCapacity_MW, $locale, 2)}</td>
-									<td>MW</td>
-									<td></td>
-								</tr>
-							{/if}
-						{:else if activeParametersTab === 'district'}
-							<tr>
-								<td>{$t('common.Losses')}</td>
-								<td>{formatNumber(kpis.districtHeatingLosses_GWh, $locale, 2)}</td>
-								<td>GWh</td>
-								<td>
-									{$t(
-										'kpis.percentageOfEnergyInputs',
-										getRelativeToDemandAndLossesParam(kpis.districtHeatingLosses_GWh, $locale)
-									)}
-								</td>
-							</tr>
-						{:else if activeParametersTab === 'financial'}
-							<!-- Backwards compatibility: remove after 2027-04. `null`: results processed before the financial KPIs were introduced. Version 0: results processed before `OutputsVersion` was introduced, shown with the rows from before. -->
-							{#if kpis.financial === null}
-								<tr>
-									<td colspan="4" class="!whitespace-normal">
-										{$t('kpis.FinancialKPIsNotAvailable')}
+									<td>{$t('kpis.HeatDemandIncludingNetworkLosses')}</td>
+									<td>{formatNumber(demand.demand_GWh, $locale, 2)}</td>
+									<td>GWh</td>
+									<td>
+										{$t(
+											'kpis.percentageOfEnergyInputs',
+											getRelativeToDemandAndLossesParam(demand.demand_GWh, $locale)
+										)}
 									</td>
 								</tr>
-							{:else if kpis.financial.outputsVersion === 0}
-								<FinancialKpisRowsLegacy financial={kpis.financial} sizes={kpis.sizes} />
+								<tr>
+									<td>{$t('kpis.AverageSupplyTemperature')}</td>
+									<td>{formatNumber(demand.averageSupplyTemp_degC, $locale, 2)}</td>
+									<td>°C</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.AverageReturnTemperature')}</td>
+									<td>{formatNumber(demand.averageReturnTemp_degC, $locale, 2)}</td>
+									<td>°C</td>
+									<td></td>
+								</tr>
+							{:else if activeParametersTab === 'collector'}
+								{@const collectorField = kpis.collectorField}
+								<tr>
+									<td>{$t('kpis.TotalSolarIrradiationOnCollector')}</td>
+									<td
+										>{formatNumber(
+											collectorField.specificTotalIrradiation_MWh_per_m2,
+											$locale,
+											2
+										)}</td
+									>
+									<td>MWh m<sup>-2</sup></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.SpecificCollectorEnergyOutput')}</td>
+									<td>{formatNumber(collectorField.specificOutputEnergy_MWh_per_m2, $locale, 2)}</td
+									>
+									<td>MWh m<sup>-2</sup></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.Efficiency')}</td>
+									<td>{formatNumber(collectorField.efficiency_1, $locale, 2)}</td>
+									<td>-</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>{$t('common.EnergyOutput')}</td>
+									<td>{formatNumber(collectorField.outputEnergy_GWh, $locale, 2)}</td>
+									<td>GWh</td>
+									<td>
+										{$t(
+											'kpis.percentageOfEnergyInputsSolarFraction',
+											getRelativeToDemandAndLossesParam(collectorField.outputEnergy_GWh, $locale)
+										)}
+									</td>
+								</tr>
+							{:else if activeParametersTab === 'storage'}
+								{@const storage = kpis.storage}
+								<tr>
+									<td>{$t('kpis.ChargedEnergy')}</td>
+									<td>{formatNumber(storage.charged_GWh, $locale, 2)}</td>
+									<td>GWh</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.DischargedEnergy')}</td>
+									<td>{formatNumber(storage.discharged_GWh, $locale, 2)}</td>
+									<td>GWh</td>
+									<td>
+										{$t(
+											'kpis.percentageOfEnergyInputs',
+											getRelativeToDemandAndLossesParam(storage.discharged_GWh, $locale)
+										)}
+									</td>
+								</tr>
+								<tr>
+									<td>{$t('common.Losses')}</td>
+									<td>{formatNumber(storage.losses_GWh, $locale, 2)}</td>
+									<td>GWh</td>
+									<td>
+										{$t(
+											'kpis.percentageOfEnergyInputs',
+											getRelativeToDemandAndLossesParam(storage.losses_GWh, $locale)
+										)}
+									</td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.NetHeatGain')}</td>
+									<td>{formatNumber(storage.netHeatGain_GWh, $locale, 2)}</td>
+									<td>GWh</td>
+									<td>
+										{$t(
+											'kpis.percentageOfEnergyInputs',
+											getRelativeToDemandAndLossesParam(storage.netHeatGain_GWh, $locale)
+										)}
+									</td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.RoundTripEfficiency')}</td>
+									<td>{formatNumber(storage.roundTripEfficiency_1, $locale, 2)}</td>
+									<td>-</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.NumberOfChargingDischargingCycles')}</td>
+									<td>{formatNumber(storage.nChargingCycles_1, $locale, 2)}</td>
+									<td>-</td>
+									<td></td>
+								</tr>
+							{:else if activeParametersTab === 'heatPump'}
+								{@const heatPump = kpis.heatPump}
+								<tr>
+									<td>{$t('kpis.EvaporatorEnergy')}</td>
+									<td>{formatNumber(heatPump.evaporatorEnergy_GWh, $locale, 2)}</td>
+									<td>GWh</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.CompressorEnergy')}</td>
+									<td>{formatNumber(heatPump.compressorEnergy_GWh, $locale, 2)}</td>
+									<td>GWh</td>
+									<td>
+										{$t(
+											'kpis.percentageOfEnergyInputs',
+											getRelativeToDemandAndLossesParam(heatPump.compressorEnergy_GWh, $locale)
+										)}
+									</td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.CondenserEnergy')}</td>
+									<td>{formatNumber(heatPump.condenserEnergy_GWh, $locale, 2)}</td>
+									<td>GWh</td>
+									<td>
+										{$t(
+											'kpis.percentageOfEnergyInputs',
+											getRelativeToDemandAndLossesParam(heatPump.condenserEnergy_GWh, $locale)
+										)}
+									</td>
+								</tr>
+								<tr>
+									<td>{$t('kpis.AnnualPerformanceFactor')}</td>
+									<td>{formatNumber(heatPump.performanceFactor_1, $locale, 2)}</td>
+									<td>-</td>
+									<td></td>
+								</tr>
+								<!-- Backwards compatibility: remove after 2027-04. `kpis.sizes !== null`: no capacity for results processed before the sizes were introduced. -->
+								{#if kpis.sizes !== null && kpis.sizes.heatPumpCapacity_MW !== null}
+									<tr>
+										<td>{$t('kpis.MaxHourlyAveragePower')}</td>
+										<td>{formatNumber(kpis.sizes.heatPumpCapacity_MW, $locale, 2)}</td>
+										<td>MW</td>
+										<td></td>
+									</tr>
+								{/if}
+							{:else if activeParametersTab === 'boiler'}
+								<tr>
+									<td>{$t('common.EnergyOutput')}</td>
+									<td>{formatNumber(kpis.boilerEnergy_GWh, $locale, 2)}</td>
+									<td>GWh</td>
+									<td>
+										{$t(
+											'kpis.percentageOfEnergyInputs',
+											getRelativeToDemandAndLossesParam(kpis.boilerEnergy_GWh, $locale)
+										)}
+									</td>
+								</tr>
+								<!-- Backwards compatibility: remove after 2027-04. No capacity for results processed before the sizes were introduced. -->
+								{#if kpis.sizes !== null}
+									<tr>
+										<td>{$t('kpis.MaxHourlyAveragePower')}</td>
+										<td>{formatNumber(kpis.sizes.boilerCapacity_MW, $locale, 2)}</td>
+										<td>MW</td>
+										<td></td>
+									</tr>
+								{/if}
+							{:else if activeParametersTab === 'district'}
+								<tr>
+									<td>{$t('common.Losses')}</td>
+									<td>{formatNumber(kpis.districtHeatingLosses_GWh, $locale, 2)}</td>
+									<td>GWh</td>
+									<td>
+										{$t(
+											'kpis.percentageOfEnergyInputs',
+											getRelativeToDemandAndLossesParam(kpis.districtHeatingLosses_GWh, $locale)
+										)}
+									</td>
+								</tr>
+							{:else if activeParametersTab === 'financial'}
+								<!-- Backwards compatibility: remove after 2027-04. `null`: results processed before the financial KPIs were introduced. Version 0: results processed before `OutputsVersion` was introduced, shown with the rows from before. -->
+								{#if kpis.financial === null}
+									<tr>
+										<td colspan="4" class="!whitespace-normal">
+											{$t('kpis.FinancialKPIsNotAvailable')}
+										</td>
+									</tr>
+								{:else if kpis.financial.outputsVersion === 0}
+									<FinancialKpisRowsLegacy financial={kpis.financial} sizes={kpis.sizes} />
+								{:else}
+									<FinancialKpisRows financial={kpis.financial} />
+								{/if}
 							{:else}
-								<FinancialKpisRows financial={kpis.financial} />
+								ERROR: Unknown tab `{activeParametersTab}`.
 							{/if}
-						{:else}
-							ERROR: Unknown tab `{activeParametersTab}`.
-						{/if}
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				</div>
 			</div>
-		</div>
-	</svelte:fragment>
-</ScrollableTabGroup>
+		</svelte:fragment>
+	</TabGroup>
+	<TabScrollArrows container={tabsContainer} />
+</div>

@@ -1,18 +1,20 @@
 <!--
-	Skeleton's `TabGroup` with arrow buttons on either side of the tab row, shown while the row can scroll further in
-	their direction. Skeleton hides the row's scrollbar, so without them, nothing shows that there are more tabs. Takes
-	the same props and slots as `TabGroup`.
+	Arrow buttons on either side of a Skeleton `TabGroup`'s tab row, shown while the row can scroll further in their
+	direction. Skeleton hides the row's scrollbar, so without them, nothing shows that there are more tabs.
+
+	Put it next to the `TabGroup`, inside a `relative` element that holds both and is passed as `container`, and give
+	the `TabGroup` `regionList="mx-5"`: the arrows sit in that margin. It isn't a wrapper around the `TabGroup`, because
+	passing the `TabGroup`'s slots on through another component loses updates in Svelte 4: the parameters form didn't
+	react to a project phase switch.
 -->
 <script lang="ts">
-	import { TabGroup } from '@skeletonlabs/skeleton';
 	import { ChevronLeft, ChevronRight } from 'lucide-svelte';
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 
 	import { t } from '$lib/i18n/translations';
 
-	export let regionList = '';
+	export let container: HTMLElement | undefined;
 
-	let container: HTMLDivElement;
 	let tabList: HTMLElement | null = null;
 	let canScrollLeft = false;
 	let canScrollRight = false;
@@ -42,8 +44,17 @@
 		tabList?.scrollBy({ left: (direction * tabList.clientWidth) / 2, behavior: 'smooth' });
 	}
 
-	onMount(() => {
-		tabList = container.querySelector<HTMLElement>('.tab-list');
+	function detach() {
+		tabList?.removeEventListener('scroll', update);
+		resizeObserver?.disconnect();
+		mutationObserver?.disconnect();
+		tabList = resizeObserver = mutationObserver = null;
+	}
+
+	// The container is bound by the parent, so it's only set after the first render.
+	function attach(container: HTMLElement | undefined) {
+		detach();
+		tabList = container?.querySelector<HTMLElement>('.tab-list') ?? null;
 		if (!tabList) return;
 		tabList.addEventListener('scroll', update, { passive: true });
 		resizeObserver = new ResizeObserver(update);
@@ -54,41 +65,32 @@
 		mutationObserver.observe(tabList, { childList: true });
 		observeTabs();
 		update();
-	});
+	}
 
-	onDestroy(() => {
-		tabList?.removeEventListener('scroll', update);
-		resizeObserver?.disconnect();
-		mutationObserver?.disconnect();
-	});
+	$: attach(container);
+
+	onDestroy(detach);
 </script>
 
-<div class="relative" bind:this={container}>
-	<!-- The arrows sit in the row's margin, which is always there, so the row's width doesn't depend on them. -->
-	<TabGroup {...$$restProps} regionList="{regionList} mx-5">
-		<slot />
-		<svelte:fragment slot="panel"><slot name="panel" /></svelte:fragment>
-	</TabGroup>
-	{#if canScrollLeft}
-		<button
-			type="button"
-			class="absolute left-0 top-0 flex w-5 items-center justify-center hover:variant-soft rounded-container-token"
-			style="height: {tabListHeight}px"
-			aria-label={$t('common.ScrollTabsLeft')}
-			on:click={() => scrollByHalf(-1)}
-		>
-			<ChevronLeft size={16} />
-		</button>
-	{/if}
-	{#if canScrollRight}
-		<button
-			type="button"
-			class="absolute right-0 top-0 flex w-5 items-center justify-center hover:variant-soft rounded-container-token"
-			style="height: {tabListHeight}px"
-			aria-label={$t('common.ScrollTabsRight')}
-			on:click={() => scrollByHalf(1)}
-		>
-			<ChevronRight size={16} />
-		</button>
-	{/if}
-</div>
+{#if canScrollLeft}
+	<button
+		type="button"
+		class="absolute left-0 top-0 flex w-5 items-center justify-center hover:variant-soft rounded-container-token"
+		style="height: {tabListHeight}px"
+		aria-label={$t('common.ScrollTabsLeft')}
+		on:click={() => scrollByHalf(-1)}
+	>
+		<ChevronLeft size={16} />
+	</button>
+{/if}
+{#if canScrollRight}
+	<button
+		type="button"
+		class="absolute right-0 top-0 flex w-5 items-center justify-center hover:variant-soft rounded-container-token"
+		style="height: {tabListHeight}px"
+		aria-label={$t('common.ScrollTabsRight')}
+		on:click={() => scrollByHalf(1)}
+	>
+		<ChevronRight size={16} />
+	</button>
+{/if}
