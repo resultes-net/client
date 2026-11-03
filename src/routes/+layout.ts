@@ -6,6 +6,11 @@ import { browser } from '$app/environment';
 import { redirect } from '@sveltejs/kit';
 import * as auth from '../auth';
 
+// Every page except login and register needs a login, which is only checked in the browser (see
+// below), so there's nothing to render on the server. `(auth)/(login-register)/+layout.ts` turns it
+// back on for those.
+export const ssr = false;
+
 export const load: LayoutLoad = async ({ data, url }) => {
 	const {
 		i18n: { locale, route: localeRoute },
