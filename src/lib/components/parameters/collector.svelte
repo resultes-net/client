@@ -165,8 +165,11 @@ ${values}
 	<div data-popup="iamInfoHoverPopup" use:portal>
 		<div class="card p-4 variant-filled-secondary z-50 max-w-3xl">
 			<p class="mb-2">
-				A CSV file with one header row and one, column giving - for each hour of the year - the heat
-				demand in MW. Therefore, the file will contain 8760+1 lines like this:
+				A text file with the incidence angle modifiers (IAM) for beam radiation. Line 1: the
+				transversal angles in °. Line 2: the longitudinal angles in °. Separate the values with
+				spaces or tabs. Then one IAM value per line: first the values for the first transversal
+				angle at each longitudinal angle, then those for the second transversal angle, and so on,
+				i.e. (number of transversal angles) × (number of longitudinal angles) values:
 			</p>
 			<pre>10.00 	20.00 	30.00 	40.00 	50.00 	60.00 	70.00 	80.00 	90.00 	
 10.00 	20.00 	30.00 	40.00 	50.00 	60.00 	70.00 	80.00 	90.00 	
