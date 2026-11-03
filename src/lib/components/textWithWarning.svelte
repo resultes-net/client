@@ -3,6 +3,9 @@
 		shallWarn: boolean;
 		errorMessage: string | null;
 	};
+
+	// Skeleton opens the first element with a popup's name, so each instance needs its own.
+	let nextPopupId = 0;
 </script>
 
 <script lang="ts">
@@ -15,9 +18,11 @@
 	export let text: string;
 	export let config: Config;
 
+	const popupTarget = `warningMessagePopup-${nextPopupId++}`;
+
 	const warningMessagePopupSettings: PopupSettings = {
 		event: 'hover',
-		target: 'warningMessagePopup',
+		target: popupTarget,
 		placement: 'top'
 	};
 </script>
@@ -33,9 +38,9 @@
 	</div>
 </div>
 
-<div data-popup="warningMessagePopup" use:portal>
+<div data-popup={popupTarget} use:portal>
 	<div hidden={config.errorMessage === null} class="card p-4 variant-filled-warning z-50">
-		<p>config.errorMessasge ?? ''</p>
+		<p>{config.errorMessage ?? ''}</p>
 		<div class="arrow variant-filled-warning" />
 	</div>
 </div>
