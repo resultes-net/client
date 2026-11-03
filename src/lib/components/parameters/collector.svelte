@@ -163,7 +163,7 @@ ${values}
 	</div>
 {:else}
 	<div data-popup="iamInfoHoverPopup" use:portal>
-		<div class="card p-4 variant-filled-secondary z-50">
+		<div class="card p-4 variant-filled-secondary z-50 max-w-3xl">
 			<p class="mb-2">
 				A CSV file with one header row and one, column giving - for each hour of the year - the heat
 				demand in MW. Therefore, the file will contain 8760+1 lines like this:

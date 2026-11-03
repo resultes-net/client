@@ -52,7 +52,7 @@
 </script>
 
 <div data-popup="realDiscountRateInfoPopup" use:portal>
-	<div class="card p-4 variant-filled-secondary z-50 max-w-md">
+	<div class="card p-4 variant-filled-secondary z-50 max-w-3xl">
 		<p>{$t('common.RealDiscountRateInfo')}</p>
 		<div class="arrow variant-filled-secondary" />
 	</div>

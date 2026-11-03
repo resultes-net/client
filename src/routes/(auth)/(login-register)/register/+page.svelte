@@ -61,7 +61,7 @@
 </script>
 
 <div data-popup="registrationCodeInfoPopup" use:portal>
-	<div class="card p-4 variant-filled-secondary relative z-50">
+	<div class="card p-4 variant-filled-secondary relative z-50 max-w-3xl">
 		<div class="arrow variant-filled-secondary" />
 		<div class="whitespace-pre-line">{$t('auth.WriteToToAskForRegistrationCode')}</div>
 	</div>

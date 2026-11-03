@@ -63,7 +63,7 @@
 </script>
 
 <div data-popup="profileInfoHoverPopup" use:portal>
-	<div class="card p-4 variant-filled-secondary z-50">
+	<div class="card p-4 variant-filled-secondary z-50 max-w-3xl">
 		<p class="mb-2">
 			A CSV file with one header row and two columns, giving - for each hour of the year - the mass
 			flow rate in kg/h and the the temperature in °C. Therefore, the file will contain 8760+1 lines

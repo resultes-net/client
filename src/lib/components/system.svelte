@@ -419,7 +419,7 @@
 {/if}
 
 <div data-popup="submitButtonDisabledMessagePopup" use:portal>
-	<div hidden={areAllParametersValid} class="card p-4 variant-filled-warning z-50">
+	<div hidden={areAllParametersValid} class="card p-4 variant-filled-warning z-50 max-w-3xl">
 		<p>{$t('common.correctErrorsInParameters')}</p>
 		<div class="arrow variant-filled-warning" />
 	</div>

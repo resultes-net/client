@@ -120,7 +120,7 @@
 </div>
 
 <div data-popup="validationeErrorMessagePopup" use:portal>
-	<div class="card p-4 variant-filled-warning z-50">
+	<div class="card p-4 variant-filled-warning z-50 max-w-3xl">
 		<p>{errorMessage}</p>
 		<div class="arrow variant-filled-warning" />
 	</div>
