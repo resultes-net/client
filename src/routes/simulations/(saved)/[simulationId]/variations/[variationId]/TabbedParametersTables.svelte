@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { formatNumber } from '$lib/formatNumber';
-	import { Tab } from '@skeletonlabs/skeleton';
+	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 
-	import ScrollableTabGroup from '$lib/components/scrollableTabGroup.svelte';
+	import TabScrollArrows from '$lib/components/tabScrollArrows.svelte';
 	import { locale, t } from '$lib/i18n/translations';
 	import type { ParametersOutput } from '$lib/openapi/generated/model/parametersOutput';
 	import { COST_REGIONS } from '$lib/parameters/financial';
@@ -23,273 +23,279 @@
 
 	type ActiveParamtersTab = 'demand' | 'collector' | 'storage' | 'control' | 'financial';
 	let activeParametersTab: ActiveParamtersTab = 'demand';
+	let tabsContainer: HTMLDivElement | undefined;
 </script>
 
-<ScrollableTabGroup>
-	<Tab bind:group={activeParametersTab} name="demand" value="demand">{$t('common.demand')}</Tab>
-	<Tab bind:group={activeParametersTab} name="collector" value="collector"
-		>{$t('common.CollectorField')}</Tab
-	>
-	<Tab bind:group={activeParametersTab} name="storage" value="storage">{$t('common.storage')}</Tab>
-	<Tab bind:group={activeParametersTab} name="control" value="control">{$t('common.Control')}</Tab>
-	<Tab bind:group={activeParametersTab} name="financial" value="financial"
-		>{$t('common.Financials')}</Tab
-	>
+<div class="relative" bind:this={tabsContainer}>
+	<TabGroup regionList="mx-5">
+		<Tab bind:group={activeParametersTab} name="demand" value="demand">{$t('common.demand')}</Tab>
+		<Tab bind:group={activeParametersTab} name="collector" value="collector"
+			>{$t('common.CollectorField')}</Tab
+		>
+		<Tab bind:group={activeParametersTab} name="storage" value="storage">{$t('common.storage')}</Tab
+		>
+		<Tab bind:group={activeParametersTab} name="control" value="control">{$t('common.Control')}</Tab
+		>
+		<Tab bind:group={activeParametersTab} name="financial" value="financial"
+			>{$t('common.Financials')}</Tab
+		>
 
-	<svelte:fragment slot="panel">
-		<div class="ltr:ml-[1%] rtl:mr-[1%]">
-			<div class="table-container">
-				<table class="table table-hover [&_th]:text-nowrap [&_td]:text-nowrap">
-					<thead>
-						<tr>
-							<th>{$t('common.Description')}</th>
-							<th>{$t('common.Value')}</th>
-							<th>{$t('common.Unit')}</th>
-							<th>{$t('common.Notes')}</th>
-						</tr>
-					</thead>
-					<tbody>
-						{#if activeParametersTab === 'demand'}
+		<svelte:fragment slot="panel">
+			<div class="ltr:ml-[1%] rtl:mr-[1%]">
+				<div class="table-container">
+					<table class="table table-hover [&_th]:text-nowrap [&_td]:text-nowrap">
+						<thead>
 							<tr>
-								<td>{$t('common.yearlyHeatDemand')}</td>
-								<td>{formatNumber(yearlyHeatDemandGWh, $locale, 1)}</td>
-								<td>GWh</td>
-								<td />
+								<th>{$t('common.Description')}</th>
+								<th>{$t('common.Value')}</th>
+								<th>{$t('common.Unit')}</th>
+								<th>{$t('common.Notes')}</th>
 							</tr>
-						{:else if activeParametersTab === 'collector'}
-							{@const collector = parameters.values.collector_field}
-							<tr>
-								<td>{$t('common.collectorArea')}</td>
-								<td>{formatNumber(collector.area.value, $locale)}</td>
-								{#if collector.area.scaling == 'absolute_m2'}
-									<td>
-										m<sup>2</sup>
-									</td>
-									<td />
-								{:else if collector.area.scaling == 'relative_to_demand_m2_per_MWh'}
-									<td>
-										m<sup>2</sup> MWh<sup>-1</sup>
-									</td>
-									<td
-										>{formatNumber(collectorFieldAreaM2, $locale, 0)}
-										m<sup>2</sup>
-									</td>
-								{:else}
-									ERROR: Unknown area scaling: `{collector.area.scaling}`.
-								{/if}
-							</tr>
-							<tr>
-								<td>{$t('common.inclination')}</td>
-								<td>{formatNumber(collector.inclination_deg, $locale)}</td>
-								<td>°</td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.orientation')}</td>
-								<td>{formatNumber(collector.orientation_east_west_deg, $locale)}</td>
-								<td>°</td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.perfCoeffA0')}</td>
-								<td>{formatNumber(collector.performance_coefficients.a0_1, $locale)}</td>
-								<td>-</td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.perfCoeffA1')}</td>
-								<td
-									>{formatNumber(
-										collector.performance_coefficients.a1_kW_per_m2_per_K,
-										$locale
-									)}</td
-								>
-								<td><span>kW m<sup>-2</sup>K<sup>-1</sup></span></td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.perfCoeffA2')}</td>
-								<td
-									>{formatNumber(
-										collector.performance_coefficients.a2_kW_per_m2_per_K2,
-										$locale
-									)}</td
-								>
-								<td><span>kW m<sup>-2</sup>K<sup>-2</sup></span></td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.perfCoeffA3')}</td>
-								<td
-									>{formatNumber(
-										collector.performance_coefficients.a3_kJ_per_m3_per_K,
-										$locale
-									)}</td
-								>
-								<td><span>kJ m<sup>-3</sup>K<sup>-1</sup></span></td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.perfCoeffA4')}</td>
-								<td>{formatNumber(collector.performance_coefficients.a4_1, $locale)}</td>
-								<td>-</td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.perfCoeffA5')}</td>
-								<td
-									>{formatNumber(
-										collector.performance_coefficients.a5_kJ_per_m2_per_K,
-										$locale
-									)}</td
-								>
-								<td><span>kJ m<sup>-2</sup>K<sup>-1</sup></span></td>
-								<td />
-							</tr>
-						{:else if activeParametersTab === 'storage'}
-							{@const systemType = parameters.values.type}
-							{#if systemType === 'ttes'}
-								<TtesTableRows
-									parameters={parameters.values.storage}
-									{yearlyHeatDemandMWh}
-									{collectorFieldAreaM2}
-								/>
-							{:else if systemType === 'ptes'}
-								<PtesTableRows
-									parameters={parameters.values.storage}
-									{yearlyHeatDemandMWh}
-									{collectorFieldAreaM2}
-								/>
-							{:else if systemType === 'btes'}
-								<BtesTableRows
-									parameters={parameters.values.storage}
-									{yearlyHeatDemandMWh}
-									{collectorFieldAreaM2}
-								/>
-							{:else}
-								ERROR: Unknonw system type `{systemType}`.
-							{/if}
-						{:else if activeParametersTab === 'control'}
-							<tr>
-								<td>{$t('common.demandSetpointTemperature')}</td>
-								<td
-									>{formatNumber(
-										parameters.values.control.demand_temperature_setpoint_degC,
-										$locale
-									)}</td
-								>
-								<td>°C</td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.DemandDeltaT')}</td>
-								<td>{formatNumber(parameters.values.control.demand_delta_T_degC, $locale)}</td>
-								<td>°C</td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.maximumStorageTemperature')}</td>
-								<td
-									>{formatNumber(
-										parameters.values.control.storage_temperature_maximum_degC,
-										$locale
-									)}</td
-								>
-								<td>°C</td>
-								<td />
-							</tr>
-						{:else if activeParametersTab === 'financial'}
-							{@const financial = parameters.values.financial}
-							{@const currency = COST_REGIONS[financial.cost_region].currencySymbol}
-							{@const hasHeatPump = parameters.values.type !== 'ttes'}
-							<tr>
-								<td>{$t('common.CostRegion')}</td>
-								<td
-									>{financial.cost_region === 'ch'
-										? $t('common.CostRegionCh')
-										: $t('common.CostRegionEu')}</td
-								>
-								<td />
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.RealDiscountRate')}</td>
-								<td>{formatNumber(financial.real_discount_rate_1, $locale)}</td>
-								<td>a<sup>-1</sup></td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.FuelPrice')}</td>
-								<td>{formatNumber(financial.fuel_price_per_kWh, $locale)}</td>
-								<td>{currency} kWh<sup>-1</sup></td>
-								<td />
-							</tr>
-							{#if hasHeatPump}
+						</thead>
+						<tbody>
+							{#if activeParametersTab === 'demand'}
 								<tr>
-									<td>{$t('common.ElectricityPrice')}</td>
-									<td>{formatNumber(financial.electricity_price_per_kWh, $locale)}</td>
+									<td>{$t('common.yearlyHeatDemand')}</td>
+									<td>{formatNumber(yearlyHeatDemandGWh, $locale, 1)}</td>
+									<td>GWh</td>
+									<td />
+								</tr>
+							{:else if activeParametersTab === 'collector'}
+								{@const collector = parameters.values.collector_field}
+								<tr>
+									<td>{$t('common.collectorArea')}</td>
+									<td>{formatNumber(collector.area.value, $locale)}</td>
+									{#if collector.area.scaling == 'absolute_m2'}
+										<td>
+											m<sup>2</sup>
+										</td>
+										<td />
+									{:else if collector.area.scaling == 'relative_to_demand_m2_per_MWh'}
+										<td>
+											m<sup>2</sup> MWh<sup>-1</sup>
+										</td>
+										<td
+											>{formatNumber(collectorFieldAreaM2, $locale, 0)}
+											m<sup>2</sup>
+										</td>
+									{:else}
+										ERROR: Unknown area scaling: `{collector.area.scaling}`.
+									{/if}
+								</tr>
+								<tr>
+									<td>{$t('common.inclination')}</td>
+									<td>{formatNumber(collector.inclination_deg, $locale)}</td>
+									<td>°</td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.orientation')}</td>
+									<td>{formatNumber(collector.orientation_east_west_deg, $locale)}</td>
+									<td>°</td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.perfCoeffA0')}</td>
+									<td>{formatNumber(collector.performance_coefficients.a0_1, $locale)}</td>
+									<td>-</td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.perfCoeffA1')}</td>
+									<td
+										>{formatNumber(
+											collector.performance_coefficients.a1_kW_per_m2_per_K,
+											$locale
+										)}</td
+									>
+									<td><span>kW m<sup>-2</sup>K<sup>-1</sup></span></td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.perfCoeffA2')}</td>
+									<td
+										>{formatNumber(
+											collector.performance_coefficients.a2_kW_per_m2_per_K2,
+											$locale
+										)}</td
+									>
+									<td><span>kW m<sup>-2</sup>K<sup>-2</sup></span></td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.perfCoeffA3')}</td>
+									<td
+										>{formatNumber(
+											collector.performance_coefficients.a3_kJ_per_m3_per_K,
+											$locale
+										)}</td
+									>
+									<td><span>kJ m<sup>-3</sup>K<sup>-1</sup></span></td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.perfCoeffA4')}</td>
+									<td>{formatNumber(collector.performance_coefficients.a4_1, $locale)}</td>
+									<td>-</td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.perfCoeffA5')}</td>
+									<td
+										>{formatNumber(
+											collector.performance_coefficients.a5_kJ_per_m2_per_K,
+											$locale
+										)}</td
+									>
+									<td><span>kJ m<sup>-2</sup>K<sup>-1</sup></span></td>
+									<td />
+								</tr>
+							{:else if activeParametersTab === 'storage'}
+								{@const systemType = parameters.values.type}
+								{#if systemType === 'ttes'}
+									<TtesTableRows
+										parameters={parameters.values.storage}
+										{yearlyHeatDemandMWh}
+										{collectorFieldAreaM2}
+									/>
+								{:else if systemType === 'ptes'}
+									<PtesTableRows
+										parameters={parameters.values.storage}
+										{yearlyHeatDemandMWh}
+										{collectorFieldAreaM2}
+									/>
+								{:else if systemType === 'btes'}
+									<BtesTableRows
+										parameters={parameters.values.storage}
+										{yearlyHeatDemandMWh}
+										{collectorFieldAreaM2}
+									/>
+								{:else}
+									ERROR: Unknonw system type `{systemType}`.
+								{/if}
+							{:else if activeParametersTab === 'control'}
+								<tr>
+									<td>{$t('common.demandSetpointTemperature')}</td>
+									<td
+										>{formatNumber(
+											parameters.values.control.demand_temperature_setpoint_degC,
+											$locale
+										)}</td
+									>
+									<td>°C</td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.DemandDeltaT')}</td>
+									<td>{formatNumber(parameters.values.control.demand_delta_T_degC, $locale)}</td>
+									<td>°C</td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.maximumStorageTemperature')}</td>
+									<td
+										>{formatNumber(
+											parameters.values.control.storage_temperature_maximum_degC,
+											$locale
+										)}</td
+									>
+									<td>°C</td>
+									<td />
+								</tr>
+							{:else if activeParametersTab === 'financial'}
+								{@const financial = parameters.values.financial}
+								{@const currency = COST_REGIONS[financial.cost_region].currencySymbol}
+								{@const hasHeatPump = parameters.values.type !== 'ttes'}
+								<tr>
+									<td>{$t('common.CostRegion')}</td>
+									<td
+										>{financial.cost_region === 'ch'
+											? $t('common.CostRegionCh')
+											: $t('common.CostRegionEu')}</td
+									>
+									<td />
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.RealDiscountRate')}</td>
+									<td>{formatNumber(financial.real_discount_rate_1, $locale)}</td>
+									<td>a<sup>-1</sup></td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.FuelPrice')}</td>
+									<td>{formatNumber(financial.fuel_price_per_kWh, $locale)}</td>
 									<td>{currency} kWh<sup>-1</sup></td>
 									<td />
 								</tr>
-							{/if}
-							<tr>
-								<td>{$t('common.CalculationPeriod')}</td>
-								<td>{formatNumber(financial.calculation_period_a, $locale)}</td>
-								<td>a</td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.MaintenanceRate')}</td>
-								<td>{formatNumber(financial.maintenance_rate_1, $locale)}</td>
-								<td>a<sup>-1</sup></td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.BoilerEfficiency')}</td>
-								<td>{formatNumber(financial.boiler_efficiency_1, $locale)}</td>
-								<td>-</td>
-								<td />
-							</tr>
-							<tr>
-								<td>{$t('common.SpecificStorageCost')}</td>
-								<td>
-									{formatNumber(financial.storage_cost.a, $locale, 2)} · V<sup
-										>{formatNumber(financial.storage_cost.b, $locale)}</sup
-									>
-								</td>
-								<td>{currency} m<sup>-3</sup></td>
-								<td>{$t('common.StorageCostCurveVariable')}</td>
-							</tr>
-							<tr>
-								<td>{$t('common.SpecificCollectorFieldCost')}</td>
-								<td>
-									{formatNumber(financial.collector_field_cost.a, $locale, 2)} · A<sup
-										>{formatNumber(financial.collector_field_cost.b, $locale)}</sup
-									>
-								</td>
-								<td>{currency} m<sup>-2</sup></td>
-								<td>{$t('common.CollectorFieldCostCurveVariable')}</td>
-							</tr>
-							{#if hasHeatPump}
+								{#if hasHeatPump}
+									<tr>
+										<td>{$t('common.ElectricityPrice')}</td>
+										<td>{formatNumber(financial.electricity_price_per_kWh, $locale)}</td>
+										<td>{currency} kWh<sup>-1</sup></td>
+										<td />
+									</tr>
+								{/if}
 								<tr>
-									<td>{$t('common.HeatPumpCost')}</td>
-									<td>{formatNumber(financial.heat_pump_cost_per_kW, $locale, 2)}</td>
+									<td>{$t('common.CalculationPeriod')}</td>
+									<td>{formatNumber(financial.calculation_period_a, $locale)}</td>
+									<td>a</td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.MaintenanceRate')}</td>
+									<td>{formatNumber(financial.maintenance_rate_1, $locale)}</td>
+									<td>a<sup>-1</sup></td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.BoilerEfficiency')}</td>
+									<td>{formatNumber(financial.boiler_efficiency_1, $locale)}</td>
+									<td>-</td>
+									<td />
+								</tr>
+								<tr>
+									<td>{$t('common.SpecificStorageCost')}</td>
+									<td>
+										{formatNumber(financial.storage_cost.a, $locale, 2)} · V<sup
+											>{formatNumber(financial.storage_cost.b, $locale)}</sup
+										>
+									</td>
+									<td>{currency} m<sup>-3</sup></td>
+									<td>{$t('common.StorageCostCurveVariable')}</td>
+								</tr>
+								<tr>
+									<td>{$t('common.SpecificCollectorFieldCost')}</td>
+									<td>
+										{formatNumber(financial.collector_field_cost.a, $locale, 2)} · A<sup
+											>{formatNumber(financial.collector_field_cost.b, $locale)}</sup
+										>
+									</td>
+									<td>{currency} m<sup>-2</sup></td>
+									<td>{$t('common.CollectorFieldCostCurveVariable')}</td>
+								</tr>
+								{#if hasHeatPump}
+									<tr>
+										<td>{$t('common.HeatPumpCost')}</td>
+										<td>{formatNumber(financial.heat_pump_cost_per_kW, $locale, 2)}</td>
+										<td>{currency} kW<sub>th</sub><sup>-1</sup></td>
+										<td />
+									</tr>
+								{/if}
+								<tr>
+									<td>{$t('common.BoilerCost')}</td>
+									<td>{formatNumber(financial.boiler_cost_per_kW, $locale, 2)}</td>
 									<td>{currency} kW<sub>th</sub><sup>-1</sup></td>
 									<td />
 								</tr>
+							{:else}
+								ERROR: Unknown tab `{activeParametersTab}`.
 							{/if}
-							<tr>
-								<td>{$t('common.BoilerCost')}</td>
-								<td>{formatNumber(financial.boiler_cost_per_kW, $locale, 2)}</td>
-								<td>{currency} kW<sub>th</sub><sup>-1</sup></td>
-								<td />
-							</tr>
-						{:else}
-							ERROR: Unknown tab `{activeParametersTab}`.
-						{/if}
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				</div>
 			</div>
-		</div>
-	</svelte:fragment>
-</ScrollableTabGroup>
+		</svelte:fragment>
+	</TabGroup>
+	<TabScrollArrows container={tabsContainer} />
+</div>
